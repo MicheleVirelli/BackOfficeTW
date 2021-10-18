@@ -7212,3 +7212,15 @@
 [Sun, 17 Oct 2021 17:02:21 GMT] DELETE /api/employees/616c571c786a9950c9d14782 - - 200
 [Sun, 17 Oct 2021 17:02:21 GMT] DELETE /api/customers/616c571c786a9950c9d1477c - - 200
 [Sun, 17 Oct 2021 17:02:21 GMT] DELETE /api/products/616c571c786a9950c9d14785 - - 200
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/employees/ - - 400
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/customers/ - - 400
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/employees/ - - 400
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/products/ - - 401
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/products/ - - 401
+[Mon, 18 Oct 2021 09:55:37 GMT] POST /api/customers/ - - 400
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/employees/ - - 400
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/customers/ - - 400
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/employees/ - - 400
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/products/ - - 401
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/products/ - - 401
+[Mon, 18 Oct 2021 10:00:14 GMT] POST /api/customers/ - - 400
