@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        div{
+            display: flex; 
+        }
+    </style>
+</head>
+<body>
+    <div>
+    <form id="loginForm">
+        <label for="username">username:</label><br>
+        <input type="text" id="username" name="username" value="testUser"><br>
+        <label for="password">password:</label><br>
+        <input type="text" id="password" name="password" value="testPassword"><br><br>
+        <input type="submit" value="submit">
+    </form>
+
+
+
+    <form id="registerForm">
+        <label for="username">username:</label><br>
+        <input type="text" id="username" name="username" value="testUser" required><br><br>
+        <label for="password">password:</label><br>
+        <input type="text" id="password" name="password" value="testPassword" required><br><br>
+        <label for="email">email:</label><br>
+        <input type="text" id="email" name="email" value="prova@gmail.com" required><br><br>
+        <label for="firstname">firstname:</label><br>
+        <input type="text" id="firstname" name="firstname" value=""><br>
+        <label for="lastname">lastname:</label><br>
+        <input type="text" id="lastname" name="lastname" value=""><br>
+        
+        <input type="submit" value="submit">
+    </form>
+    </div>  
+
+    <script>
+        const uriLogin = "http://localhost:8000/api/authentication/customers/login/"
+        const uriRegister = "http://localhost:8000/api/customers/"
+
+        const address = {
+            country: "Italy",
+            city: "London",
+            zipcode: "12345678",
+            streetAddress: "via ciaociao"
+        }
+
+        const loginForm = document.getElementById("loginForm");
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            let data = serializeForm(loginForm);
+
+            console.log(data);
+
+            let response = await fetch(uriLogin, {
+                headers: {"Content-Type": "application/json"},
+                method: "POST",
+                body: JSON.stringify(data),
+                mode: 'cors',
+            });
+            
+            let text = await response.text();
+            console.log(text);
+        })
+
+        const registerForm = document.getElementById("registerForm");
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            let rawData = serializeForm(registerForm);
+
+            console.log(rawData);
+
+            let data = {
+                firstname: rawData["firstname"],
+                lastname: rawData["lastname"],
+                loginInfo: {
+                    username: rawData["username"],
+                    password: rawData["password"],
+                    email: rawData["email"],
+                },
+                address: address,
+            }
+
+            console.log(data);
+            
+            let response = await fetch(uriRegister, {
+                headers: {"Content-Type": "application/json"},
+                method: "POST",
+                body: JSON.stringify(data),
+                mode: 'cors',
+            });
+            
+        })
+
+
+        function serializeForm(form) {
+            return Array.from(form.querySelectorAll('input, select, textarea'))
+                .filter(element => element.name)
+                .reduce((json, element) => {
+                    json[element.name] = element.type === 'checkbox' ? element.checked : element.value;
+                    return json;
+                }, {});
+        }
+    </script>
+
+</body>
