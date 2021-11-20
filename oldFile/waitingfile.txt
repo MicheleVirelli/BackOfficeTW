@@ -1,0 +1,145 @@
+ 
+  <body>
+     
+    <div class="container-fluid" style="padding: 0;" >
+            <!--Sidenav-->
+            <div id="mySidenav" class="sidenav">
+                <!--Brand name-->
+                <a id="brand" href="#" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-gem" viewBox="0 0 16 16">
+                      <title>Gem</title>
+                      <desc>An image of a cut diamond, it's a link for the home page</desc>
+                    <path d="M3.1.7a.5.5 0 0 1 .4-.2h9a.5.5 0 0 1 .4.2l2.976 3.974c.149.185.156.45.01.644L8.4 15.3a.5.5 0 0 1-.8 0L.1 5.3a.5.5 0 0 1 0-.6l3-4zm11.386 3.785-1.806-2.41-.776 2.413 2.582-.003zm-3.633.004.961-2.989H4.186l.963 2.995 5.704-.006zM5.47 5.495 8 13.366l2.532-7.876-5.062.005zm-1.371-.999-.78-2.422-1.818 2.425 2.598-.003zM1.499 5.5l5.113 6.817-2.192-6.82L1.5 5.5zm7.889 6.817 5.123-6.83-2.928.002-2.195 6.828z"/>
+                    </svg>
+                    <nobr>Privilege</nobr>
+                </a>
+                <hr style="border-top: 1px solid #daa520;">
+            
+                <!--Nolo link-->
+                <a class="nav-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16">
+                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
+                      <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                    </svg>
+                    <nobr>Noleggio</nobr>
+                </a>
+            
+                <!-- Invetario link -->
+                <a href="#" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                      <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                    </svg>
+                    <nobr>Inventario</nobr>
+                </a>
+                <hr style ="border-top: 1px solid #daa520;">
+            
+                <!-- logIn Link-->
+                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"  class="nav-link" style="position: absolute; bottom: 0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                    </svg>
+                    <nobr>LogIn</nobr>
+                    </a>
+            </div>
+
+            <!--Main-->
+            <div id="main">
+              <div id="elem"></div>
+            </div>
+
+            <!--login modal-->
+            <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <!--header-->
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!--body-->
+                    <div class="modal-body">
+                      <form id="loginForm">
+                        <div class="mb-3 mt-3">
+                          <label for="email" class="form-label">Email:</label>
+                          <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="mb-3">
+                          <label for="pwd" class="form-label">Password:</label>
+                          <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
+                        </div>
+                        <div class="form-check mb-3">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                          </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                      </form>
+                    </div>
+                    <!--footer-->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+    </div>
+  </body>
+
+    <footer>
+    <script>
+      
+      function serializeFormJson(form) {
+        return Array.from(form.querySelectorAll('input, select, textarea'))
+          .filter(element => element.name)
+          .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json;}, {});
+        }
+
+      const loginForm = document.getElementById("loginForm");
+
+      loginForm.addEventListener("submit", async function(event){
+        event.preventDefault();
+        //URU83RDR2FQ
+
+        var urlemployees = "http://localhost:8000/api/authentication/employees/login";
+        
+        const data = serializeFormJson(loginForm); 
+
+        const response = await fetch(urlemployees, {
+          headers:{'Content-Type':'application/json'},
+          method: "POST",
+          body: JSON.stringify(data),
+          mode: 'cors',
+        })
+
+      });
+
+      $("#elem").load("templates/rent.html", function(responseTxt, statusTxt, xhr){
+                /*if(statusTxt == "success"){
+                  alert("External content loaded successfull!");
+                  $(this).append();
+                }*/
+                if(statusTxt == "error")
+                  alert("Error: " + xhr.status + ": " + xhr.statusText);
+              });
+        
+      //Tentativi di fare una get al sito unibo
+
+      const urlsite = "https://site202120.tw.cs.unibo.it/api/products/";
+
+      $.get(urlsite, function(data) {
+        data.forEach(date => {
+          $("#main").append(
+            `<div class="card noproducts cardmargin">
+              <div class="card box aviable"></div>
+              <nobr class="pinfo">${date.name} ,${date.category}, ${date.subcategory}, n° ${date.altproducts.length}, ${date.tags}</nobr>
+              </div>`);
+
+
+            console.log(date.image);
+        });
+      })  
+      
+    </script>
+  </footer>

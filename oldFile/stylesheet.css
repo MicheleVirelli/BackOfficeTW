@@ -1,7 +1,7 @@
 /* The side navigation menu */
 .sidenav {
     height: 100%; /* 100% Full-height */
-    width: 250px; /* 0 width - change this with JavaScript */
+    width: 125px; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
@@ -17,10 +17,11 @@
   /* The navigation menu links padding: 8px 8px 8px 8px;*/
   .sidenav a {  
     text-decoration: none;
-    font-size: 25px;
+    font-size: 1em;
     color: #818181;
     display: block;
     transition: 0.3s;
+    padding-left: .7em;
   }
   
   /* When you mouse over the navigation links, change their color */
@@ -42,7 +43,7 @@
     height: 100%;
     transition: margin-left .5s;
     padding: 0;
-    margin-left: 250px;
+    margin-left: 125px;
   }
   
   /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -52,8 +53,33 @@
   } 
  
   #backsearch{
-    height: 7em;
+    height: 3em;
     padding-left:0;
     margin-left: 0;
     background-color: #343a40;
+  }
+
+  .box {
+    width: 2em;
+    height: 2em;
+  }
+  .aviable{
+    background-color: lightgreen;
+  }
+  .unaviable{
+    background-color: red;
+  }
+
+  .noproducts{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: #818181;
+  }
+
+  .cardmargin{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 7em;
+    margin-right: 7em;
   }

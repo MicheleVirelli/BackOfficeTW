@@ -96,14 +96,38 @@
           </div>
         </nav>
 
-
-
       </div>
       <div class="content">
 
-        <!-- Inventario -->
-        <div id="productlist">
-        </div>
+        <!-- Noleggio -->
+
+        <form class="myform card row g-5  mt-3 ms-auto me-auto">
+          <h3>Ricerca disponibilità di un prodotto a tua scelta</h3>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Nome Prodotto</label>
+              <input type="text" class="form-control is-invalid" id="productname">
+              <div class="invalid-feedback">
+                Questo prodotto non esiste
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Data inizio</label>
+              <input type="date" class="form-control" id="productname">
+            </div>
+            <div class="col-md-4">
+              <label>Data Fine</label>
+              <input type="date" class="form-control" id="productname">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <input type="button" value="Submit" >
+          </div>
+        </form>
+
+        <!--Fine Noleggio -->
 
       </div>
     </div>
@@ -158,18 +182,6 @@
 
     /* Caricamento dati inventario */
     const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
-      
-    $.get(urlproducts, function (products) {
-
-      /* Stampa le card senza template */
-      products.forEach(element => {
-        $("#productlist").append(
-          `<div class="card noproducts cardmargin mb-3">
-              <div class="card box aviable"></div>
-              <nobr class="pinfo">${element.name} ,${element.category}, ${element.subcategory}, n° ${element.altproducts.length}, ${element.tags}</nobr>
-              </div>`);
-      });
-    });
 
   </script>
 </footer>
