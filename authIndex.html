@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </script>
+
+    <!-- Verifico che l'utente sia loggato -->
+
+</head>
+
+<body>
+    <div class="containero">
+        <div id="sidebar" class="nav-link">
+
+            <!--Brand name
+            <a id="brand" href="#" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gem icon" viewBox="0 0 16 16">
+                    <title>Gem</title>
+                    <desc>An image of a cut diamond, it's a link for the home page</desc>
+                    <path
+                        d="M3.1.7a.5.5 0 0 1 .4-.2h9a.5.5 0 0 1 .4.2l2.976 3.974c.149.185.156.45.01.644L8.4 15.3a.5.5 0 0 1-.8 0L.1 5.3a.5.5 0 0 1 0-.6l3-4zm11.386 3.785-1.806-2.41-.776 2.413 2.582-.003zm-3.633.004.961-2.989H4.186l.963 2.995 5.704-.006zM5.47 5.495 8 13.366l2.532-7.876-5.062.005zm-1.371-.999-.78-2.422-1.818 2.425 2.598-.003zM1.499 5.5l5.113 6.817-2.192-6.82L1.5 5.5zm7.889 6.817 5.123-6.83-2.928.002-2.195 6.828z" />
+                </svg>
+                <nobr>Privilege</nobr>
+            </a>
+            <hr style="border-top: 1px solid #daa520;">-->
+
+            <!--Nolo link
+            <a href="rent.html" class="nav-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar2-week"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                    <path
+                        d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                </svg>
+                <nobr>Noleggio</nobr>
+            </a>-->
+
+            <!-- Invetario link 
+            <a href="index.html" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                    <path
+                        d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                </svg>
+                <nobr>Inventario</nobr>
+            </a>-->
+
+            <!-- Gestione clienti  
+                <a href="#" class="nav-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        <path fill-rule="evenodd"
+                            d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z" />
+                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                    </svg>
+                    <nobr>Clienti</nobr>
+                </a>-->
+                <!-- Tentativo dropdown -->
+                
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                      <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                      </button>
+                      <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="#" class="link-dark rounded">Overview</a></li>
+                          <li><a href="#" class="link-dark rounded">Updates</a></li>
+                          <li><a href="#" class="link-dark rounded">Reports</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li class="mb-1">
+                      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                      </button>
+                      <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="#" class="link-dark rounded">Overview</a></li>
+                          <li><a href="#" class="link-dark rounded">Weekly</a></li>
+                          <li><a href="#" class="link-dark rounded">Monthly</a></li>
+                          <li><a href="#" class="link-dark rounded">Annually</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li class="mb-1">
+                      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                      </button>
+                      <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="#" class="link-dark rounded">New</a></li>
+                          <li><a href="#" class="link-dark rounded">Processed</a></li>
+                          <li><a href="#" class="link-dark rounded">Shipped</a></li>
+                          <li><a href="#" class="link-dark rounded">Returned</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li class="border-top my-3"></li>
+                    <li class="mb-1">
+                      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                      </button>
+                      <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="#" class="link-dark rounded">New...</a></li>
+                          <li><a href="#" class="link-dark rounded">Profile</a></li>
+                          <li><a href="#" class="link-dark rounded">Settings</a></li>
+                          <li><a href="#" class="link-dark rounded">Sign out</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+            <hr style="border-top: 1px solid #daa520;">
+
+        </div>
+
+        <div class="body">
+            <div class="header">
+
+                <nav class="navbar navbar-light bg-dark">
+                    <div class="container-fluid">
+
+                        <!-- Searchbar 
+            TODO: gestire la responsività della dimensione-->
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+
+                        <!-- LogIn 
+            <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-box-arrow-right"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                <path fill-rule="evenodd"
+                  d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+              </svg>
+              <nobr>LogIn</nobr>
+            </a>-->
+
+                        <!-- Autenticato -->
+                        <div class="dropdown">
+                            <a href="#"
+                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://github.com/mdo.png" alt="" width="32" height="32"
+                                    class="rounded-circle me-2">
+                                <strong>ilTuoNome</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow"
+                                aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </nav>
+
+
+            </div>
+            <div class="content">
+
+                <div>
+                    <h1>Stessa pagina però da autenticato</h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--login modal-->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--header-->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!--body-->
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password"
+                                name="password">
+                        </div>
+                        <div class="form-check mb-3">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                            </label>
+                        </div>
+                        <!-- TODO: pagina di registrazione -->
+                        <div class="form-check mb-3">
+                            <a href="#">Non sei ancora registrato ?</a>
+                        </div>
+                        <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <!--footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<footer>
+    <script>
+
+        /* Gestione dimensione icone della sidebar */
+        $(document).ready(function () {
+            $(".bi").attr("width", "16");
+            $(".bi").attr("height", "16");
+        });
+
+
+        /* Caricamento dati inventario */
+        const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
+
+        $.get(urlproducts, function (products) {
+
+            /* Stampa le card senza template */
+            //TODO: non è accessibile
+            products.docs.forEach(element => {
+                $("#productlist").append(
+                    `<a><div class="card noproducts cardmargin mb-3" onclick="productPage('${element._id}')">
+              <div class="card box aviable"></div>
+              <nobr class="pinfo">${element.name} ,${element.category}, ${element.subcategory}, n° ${element.altproducts.length}, ${element.tags}</nobr>
+              </div></a>`);
+            });
+        });
+
+        /* Setto l'id del prodotto in cui devo andare a vedere la pagina */
+        function productPage(id) {
+            localStorage.setItem("idProduct", id);
+
+            document.location.href = "productPage.html";
+        }
+
+
+        /* Prendo le info e contatto il server per sapere se sono corrette */
+
+        function serializeFormJson(form) {
+            return Array.from(form.querySelectorAll('input, select, textarea'))
+                .filter(element => element.name)
+                .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+        }
+
+        $('#loginsubmit').click(async function (event) {
+            event.preventDefault()
+            //URU83RDR2FQ
+
+            var urlemployees = "http://site202120.tw.cs.unibo.it/api/authentication/employees/login";
+
+            const data = serializeFormJson(loginForm);
+
+            const response = await fetch(urlemployees, {
+                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                body: JSON.stringify(data),
+                mode: 'cors',
+            })
+
+            console.log(response)
+            if (response.ok == true)
+                document.location.href = "authIndex.html";
+        });
+
+    </script>
+</footer>
+
+</html>

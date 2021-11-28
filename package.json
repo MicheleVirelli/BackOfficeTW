@@ -1,0 +1,23 @@
+{
+  "name": "backofficetw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "request.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MicheleVirelli/BackOfficeTw.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MicheleVirelli/BackOfficeTw/issues"
+  },
+  "homepage": "https://github.com/MicheleVirelli/BackOfficeTw#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "requirejs": "^2.3.6"
+  }
+}

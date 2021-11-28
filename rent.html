@@ -101,7 +101,7 @@
 
         <!-- Noleggio -->
 
-        <form class="myform card row g-5  mt-3 ms-auto me-auto">
+        <form class="myform card row g-5 mt-3 ms-auto me-auto">
           <h3>Ricerca disponibilità di un prodotto a tua scelta</h3>
           <div class="row">
             <div class="col-md-4">
@@ -114,20 +114,24 @@
           </div>
           <div class="row">
             <div class="col-md-4">
-              <label>Data inizio</label>
-              <input type="date" class="form-control" id="productname">
+              <label>Data Inizio</label>
+              <input type="date" class="form-control" id="productstartdate">
             </div>
             <div class="col-md-4">
               <label>Data Fine</label>
-              <input type="date" class="form-control" id="productname">
+              <input type="date" class="form-control" id="productenddate">
             </div>
           </div>
           <div class="col-md-4">
-            <input type="button" value="Submit" >
+            <input id="submit" type="button" value="Submit">
           </div>
         </form>
 
         <!--Fine Noleggio -->
+
+        <!-- Contenuto -->
+        <div id="contenuto">
+        </div>
 
       </div>
     </div>
@@ -174,14 +178,48 @@
 <footer>
   <script>
 
+    let urlproduct = `htps://site202120.tw.cs.unibo.it/api/products/`
+    $('#submit').click(function () {
+      let urlproduct = `https://site202120.tw.cs.unibo.it/api/products/${$('#productname').val()}`
+
+      $("#contenuto").children().remove();
+
+      $.ajax({
+        url: urlproduct,
+        data: {
+          zipcode: 97201
+        },
+        statusCode: {
+          //Il contenuto appeso deve mostrare se il quel prodotto è disponibile e qual'è il prezzo non presente nella unit
+          //Inoltre se non è disponibile nessun prodotto lo deve comunicare 
+          //TODO: la query non può essere vuota perché smichia tutto 
+          200: function (response) {
+            $("#contenuto").append(`
+              <div>
+                <p>${response.name}</p>
+                <p>Il prodotto è disponibile è costa </p>
+              </div>
+            <br>
+            `)
+            console.log(response)
+          },
+          400: function (response) {
+            alert('Errore richiesta sbagliata')
+          },
+          404: function (response) {
+            alert('Errore nome non esistente')
+          }
+        }
+      });
+
+      //Chiedere a vannucchi la gestione della aviability 
+    })
+
     /* Gestione dimensione icone della sidebar */
     $(document).ready(function () {
       $(".bi").attr("width", "16");
       $(".bi").attr("height", "16");
     });
-
-    /* Caricamento dati inventario */
-    const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
 
   </script>
 </footer>

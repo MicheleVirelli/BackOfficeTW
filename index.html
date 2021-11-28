@@ -28,6 +28,8 @@
     integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   </script>
 
+  <!-- Verifico che l'utente sia loggato -->
+
 </head>
 
 <body>
@@ -134,7 +136,11 @@
                 <input class="form-check-input" type="checkbox" name="remember"> Remember me
               </label>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <!-- TODO: pagina di registrazione -->
+            <div class="form-check mb-3">
+              <a href="#">Non sei ancora registrato ?</a>
+            </div>
+            <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <!--footer-->
@@ -147,6 +153,7 @@
   </div>
 
 </body>
+
 <footer>
   <script>
 
@@ -156,19 +163,58 @@
       $(".bi").attr("height", "16");
     });
 
+
     /* Caricamento dati inventario */
     const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
-      
+
     $.get(urlproducts, function (products) {
 
       /* Stampa le card senza template */
-      products.forEach(element => {
+      //TODO: non è accessibile
+      products.docs.forEach(element => {
         $("#productlist").append(
-          `<div class="card noproducts cardmargin mb-3">
+          `<a><div class="card noproducts cardmargin mb-3" onclick="productPage('${element._id}')">
               <div class="card box aviable"></div>
               <nobr class="pinfo">${element.name} ,${element.category}, ${element.subcategory}, n° ${element.altproducts.length}, ${element.tags}</nobr>
-              </div>`);
+              </div></a>`);
       });
+    });
+
+    /* Setto l'id del prodotto in cui devo andare a vedere la pagina */
+    function productPage(id) {
+      localStorage.setItem("idProduct", id);
+
+      document.location.href = "productPage.html";
+    }
+
+
+    /* Prendo le info e contatto il server per sapere se sono corrette */
+
+
+    function serializeFormJson(form) {
+      return Array.from(form.querySelectorAll('input, select, textarea'))
+        .filter(element => element.name)
+        .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+    }
+    
+    $('#loginsubmit').click(async function (event) {
+      event.preventDefault()
+      //URU83RDR2FQ
+
+      var urlemployees = "http://site202120.tw.cs.unibo.it/api/authentication/employees/login";
+
+      const data = serializeFormJson(loginForm);
+
+      const response = await fetch(urlemployees, {
+        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        body: JSON.stringify(data),
+        mode: 'cors',
+      })
+      
+      console.log(response)
+      if(response.ok == true)
+        document.location.href = "authIndex.html";
     });
 
   </script>
