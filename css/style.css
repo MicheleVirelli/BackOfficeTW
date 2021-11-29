@@ -22,7 +22,7 @@ body {
   color: #daa520;
 }
 
-#sidebar a {  
+#sidebar a {   
   text-decoration: none;
   font-size: 0.8em;
   color: #daa520;
@@ -30,6 +30,10 @@ body {
   transition: 0.3s;
   padding-top: 2em;
 }
+
+#sidebar .btn, .btn:hover, .btn:active, .btn:focus{
+  color: #daa520;
+} 
 
 .header{
   background-color: rgb(39, 37, 37);

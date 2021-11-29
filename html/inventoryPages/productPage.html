@@ -61,7 +61,6 @@
 
             async function Funzion() {
                 let product = await $.get(urlProduct);
-                console.log(product)
 
                 $("#productname").append(`${product.name}`);
                 $('#productcategory').append(`${product.category}`);
