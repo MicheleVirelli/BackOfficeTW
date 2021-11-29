@@ -33,10 +33,10 @@ jobs:
       - run: 
           command: | 
             ssh-keyscan -H donpasquale.cs.unibo.it >> ~/.ssh/known_hosts
-            scp -r css/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/css/
-            scp -r html/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/html/
-            scp -r js/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/js/
-            scp index.js michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
+            scp -r css/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
+            scp -r html/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
+            scp -r js/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
+            scp index.html michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
 
 
 
