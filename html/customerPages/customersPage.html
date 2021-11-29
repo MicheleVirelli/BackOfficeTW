@@ -31,24 +31,31 @@
     <!-- Aggiungo la grid -->
     <script>
         $.get('templates/grid.html', async (data) => {
-            await $('body').html(data);
+            await $('body').load(data);
         })
-        $('.container').append(`<h1>Non funziona</h1>`)
     </script>
 </head>
 
 <body>
-    <div id="main">
-
-    </div>
 
 </body>
 <footer>
     <script>
-        //Non sono autorizzato 
+        
         const urlcustomer = 'https://site202120.tw.cs.unibo.it/api/customers/'
-        $.get(urlcustomer, (data) => {
-            console.log(data)
+        $.ajax({
+            url: urlcustomer,
+            type: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            data: {
+                //No
+            },  
+            success: (result) => {
+                console.log(result)
+            }
         })
     </script>
 </footer>

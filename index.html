@@ -207,14 +207,13 @@
 
       const response = await fetch(urlemployees, {
         headers: { 'Content-Type': 'application/json' },
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(data),
         mode: 'cors',
       })
-      
       console.log(response)
-      if(response.ok == true)
-        document.location.href = "/html/authIndex.html";
+      // if(response.ok == true)
+      //   document.location.href = "/html/authIndex.html";
     });
 
   </script>
