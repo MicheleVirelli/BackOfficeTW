@@ -174,8 +174,6 @@
     }
 
     $('#loginsubmit').click(async function (event) {
-      event.preventDefault()
-      //URU83RDR2FQ
 
       var urlemployees = "https://site202120.tw.cs.unibo.it/api/authentication/employees/login";
 
@@ -183,8 +181,7 @@
 
       const response = await api.employees.login(data);
 
-      console.log(response)
-      if (response.ok == true)
+      if (response.status == 200)
         document.location.href = "/html/authenticatedPage/authIndex.html";
     });
 
