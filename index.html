@@ -177,16 +177,11 @@
       event.preventDefault()
       //URU83RDR2FQ
 
-      var urlemployees = "http://site202120.tw.cs.unibo.it/api/authentication/employees/login";
+      var urlemployees = "https://site202120.tw.cs.unibo.it/api/authentication/employees/login";
 
       const data = serializeFormJson(loginForm);
 
-      const response = await fetch(urlemployees, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify(data),
-        mode: 'cors',
-      })
+      const response = await api.employees.login(data);
 
       console.log(response)
       if (response.ok == true)
