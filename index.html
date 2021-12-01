@@ -144,8 +144,6 @@
     const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
 
     $.get(urlproducts, function (products) {
-
-      /* Stampa le card senza template */
       //TODO: non è accessibile
       products.docs.forEach(element => {
         $("#productlist").append(
@@ -163,10 +161,6 @@
       document.location.href = "/html/inventoryPages/productPage.html";
     }
 
-
-    /* Prendo le info e contatto il server per sapere se sono corrette */
-
-
     function serializeFormJson(form) {
       return Array.from(form.querySelectorAll('input, select, textarea'))
         .filter(element => element.name)
@@ -175,14 +169,14 @@
 
     $('#loginsubmit').click(async function (event) {
 
-      var urlemployees = "https://site202120.tw.cs.unibo.it/api/authentication/employees/login";
-
       const data = serializeFormJson(loginForm);
 
       const response = await api.employees.login(data);
 
       if (response.status == 200)
-        document.location.href = "/html/authenticatedPage/authIndex.html";
+        //1) inidirizzo di base 
+        //2) solo server side 
+        document.location.href = "~/html/authenticatedPage/authIndex.html";
     });
 
   </script>

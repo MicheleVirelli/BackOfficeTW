@@ -105,35 +105,10 @@
 
 <footer>
     <script>
+        //Import della sidebar 
         $('document').ready(() => {
             $('#sidebar').load('../templates/sidebar.html')
         })
-
-        function serializeFormJson(form) {
-            return Array.from(form.querySelectorAll('input, select, textarea'))
-                .filter(element => element.name)
-                .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
-        }
-
-        $('#loginsubmit').click(async function (event) {
-            event.preventDefault()
-            //URU83RDR2FQ
-
-            var urlemployees = "http://site202120.tw.cs.unibo.it/api/authentication/employees/login";
-
-            const data = serializeFormJson(loginForm);
-
-            const response = await fetch(urlemployees, {
-                headers: { 'Content-Type': 'application/json' },
-                method: "POST",
-                body: JSON.stringify(data),
-                mode: 'cors',
-            })
-
-            console.log(response)
-            if (response.ok == true)
-                document.location.href = "authIndex.html";
-        });
 
     </script>
 </footer>
