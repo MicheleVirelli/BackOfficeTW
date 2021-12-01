@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Il resto dello head -->
+    <script> $('head').load('../templates/gridHead.html') </script>
+
+</head>
+
+<body>
+    <div class="containero">
+        <div id="sidebar" class="nav-link">
+
+        </div>
+
+        <div class="body">
+            <div class="header">
+
+                <nav class="navbar navbar-light bg-dark">
+                    <div class="container-fluid">
+
+                        <!-- Searchbar 
+            TODO: gestire la responsività della dimensione-->
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+
+                        <!-- Autenticato -->
+                        <div class="dropdown">
+                            <a href="#"
+                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://github.com/mdo.png" alt="" width="32" height="32"
+                                    class="rounded-circle me-2">
+                                <strong>ilTuoNome</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow"
+                                aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </nav>
+
+
+            </div>
+            <div class="content">
+
+                <div>
+                    <h1>Stessa pagina però da autenticato</h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--login modal-->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--header-->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!--body-->
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password"
+                                name="password">
+                        </div>
+                        <div class="form-check mb-3">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                            </label>
+                        </div>
+                        <!-- TODO: pagina di registrazione -->
+                        <div class="form-check mb-3">
+                            <a href="#">Non sei ancora registrato ?</a>
+                        </div>
+                        <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <!--footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<footer>
+    <script>
+        $('document').ready(() => {
+            $('#sidebar').load('../templates/sidebar.html')
+        })
+
+        function serializeFormJson(form) {
+            return Array.from(form.querySelectorAll('input, select, textarea'))
+                .filter(element => element.name)
+                .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+        }
+
+        $('#loginsubmit').click(async function (event) {
+            event.preventDefault()
+            //URU83RDR2FQ
+
+            var urlemployees = "http://site202120.tw.cs.unibo.it/api/authentication/employees/login";
+
+            const data = serializeFormJson(loginForm);
+
+            const response = await fetch(urlemployees, {
+                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                body: JSON.stringify(data),
+                mode: 'cors',
+            })
+
+            console.log(response)
+            if (response.ok == true)
+                document.location.href = "authIndex.html";
+        });
+
+    </script>
+</footer>
+
+</html>

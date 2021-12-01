@@ -2,33 +2,11 @@
 <html lang="it">
 
 <head>
-  <title>ThePrivilege employee stuff</title>
-
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-  <!--Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- Option 1: Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  <!-- Awesome CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  </script>
-
-  <!-- Verifico che l'utente sia loggato -->
+  <!-- Il resto dello head -->
+  <script> $('head').load('html/templates/gridHead.html')</script>
 
 </head>
 
@@ -37,7 +15,7 @@
     <div id="sidebar" class="nav-link">
 
       <!--Brand name-->
-      <a id="brand" href="html/templates/grid.html" class="nav-link">
+      <a id="brand" href="#" class="nav-link">
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gem icon" viewBox="0 0 16 16">
           <title>Gem</title>
           <desc>An image of a cut diamond, it's a link for the home page</desc>
@@ -97,8 +75,6 @@
             </a>
           </div>
         </nav>
-
-
 
       </div>
       <div class="content">
@@ -196,7 +172,7 @@
         .filter(element => element.name)
         .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
     }
-    
+
     $('#loginsubmit').click(async function (event) {
       event.preventDefault()
       //URU83RDR2FQ
@@ -211,9 +187,10 @@
         body: JSON.stringify(data),
         mode: 'cors',
       })
+
       console.log(response)
-      // if(response.ok == true)
-      //   document.location.href = "/html/authIndex.html";
+      if (response.ok == true)
+        document.location.href = "/html/authenticatedPage/authIndex.html";
     });
 
   </script>
