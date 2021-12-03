@@ -61,6 +61,11 @@
             $('#country').attr('value', `${customer.address.country}`)
             $('#city').attr('value', `${customer.address.city}`)
             $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
+
+            //Carico le rent associate
+            const rentals = await api.customers.getRentals(idCustomer)
+            console.log(rentals)
+
         })
     </script>
 
