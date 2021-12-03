@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/grid.css">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+
+
+    <!-- Controllo il prodotto nel sessionStorage -->
+    <script>
+        $('document').ready(async () => {
+
+            //Importo la sidebar
+            $('#sidebar').load('../templates/sidebar.html')
+
+            //Importo l'header
+            $('#header').load('../templates/header.html')
+
+            const idCustomer = sessionStorage.getItem('idCustomer')
+            let customer = await api.customers.getSingle(idCustomer)
+            customer = customer.data
+
+            console.log(customer)
+
+            //Aggiungo le info come placeholder del form
+            $('#username').attr('value', `${customer.loginInfo.username}`)
+            $('#firstname').attr('value', `${customer.firstname}`)
+            $('#lastname').attr('value', ` ${customer.lastname}`)
+            $('#dateOfBirth').attr('value', `${customer.dateOfBirth}`)
+            $('#country').attr('value', `${customer.address.country}`)
+            $('#city').attr('value', `${customer.address.city}`)
+            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
+        })
+    </script>
+
+</head>
+
+<body>
+
+    <div class="containero">
+        <div id="sidebar" class="nav-link">
+        </div>
+        <div id="body">
+            <div id="header">
+            </div>
+            <div id="content">
+
+                <!-- Visualizzazione dati con form -->
+                <!-- TODO: Aggiungere uno stile più chiaro -->
+                <form id="customerInfo">
+                    <label for="username">Username: </label><br>
+                    <input id="username" disabled="disabled"><br>
+                    <label for="firstname">Name: </label><br>
+                    <input id="firstname" disabled="disabled"><br>
+                    <label for="lastname">Surname: </label><br>
+                    <input id="lastname" disabled="disabled"><br>
+                    <label for="dateOfBirth">Date of birth: </label><br>
+                    <input id="dateOfBirth" disabled="disabled"><br>
+                    <label for="country">Country: </label><br>
+                    <input id="country" disabled="disabled"><br>
+                    <label for="city">City: </label><br>
+                    <input id="city" disabled="disabled"><br>
+                    <label for="streetAddress">streetAddress: </label><br>
+                    <input id="streetAddress" disabled="disabled"><br>
+
+                </form>
+
+                <div id="buttonPanel">
+                    <button id="modifica">Modifica</button>
+
+                    <button id="elimina">Elimina</button>
+                </div>
+                <!-- Informazioni su rent pending & aperti -->
+                <!-- Informazioni tutti i rent effettuati  -->
+                <!-- Info sui prodotti che cerca più frequentemente  ?? -->
+                <div id="rentInfo"></div>
+
+            </div>
+        </div>
+
+</body>
+
+<footer>
+    <!-- Modifica Campi cliente -->
+    <script>
+        $('#modifica').click(async () => {
+            //Rendere tutti gli input del form customerInfo modificabili
+            //Cambiare il valore del bottone modifica in submit 
+            //Funzione di submit associata al bottone
+            $('#customerInfo').
+            
+
+            //Forse serve un'altro bottone per retrocedere da questa procedura ?? 
+            //Oppure basta lasciare il submit che se i dati sono uguli non posta ?? 
+        })
+    </script>
+
+    <!-- Cancella il cliente solo se questi non ha mai avuto rent -->
+    <!-- TODO: Caso estremo di cancellazione con rent ? deve farlo solo il manager ???? -->
+    <script>
+            //Get se ha mai avuto un rent
+            //TRUE: alert il cliente ha almeno un rent non è possibile eliminarlo
+            //FALSE: elimino il cliente
+    </script>
+
+
+</footer>
+
+</html>
