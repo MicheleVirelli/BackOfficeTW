@@ -62,9 +62,44 @@
             $('#city').attr('value', `${customer.address.city}`)
             $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
 
-            //Carico le rent associate
-            const rentals = await api.customers.getRentals(idCustomer)
-            console.log(rentals)
+            //Prendo le rent
+            let rentals = (await api.customers.getRentals(idCustomer)).data
+            let pendingRentals = []
+            let openRentals = []
+            let closeRentals = []
+
+            rentals.forEach(rent => {
+                if(rent.state == 'pending')
+                    pendingRentals.push(rent)
+                if(rent.state == 'open')
+                    openRentals.push(rent)
+                if(rent.state == 'close')
+                    closeRentals.push(rent)
+            });
+
+            console.log(pendingRentals)
+            console.log(openRentals)
+            console.log(closeRentals)
+
+            //TODO: formattare le date in modo umano
+            pendingRentals.forEach(rent => {
+                $('#rentInfo').append(`
+                <div class="card">
+                    <h4>Rent pending !!</h4>
+                    <p>Il rent deve partire il ${rent.startDate}</p>
+                </div>
+                `)
+            });
+
+            openRentals.forEach(rent => {
+                $('#rentInfo').append(`
+                <div class="card">
+                    <h4>Rent aperto !!</h4>
+                    <p>Il rent deve partire il ${rent.startDate}</p>
+                    <p>E deve finire il ${rent.expectedEndDate}</p>
+                </div>
+                `)
+            });
 
         })
     </script>
@@ -102,9 +137,9 @@
                 </form>
 
                 <div id="buttonPanel">
-                    <button id="modifica">Modifica</button>
+                    <button id="modify" value="Modifica">Modify</button>
 
-                    <button id="elimina">Elimina</button>
+                    <button id="delete">Delete</button>
                 </div>
                 <!-- Informazioni su rent pending & aperti -->
                 <!-- Informazioni tutti i rent effettuati  -->
@@ -119,26 +154,53 @@
 <footer>
     <!-- Modifica Campi cliente -->
     <script>
-        $('#modifica').click(async () => {
-            //Rendere tutti gli input del form customerInfo modificabili
-            //Cambiare il valore del bottone modifica in submit 
-            //Funzione di submit associata al bottone
-            
+        //Stato iniziale bottoni
+        let state = true
 
-            //Forse serve un'altro bottone per retrocedere da questa procedura ?? 
-            //Oppure basta lasciare il submit che se i dati sono uguli non posta ?? 
+
+        $('#modify').click(async () => {
+            if (state) {
+                $('#username').removeAttr('disabled')
+                $('#firstname').removeAttr('disabled')
+                $('#lastname').removeAttr('disabled')
+                $('#dateOfBirth').removeAttr('disabled')
+                $('#country').removeAttr('disabled')
+                $('#city').removeAttr('disabled')
+                $('#streetAddress').removeAttr('disabled')
+
+                state = false
+                addSubmit()
+            }
+            else {
+                $('#username').attr('disabled', 'disabled')
+                $('#firstname').attr('disabled', 'disabled')
+                $('#lastname').attr('disabled', 'disabled')
+                $('#dateOfBirth').attr('disabled', 'disabled')
+                $('#country').attr('disabled', 'disabled')
+                $('#city').attr('disabled', 'disabled')
+                $('#streetAddress').attr('disabled', 'disabled')
+
+                state = true
+                $('#submit').remove()
+            }
+
         })
+
+        //Devo aggiungere un bottone per fare il submit
+        function addSubmit() {
+            $('#buttonPanel').append(`
+        <button id="submit">Submit</button>`)
+        }
+    
+        $('#submit').click(() => {
+            console.log('Fare una patch della submit')
+        })
+
+        $('#delete').click(async () => {
+        })
+
+
     </script>
-
-    <!-- Cancella il cliente solo se questi non ha mai avuto rent -->
-    <!-- TODO: Caso estremo di cancellazione con rent ? deve farlo solo il manager ???? -->
-    <script>
-            //Get se ha mai avuto un rent
-            //TRUE: alert il cliente ha almeno un rent non è possibile eliminarlo
-            //FALSE: elimino il cliente
-    </script>
-
-
 </footer>
 
 </html>
