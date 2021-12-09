@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/grid.css">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+</head>
+
+<body>
+    <div class="containero">
+        <div id="sidebar" class="nav-link">
+        </div>
+        <div id="body">
+            <div id="header">
+            </div>
+            <div id="content">
+                <h2>Page for the management of the products</h2>
+                <button id="searchP">Search products</button><br><br>
+                <button id="addP">Add a product</button>
+
+                <div id="showPanel"></div>
+
+            </div>
+        </div>
+        <div>
+</body>
+<footer>
+    <script>
+        //Import della sidebar e dell'header
+        $('document').ready(() => {
+            $('#sidebar').load('../templates/sidebar.html')
+            $('#header').load('../templates/header.html')
+        })
+
+        //TODO: trova prodotti solo se digiti correttamente il nome
+        //Io voglio che li aggiorni ogni volta che inserisco un carattere
+        $('#searchP').click(() => {
+            $('#showPanel').children('div').remove()
+
+            //Mostra una searchBar nello show panel
+            $('#showPanel').append(`
+            <div>
+            <form id="searchProduct">
+                <input class="form-control me-2" type="search" placeholder="Search Products by name" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <div id="searchPanel"></div>
+            </div>
+            `)
+
+            $('#searchProduct').on('submit', async (event) => {
+                event.preventDefault()
+                //Rimuove le ricerche precedenti
+                $('#searchPanel').children('div').remove()
+
+                let query = { name: $('#searchProduct').children('input').val() }
+
+                const data = (await api.products.get(query)).data.docs
+
+                data.forEach(async element => {
+
+                    $('#searchPanel').append(`
+                    <div class="card">
+                        <h3>${element.name}</h3><br>
+                        <h5>${element.category}, ${element.subcategory}</h5><br>
+                        <p>${element.description}</p><br>
+                        <p>${element.tags}</p><br>
+                        <br><br>
+                        
+                    </div>
+                    `)
+
+                });
+                
+            })
+        })
+
+        function getCreateFormData() {
+            let data = {
+                name: $('#createForm').children('#name').val(),
+                description: $('#createForm').children('#description').val(),
+                category: $('#createForm').children('#category').val(),
+                subcategory: $('#createForm').children('#subcategory').val(),
+                //TODO: pensare alla gestione di IMAGE TAGS ed gli ALTPRODUCTS
+                tags: $('#createForm').children('#tag').val() || [],
+                altproducts: $('#createForm').children('#altproducts').val() || [],
+            }
+            return data
+        }
+
+        //Spazio per fare la post di un prodotto
+        $('#addP').click(() => {
+            $('#showPanel').children('div').remove()
+
+            //Mostra una searchBar nello show panel
+            $('#showPanel').append(`
+            <div>
+            <form id="createForm">
+                <label for="name">Product Name: </label><br>
+                <input id="name" type="text"><br>
+                <label for="description">Product Description: </label><br>
+                <textarea id="description" rows="2" cols="25"></textarea><br>
+                <label for="image">Product Image: </label><br>
+                <input id="image" type="file"><br>
+                <label for="category">Products Category: </label><br>
+                <input id="category" type="text"><br>
+                <label for="subcategory">Products Subcategory: </label><br>
+                <input id="subcategory" type="text"><br>
+                <label for="tags">Products Tag: </label><br>
+                <input id="tags" disabled="disabled" type="text"><br>
+                <label for="altproducts">Alternative to the Products: </label><br>
+                <input id="altproducts" disabled="disabled" type="text"><br>
+            
+
+                <button type="submit"> Create Products</button>
+            </form>
+            <div>
+            `)
+
+            $("#createForm").on("submit", async function (event) {
+                event.preventDefault()
+                let product = getCreateFormData()
+                console.log(product)
+
+                //Ora devo fare una post !!
+                const response  = await api.products.post(product)
+                console.log(response)
+            });
+
+        })
+
+    </script>
+</footer>
+
+</html>

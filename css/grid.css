@@ -10,7 +10,6 @@ body {
     grid-template-rows: 1fr;
     padding: 0;
     margin: 0;
-    overflow: hidden;
     background-color: rgb(78, 87, 84);
   }
   
@@ -46,13 +45,13 @@ body {
     color: #daa520;
   }
   
-  .body {
+  #body {
     display: grid;
     grid-template-rows: 1fr 7fr;
     overflow: hidden;
   }
   
-  .content {
+  #content {
     overflow-y: scroll;
     padding: 20px;
     background-color: rgb(187, 179, 179);
