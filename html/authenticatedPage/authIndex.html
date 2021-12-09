@@ -41,25 +41,16 @@
     <div class="containero">
 
         <div id="sidebar" class="nav-link">
-            <!-- Caricato con jquery -->
         </div>
-
         <div class="body">
-
-            <div class="header">
-                <!-- Caricato con jquery -->
+            <div id="header">
             </div>
-
-            <div class="content">
-
+            <div id="content">
                 <div>
                     <h1>Stessa pagina però da autenticato</h1>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <!--login modal-->
@@ -111,13 +102,8 @@
         //Import della sidebar 
         $('document').ready(() => {
             $('#sidebar').load('../templates/sidebar.html')
-        })
-
-        //Import del header
-        $('document').ready(() => {
             $('#header').load('../templates/header.html')
         })
-
     </script>
 </footer>
 
