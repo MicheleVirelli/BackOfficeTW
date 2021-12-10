@@ -35,6 +35,12 @@
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
+    <script src="../../js/helper.js"></script>
+
+    <script>
+
+    </script>
+
 </head>
 
 <body>
@@ -45,6 +51,28 @@
             <div id="header">
             </div>
             <div id="content">
+                <!-- 
+                    Il prodotto noleggiato
+                    Il nome del cliente e qualche info base sul personaggio
+                    Lo state del noleggio
+                    
+                    La visualizzasione cambia in base allo state ? => MEGLIO DI NO 
+
+                    Quindi vedo da che data a che data andava il rent
+                    Se questo è finito quando ci si aspettava 
+
+                     !!! Questa parte cambia in base allo state !!!
+                    Voglio vedere chi è l'impiegato se è pendig
+                    La bill se è chiuso, la price estimation se è aperto
+                -->
+
+                <div id="unitInfo"></div>
+                <div id="clientInfo"></div>
+                <div id="stateInfo"></div>
+                <div id="dateInfo"></div>
+                <div id="employeeInfo"></div>
+                <div id="priceInfo"></div>
+
             </div>
         </div>
         <div>
@@ -57,6 +85,78 @@
             $('#header').load('../templates/header.html')
         })
 
+        $('document').ready(async () => {
+            //get dello strumento
+            const idRental = localStorage.getItem('idRental')
+            let query = { populate: true }
+
+            const rental = (await api.rentals.getSingle(idRental, query)).data
+            console.log(rental)
+
+            //Caricamento dati nei campi 
+            //TODO: rendere campi cliccabili per vedere il prodotto/cliente
+            $('#unitInfo').append(`
+                <h3>Product name: ${rental.unit.name}</h3>
+            `)
+            $('#clientInfo').append(`
+                <h3>Customer: ${rental.customer.firstname}, ${rental.customer.lastname}</h3>
+            `)
+            $('#stateInfo').append(`
+                <h3>State: ${rental.state}</h3>
+            `)
+
+            let prenotationDate = (new Date(rental.prenotationDate)).toString()
+            let startDate = (new Date(rental.startDate)).toString()
+            let expectedEndDate = (new Date(rental.expectedEndDate)).toString()
+            let end = prenotationDate.indexOf("GMT")
+
+            prenotationDate = prenotationDate.substring(0, end)
+            startDate = startDate.substring(0, end)
+            expectedEndDate = expectedEndDate.substring(0, end)
+
+            //TODO: migliorare la visualizzazione con un calendario
+            switch (rental.state) {
+                case 'pending':
+                    //carico la dateInfo e la price Info
+                    $('#dateInfo').append(`
+                        <h5>Date information</h5>
+                        <p>Reservation made: ${prenotationDate}</p>
+                        <p>Start date of the rental:  ${startDate}</p>
+                        <p>End date of the rental:  ${expectedEndDate}</p>
+                    `)
+                    //Aggiungere le informazioni sulla priceEstimation
+                    break;
+                case 'open':
+                    $('#dateInfo').append(`
+                        <h5>Date information</h5>
+                        <p>Reservation made: ${prenotationDate}</p>
+                        <p>Start date of the rental:  ${startDate}</p>
+                        <p>End date of the rental:  ${expectedEndDate}</p>
+                    `)
+
+                    $('#employeeInfo').append(`
+                        <h5>Employee information</h5>
+                        <p>Name: ${rental.employee.firstname}, ${rental.employee.lastname}</p>
+                    `)
+                    //Aggiungere le informazioni sulla price Esitmation
+                    break;
+                case 'close':
+                    $('#dateInfo').append(`
+                        <h5>Date information</h5>
+                        <p>Reservation made: ${prenotationDate}</p>
+                        <p>Start date of the rental:  ${startDate}</p>
+                        <p>End date of the rental:  ${expectedEndDate}</p>
+                    `)
+                    //Aggiungere le informazioni sulla bill
+                    break;
+
+                default:
+                    break;
+            }
+
+
+
+        })
     </script>
 </footer>
 

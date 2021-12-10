@@ -57,6 +57,45 @@
             $('#header').load('../templates/header.html')
         })
 
+        //Go to single rental page
+        function rentalPage(id){
+            localStorage.setItem('idRental', id)
+
+            document.location.href = "./rentalPage.html"
+        }
+        
+
+        //Get all rentals
+        $('document').ready(async () => {
+            let query = {
+                limit: 20,
+                populate: true,
+            }
+            const rentals = (await api.rentals.get(query)).data.docs
+            
+            //TODO: Posso fare veramente un sacco di cose qui ...
+            rentals.forEach(rental => {
+
+                let value 
+                if(rental.state == 'pending')
+                    value = 'Prenotation Date: ' + rental.prenotationDate
+                if(rental.state == 'open')
+                    value = 'Expected end Date: ' + rental.expectedEndDate
+                if(rental.state == 'close')
+                    value = 'End Date: ' + rental.expectedEndDate
+
+                $('#content').append(`
+                <div class="card mb-3" onclick="rentalPage('${rental._id}')">
+                    <h4>${rental.unit.name} / ${rental.customer.lastname}</h4>
+                    <p>${rental.state}</p>
+                    <p>${value}</p>
+                </div>
+                `)
+            });
+
+
+        })
+
     </script>
 </footer>
 
