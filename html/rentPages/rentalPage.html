@@ -73,10 +73,71 @@
                 <div id="employeeInfo"></div>
                 <div id="priceInfo"></div>
 
+                <div id="buttonPanel">
+                    <button id="modify" data-bs-toggle="modal" data-bs-target="#rentalModal">Modifica</button>
+                    <button id="delete">Cancella</button>
+                </div>
+
             </div>
         </div>
         <div>
+
+            <div class="modal fade" id="rentalModal" tabindex="-1" aria-labelledby="rentalModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!--header-->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="loginModalLabel">Modifica i campi del Rent</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!--body-->
+                        <div class="modal-body">
+                            <form id="loginForm">
+                                <div class="mb-3 mt-3">
+                                    <label for="customer" class="form-label">Customer: </label>
+                                    <input type="text" class="form-control" id="customer">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="employee" class="form-label">Employee: </label>
+                                    <input type="text" class="form-control" id="employee">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="state" class="form-label">Rental State: </label>
+                                    <input type="text" class="form-control" id="state">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="prenotationDate" class="form-label">Prenotation Date: </label>
+                                    <input type="date" class="form-control" id="prenotationDate">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="startDate" class="form-label">Start Date: </label>
+                                    <input type="date" class="form-control" id="startDate">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="expectedEndDate" class="form-label">Expected End Date: </label>
+                                    <input type="date" class="form-control" id="expectedEndDate">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="endDate" class="form-label">End Date: </label>
+                                    <input type="date" class="form-control" id="endDate">
+                                </div>
+                                <div>
+                                    <!-- TODO: Aggiungere un campo che ricarichi una priceEstimation -->
+                                </div>
+
+                            </form>
+                        </div>
+                        <!--footer-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="modifyRental" type="button" class="btn btn-primary">Modify Rental</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 </body>
+
 <footer>
     <script>
         //Import della sidebar e dell'header
@@ -154,8 +215,65 @@
                     break;
             }
 
+            //Modale che permette la riceca di informazioni per completare il rent
 
+            //Gestione del bottone del cancella
+        })
 
+        function getModifyRentalForm() {
+            let rental = {
+                customer: '',
+                employee: '',
+                state: '',
+                prenotationDate: '',
+                startDate: '',
+                expectedEndDate: '',
+                endDate: '',
+                product: '',
+                unit: '',
+            }
+
+            rental.customer = $('#customer').val()
+            rental.employee = $('#employee').val()
+            rental.state = $('#state').val()
+            rental.prenotationDate = $('#prenotationDate').val() + 'T00:00:00.000Z'
+            rental.startDate = $('#startDate').val() + 'T00:00:00.000Z'
+            rental.expectedEndDate = $('#expectedEndDate').val() + 'T00:00:00.000Z'
+            rental.endDate = $('#endDate').val() + 'T00:00:00.000Z'
+
+            return rental
+        }
+
+        $('#modifyRental').on('click', async(event) => {
+            event.preventDefault()
+
+            const oldRental = localStorage.getItem('idRental')
+            //TODO: Rimuovere i campi riempiti precedentemente
+            //cleanModifyRentalForm()
+            //TODO: Prendere i dati dal form  
+            let rental = getModifyRentalForm()
+            let query = {
+                name: ''
+            }
+            
+            query.firstname = rental.customer
+            rental.customer = await api.customers.get(query)
+            console.log(rental.customer)
+
+            query.firstname = rental.employee
+            rental.employee = await api.employees.get(query)
+            console.log(rental.employee)
+
+            //TODO: Non è possibile cambiare le unit
+            // query.name = rental.product
+            // rental.unit = await api.products.get(query)
+
+            rental.unit = oldRental.unit
+            
+            //TODO: Fare una patch
+            
+            //const response = await api.rentals.patchSingle(oldRental, rental)
+            console.log(response)
         })
     </script>
 </footer>
