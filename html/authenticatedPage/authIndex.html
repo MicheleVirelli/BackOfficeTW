@@ -2,6 +2,7 @@
 <html lang="it">
 
 <head>
+
     <title>ThePrivilege employee stuff</title>
 
     <!-- Required meta tags -->
@@ -37,13 +38,15 @@
 
     <!--Se il token non è corretto => ti mando alla pagina principale -->
     <!-- TODO: Non mi deve flashare la pagina lo deve fare prima che carichi il documento -->
-    <script>
-        $('document').ready(async () => {
+    <script>    
+        async function checkToken() {
             const logged = await config.loggedIn()
-            console.log('controllo')
             if (logged == false)
                 document.location.href = "../../index.html"
-        })  
+        }
+        checkToken()
+        
+    
     </script>
 
 </head>
