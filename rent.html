@@ -105,7 +105,11 @@
                 <input class="form-check-input" type="checkbox" name="remember"> Remember me
               </label>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <!-- TODO: pagina di registrazione -->
+            <div class="form-check mb-3">
+              <a href="#">Non sei ancora registrato ?</a>
+            </div>
+            <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <!--footer-->
@@ -115,7 +119,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 
 </body>
 <footer>
@@ -144,13 +148,13 @@
       //TODO: Migliorare la card dei prodotti e provare a fare uno scorrimento orizontale
       $('#productsAvailable').children('div').remove()
 
-      products.length == 0 ? 
+      products.length == 0 ?
         $('#productsAvailable').append(`
         <div class="card mt-3">
         <h4> Non ci sono prodotti disponibili o il prodotto cercato non esiste </h4>
         </div>
         `)
-      :
+        :
         products.forEach(product => {
           $('#productsAvailable').append(`
           <div class="card mt-3">
@@ -160,6 +164,27 @@
           </div>`)
         })
     })
+
+    function serializeFormJson(form) {
+      return Array.from(form.querySelectorAll('input, select, textarea'))
+        .filter(element => element.name)
+        .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+    }
+
+    $('#loginsubmit').click(async function (event) {
+      event.preventDefault()
+
+      const data = serializeFormJson(loginForm);
+
+      const response = await api.employees.login(data);
+
+      if (response.status == 200)
+        config.setToken(response.headers.authorization, data.remember)
+      console.log(config.getToken())
+      //1) inidirizzo di base 
+      //2) solo server side 
+      document.location.href = "/html/authenticatedPage/authIndex.html"
+    });
 
   </script>
 </footer>
