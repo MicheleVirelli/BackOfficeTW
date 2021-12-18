@@ -45,7 +45,7 @@
             $('#sidebar').load('../templates/sidebar.html')
 
             //Importo l'header
-            $('#header').load('../templates/header.html')
+            $('#header').load('../templates/loggedHeader.html')
 
             const idCustomer = sessionStorage.getItem('idCustomer')
             let customer = await api.customers.getSingle(idCustomer)
@@ -145,7 +145,6 @@
                 <!-- Informazioni tutti i rent effettuati  -->
                 <!-- Info sui prodotti che cerca più frequentemente  ?? -->
                 <div id="rentInfo"></div>
-
             </div>
         </div>
 
