@@ -63,23 +63,25 @@
             $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
 
             //Prendo le rent
-            let rentals = (await api.customers.getRentals(idCustomer)).data
+            let rentals = (await api.customers.getRentals(idCustomer)).data.docs
+            console.log(rentals)
+
             let pendingRentals = []
             let openRentals = []
             let closeRentals = []
 
             rentals.forEach(rent => {
-                if(rent.state == 'pending')
+                if (rent.state == 'pending')
                     pendingRentals.push(rent)
-                if(rent.state == 'open')
+                if (rent.state == 'open')
                     openRentals.push(rent)
-                if(rent.state == 'close')
+                if (rent.state == 'close')
                     closeRentals.push(rent)
             });
 
-            console.log(pendingRentals)
-            console.log(openRentals)
-            console.log(closeRentals)
+            // console.log(pendingRentals)
+            // console.log(openRentals)
+            // console.log(closeRentals)
 
             //TODO: formattare le date in modo umano
             pendingRentals.forEach(rent => {
@@ -107,41 +109,44 @@
 </head>
 
 <body>
-
     <div class="containero">
-        <div id="sidebar" class="nav-link">
-        </div>
+        <div id="sidebar" class="nav-link"></div>
         <div id="body">
-            <div id="header">
-            </div>
-            <div id="content">
+            <div id="header"></div>
+            <div id="content" class="row">
 
                 <!-- TODO: Aggiungere uno stile più chiaro -->
-                <form id="customerInfo">
-                    <label for="username">Username: </label><br>
-                    <input id="username" disabled="disabled"><br>
-                    <label for="firstname">Name: </label><br>
-                    <input id="firstname" disabled="disabled"><br>
-                    <label for="lastname">Surname: </label><br>
-                    <input id="lastname" disabled="disabled"><br>
-                    <label for="dateOfBirth">Date of birth: </label><br>
-                    <input id="dateOfBirth" disabled="disabled"><br>
-                    <label for="country">Country: </label><br>
-                    <input id="country" disabled="disabled"><br>
-                    <label for="city">City: </label><br>
-                    <input id="city" disabled="disabled"><br>
-                    <label for="streetAddress">streetAddress: </label><br>
-                    <input id="streetAddress" disabled="disabled"><br>
-                </form>
+                <div class="col-sm-6">
+                    <form id="customerInfo">
+                        <label for="username">Username: </label><br>
+                        <input id="username" disabled="disabled"><br>
+                        <label for="firstname">Name: </label><br>
+                        <input id="firstname" disabled="disabled"><br>
+                        <label for="lastname">Surname: </label><br>
+                        <input id="lastname" disabled="disabled"><br>
+                        <label for="dateOfBirth">Date of birth: </label><br>
+                        <input id="dateOfBirth" disabled="disabled"><br>
+                        <label for="country">Country: </label><br>
+                        <input id="country" disabled="disabled"><br>
+                        <label for="city">City: </label><br>
+                        <input id="city" disabled="disabled"><br>
+                        <label for="streetAddress">streetAddress: </label><br>
+                        <input id="streetAddress" disabled="disabled"><br>
+                    </form>
 
-                <div id="buttonPanel">
-                    <button id="modify" value="Modifica">Modify</button>
-                    <button id="delete">Delete</button>
+                    <div id="buttonPanel">
+                        <button id="modify" value="Modifica">Modify</button>
+                        <button id="delete">Delete</button>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <p>Immagine del tipo</p>
+                    <p>Magari il form con la descrizione </p>
                 </div>
                 <!-- Informazioni su rent pending & aperti -->
                 <!-- Informazioni tutti i rent effettuati  -->
                 <!-- Info sui prodotti che cerca più frequentemente  ?? -->
-                <div id="rentInfo"></div>
+                <div id="rentInfo" class="row"></div>
             </div>
         </div>
 
@@ -184,7 +189,7 @@
             $('#buttonPanel').append(`
         <button id="submit">Submit</button>`)
         }
-    
+
         $('#submit').click(() => {
             console.log('Fare una patch della submit')
         })
