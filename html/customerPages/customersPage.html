@@ -43,7 +43,7 @@
         <div id="body">
             <div id="header">
             </div>
-            <div id="content">
+            <div id="content" class="row">
             </div>
         </div>
         <div>
@@ -66,22 +66,25 @@
 
         //Get e append di tutti i customers
         $('document').ready(async () => {
-            const pageLimit = 1
-            const response = await api.customers.get(pageLimit)
+            const customers = (await api.customers.get(0)).data.docs
 
-            console.log(response.data.docs)
-            //TODO: quali sono i dati interessanti da mostrare
-            response.data.docs.forEach(customer => {
+            console.log(customers)
+            //TODO: Uniformare la visualizzazione
+            customers.forEach(customer => {
                 $('#content').append(`
-                <div class="card noproducts cardmargin mb-3" onclick="customerPage('${customer._id}')">
-                    <h5>${customer.firstname}, ${customer.lastname}</h5>
-                    
+                <div class="col-sm-4">
+                <div class="card" onclick="customerPage('${customer._id}')" style=" margin-bottom:3em;">
+                <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
+                <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
+                <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0,10)}</div>
+                <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
+                </div>
                 </div>
                 `)
             });
         })
     </script>
-    
+
 </footer>
 
 </html>

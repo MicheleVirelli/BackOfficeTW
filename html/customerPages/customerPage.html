@@ -116,7 +116,6 @@
             </div>
             <div id="content">
 
-                <!-- Visualizzazione dati con form -->
                 <!-- TODO: Aggiungere uno stile più chiaro -->
                 <form id="customerInfo">
                     <label for="username">Username: </label><br>
@@ -133,12 +132,10 @@
                     <input id="city" disabled="disabled"><br>
                     <label for="streetAddress">streetAddress: </label><br>
                     <input id="streetAddress" disabled="disabled"><br>
-
                 </form>
 
                 <div id="buttonPanel">
                     <button id="modify" value="Modifica">Modify</button>
-
                     <button id="delete">Delete</button>
                 </div>
                 <!-- Informazioni su rent pending & aperti -->
@@ -151,11 +148,8 @@
 </body>
 
 <footer>
-    <!-- Modifica Campi cliente -->
     <script>
-        //Stato iniziale bottoni
         let state = true
-
 
         $('#modify').click(async () => {
             if (state) {
