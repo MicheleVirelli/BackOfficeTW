@@ -37,8 +37,14 @@
 
 
 
-    <!-- Controllo il prodotto nel sessionStorage -->
+    <!-- Carico il prodotto dal sessionStorage -->
     <script>
+        function rentalPage(id) {
+            localStorage.setItem('idRental', id)
+
+            document.location.href = "../rentPages/rentalPage.html"
+        }
+
         $('document').ready(async () => {
 
             //Importo la sidebar
@@ -50,6 +56,10 @@
             const idCustomer = sessionStorage.getItem('idCustomer')
             let customer = await api.customers.getSingle(idCustomer)
             customer = customer.data
+            let query = {
+                paginatorLimit: 0,
+                populate: true
+            }
 
             console.log(customer)
 
@@ -62,9 +72,14 @@
             $('#city').attr('value', `${customer.address.city}`)
             $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
 
+            //Aggiungo altre informazioni dell'utente
+            $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
+            $('#description').attr('value', `${customer.description}`)
+
             //Prendo le rent
-            let rentals = (await api.customers.getRentals(idCustomer)).data.docs
+            let rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
             console.log(rentals)
+
 
             let pendingRentals = []
             let openRentals = []
@@ -79,26 +94,39 @@
                     closeRentals.push(rent)
             });
 
-            // console.log(pendingRentals)
-            // console.log(openRentals)
-            // console.log(closeRentals)
-
+            if (openRentals.length > 0 || closeRentals > 0) {
+                $('#delete').addClass('disabled')
+                console.log('entrato')
+            }
             //TODO: formattare le date in modo umano
             pendingRentals.forEach(rent => {
-                $('#rentInfo').append(`
-                <div class="card">
-                    <h4>Rent pending !!</h4>
-                    <p>Il rent deve partire il ${rent.startDate}</p>
+                $('#pendingRent').append(`
+                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
+                    <h4>Rent pending di ${rent.unit.name} </h4>
+                    <p>Il rent deve partire il ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
                 </div>
                 `)
             });
 
             openRentals.forEach(rent => {
-                $('#rentInfo').append(`
-                <div class="card">
-                    <h4>Rent aperto !!</h4>
-                    <p>Il rent deve partire il ${rent.startDate}</p>
-                    <p>E deve finire il ${rent.expectedEndDate}</p>
+                $('#delete').attr('data-toggle', 'tooltip')
+                $('#delete').attr('title', 'horray')
+                $('#openRent').append(`
+                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
+                    <h4>Rent aperto di ${rent.unit.name}</h4>
+                    <p>Il rent è iniziato ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
+                    <p>E deve finire ${(new Date(rent.expectedEndDate)).toString().slice(0, 16)}</p>
+                </div>
+                `)
+            });
+
+            closeRentals.forEach(rent => {
+                $('#closeRent').append(`
+                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
+                    <h4>Rent chiuso di ${rent.unit.name}</h4>
+                    <p>Il rent è iniziato ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
+                    <p>La fine era prevista per ${(new Date(rent.expectedEndDate)).toString().slice(0, 16)}</p>
+                    <p>La consegne è effettivamente avvenuta ${(new Date(rent.endDate)).toString().slice(0, 16)}</p>
                 </div>
                 `)
             });
@@ -115,7 +143,14 @@
             <div id="header"></div>
             <div id="content" class="row">
 
-                <!-- TODO: Aggiungere uno stile più chiaro -->
+                <div class="col-sm-6 d-flex justify-content-end">
+                    <div class="row d-flex justify-content-end">
+                        <img class="img-fluid rounded" id="profilepicture" style="height: 18em; width: 18em;"><br>
+                        <textarea id="description" class="mt-3" disabled="disabled"></textarea>
+                    </div>
+
+                </div>
+
                 <div class="col-sm-6">
                     <form id="customerInfo">
                         <label for="username">Username: </label><br>
@@ -133,20 +168,25 @@
                         <label for="streetAddress">streetAddress: </label><br>
                         <input id="streetAddress" disabled="disabled"><br>
                     </form>
+                </div>
 
-                    <div id="buttonPanel">
-                        <button id="modify" value="Modifica">Modify</button>
-                        <button id="delete">Delete</button>
+                <div id="buttonPanel" class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-primary" id="modify" value="Modifica">Modify</button>
+                    <div style="width: 10em;"></div>
+                    <div id="wrapperdelete" data-toggle="tooltip" title="Non è possibile eliminare un cliente che ha noleggi aperti o che ne ha conclusi altri">
+                        <button type="button" class="btn btn-danger" id="delete" data-toggle="tooltip"
+                            title="wow">Delete</button>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <p>Immagine del tipo</p>
-                    <p>Magari il form con la descrizione </p>
-                </div>
+
                 <!-- Informazioni su rent pending & aperti -->
                 <!-- Informazioni tutti i rent effettuati  -->
                 <!-- Info sui prodotti che cerca più frequentemente  ?? -->
-                <div id="rentInfo" class="row"></div>
+                <div id="rentInfo" class="mt-5">
+                    <div id="pendingRent" class="row d-flex justify-content-evenly"></div>
+                    <div id="openRent" class="row d-flex justify-content-evenly"></div>
+                    <div id="closeRent" class="row d-flex justify-content-evenly"></div>
+                </div>
             </div>
         </div>
 
@@ -180,6 +220,7 @@
 
                 state = true
                 $('#submit').remove()
+                $('#otherspace').remove()
             }
 
         })
@@ -187,7 +228,8 @@
         //Devo aggiungere un bottone per fare il submit
         function addSubmit() {
             $('#buttonPanel').append(`
-        <button id="submit">Submit</button>`)
+        <div id="otherspace" style="width:10em;"></div>
+        <button id="submit" class="btn btn-warning" >Submit</button>`)
         }
 
         $('#submit').click(() => {
