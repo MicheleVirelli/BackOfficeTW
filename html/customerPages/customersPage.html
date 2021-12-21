@@ -18,7 +18,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/grid.css">
+    <link rel="stylesheet" href="../../css/random.css">
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -38,24 +38,15 @@
 
 <body>
     <div class="containero">
-        <div id="sidebar" class="nav-link">
-        </div>
-        <div id="body">
-            <div id="header">
-            </div>
-            <div id="content" class="row">
-            </div>
-        </div>
-        <div>
+            <div id="header"></div>
+            <div id="content"></div>
+    </div>
 </body>
 
 <footer>
     <script>
-        //Import della sidebar
-        $('#sidebar').load('../templates/sidebar.html')
-
         //Import del header
-        $('#header').load('../templates/loggedHeader.html')
+        $('#header').load('../templates/navHeader.html')
 
         //Funzione per andare in altre pagine
         function customerPage(id) {

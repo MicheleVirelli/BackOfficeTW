@@ -1,82 +1,9 @@
 body {
-  overflow: hidden;
-}
-
-.containero {
   height: 100vh;
   width: 100vw;
-  display: grid;
-  grid-template-columns: 7em 1fr;
-  grid-template-rows: 1fr;
-  padding: 0;
+  padding: 5em;
   margin: 0;
-  overflow: hidden;
-}
-
-#sidebar{
-  background-color: #111;
-  padding: 0;
-}
-
-#sidebar a:hover, a:active, a:focus{
-  color: #daa520;
-}
-
-#sidebar a {   
-  text-decoration: none;
-  font-size: 0.8em;
-  color: #daa520;
-  display: block;
-  transition: 0.3s;
-  padding-top: 2em;
-}
-
-#sidebar .btn, .btn:hover, .btn:active, .btn:focus{
-  color: #daa520;
-} 
-
-.header{
-  background-color: rgb(39, 37, 37);
-  overflow: hidden;
-}
-
-.header a{
-  text-decoration: none;
-  font-size: 0.8em;
-  color: #daa520;
-}
-
-.body {
-  display: grid;
-  grid-template-rows: 1fr 11fr;
-  overflow: hidden;
-}
-
-.content {
+  background-color: #7d7484;
   overflow-y: scroll;
-  padding: 20px;
-  background-color: rgb(187, 179, 179);
-}
-
-.cardmargin{
-  margin-top: 1em;
-  margin-bottom: 1em;
-  margin-left: 7em;
-  margin-right: 7em;
-  overflow: hidden;
-}
-
-.box {
-  width: 2em;
-  height: 2em;
-}
-.aviable{
-  background-color: green;
-}
-.unaviable{
-  background-color: red;
-}
-
-.myform{
-  background-color: white;
+  overflow-x: hidden;
 }

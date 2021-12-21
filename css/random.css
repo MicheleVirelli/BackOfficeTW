@@ -1,0 +1,36 @@
+body {
+  overflow: hidden;
+}
+
+.containero {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 7fr;  
+  padding: 0;
+  margin: 0;
+  background-color:#7D7484;
+}
+
+#header {
+  overflow:visible;
+  background-color: #330867;
+}
+#header a:hover, a:active, a:focus{
+  color: #FFB54C;
+}
+#header a {   
+  text-decoration: none;
+  font-size: 0.8em;
+  /* color: #FFB54C; */
+  color: #FFB54C;
+  display: block;
+}
+#content {
+  /* display: grid; */
+  overflow-y: scroll;
+  padding-left: 5em;
+  padding-right: 5em;
+  background-color: #7D7484;
+}

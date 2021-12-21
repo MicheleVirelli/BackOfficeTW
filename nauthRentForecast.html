@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+  <!-- Jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!-- Richiesta Api dal backend -->
+  <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+  <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+  <script>
+    $.get('html/templates/head.html', (data) => {
+      $('head').append(data)
+    })
+  </script>
+</head>
+
+<body>
+  <div id="content">
+    <form class="myform card row g-5 mt-3 ms-auto me-auto p-3 pt-0" style="background-color:#B2A8B9;">
+      <h1>Previsione di un noleggio</h1>
+      <h4>Inserisci il nome del prodotto e le date in cui lo stai cercando</h4>
+      <div class="row">
+        <!-- <div class="col-md-4">
+          <label>Nome Prodotto</label>
+          <input type="text" class="form-control is-invalid" id="productname" style="background-color: #FEE9FF;">
+          <div class="invalid-feedback">
+            Questo prodotto non esiste
+          </div> -->
+        <div class="input-group mb-3">
+          <span class="input-group-default">
+            <select class="form-select" id="field">
+              <option>Scegli in che campo cercare</option>
+              <option>Nome</option>
+              <option>Categoria</option>
+              <option>Sottocateoria</option>
+              <option>Tag</option>
+            </select>
+          </span>
+          <input id="productname" type="text" class="form-control" placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui">
+          <button id="submit" class="btn" type="submit"
+            style="background-color: #212529; color: white;">Cerca</button>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="input-group mb-3 col-md-4">
+          <span class="input-group-text" id="basic-addon1">Data inizio: </span>
+          <input type="date" class="form-control" id="productstartdate">
+        </div>
+        <div class="input-group mb-3 col-md-4">
+          <span class="input-group-text" id="basic-addon1">Data fine: </span>
+          <input type="date" class="form-control" id="productenddate">
+        </div>
+      </div>
+    </form>
+
+    <!-- Contenuto -->
+    <div id="productsAvailable"></div>
+
+
+
+    <!--login modal-->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!--header-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <!--body-->
+          <div class="modal-body">
+            <form id="loginForm">
+              <div class="mb-3 mt-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+              </div>
+              <div class="mb-3">
+                <label for="pwd" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
+              </div>
+              <div class="form-check mb-3">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                </label>
+              </div>
+              <!-- TODO: pagina di registrazione -->
+              <div class="form-check mb-3">
+                <a href="#">Non sei ancora registrato ?</a>
+              </div>
+              <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+          <!--footer-->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+<footer>
+  <script>
+    //TODO: Voglio cambiare il metodo di ricerca con uno che si aggiorna per carattere  
+    $('#submit').on('click', async (event) => {
+      event.preventDefault()  
+      const name = $('#productname').val()
+      const startDate = $('#productstartdate').val()
+      const endDate = $('#productenddate').val()
+      const date = new Date()
+
+      let query = {
+        name: name,
+      }
+
+      const products = (await api.products.get(query)).data.docs
+
+      console.log(products)
+
+      //TODO: Devo fare la ricerca che sia disponibile
+
+      //TODO: Migliorare la card dei prodotti e provare a fare uno scorrimento orizontale
+      $('#productsAvailable').children('div').remove()
+
+      products.length == 0 ?
+        $('#productsAvailable').append(`
+        <div class="card mt-3" style="background-color:#B2A8B9;">
+        <h4> Non ci sono prodotti disponibili o il prodotto cercato non esiste </h4>
+        </div>
+        `)
+        :
+        products.forEach(product => {
+          $('#productsAvailable').append(`
+          <div class="card mt-3" style="background-color:#B2A8B9;">
+          <h4>${product.name}</h4>
+          <p>Caricare l'immagine</p>
+          <p>Proporre il prezzo</p>
+          </div>`)
+        })
+    })
+
+  </script>
+
+  <script>
+    function serializeFormJson(form) {
+      return Array.from(form.querySelectorAll('input, select, textarea'))
+        .filter(element => element.name)
+        .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+    }
+
+    $('#loginsubmit').click(async function (event) {
+      event.preventDefault()
+
+      const data = serializeFormJson(loginForm);
+
+      const response = await api.employees.login(data);
+
+      if (response.status == 200)
+        config.setToken(response.headers.authorization, data.remember)
+      console.log(config.getToken())
+      //1) inidirizzo di base 
+      //2) solo server side 
+      document.location.href = "/html/authenticatedPage/authIndex.html"
+    });
+
+  </script>
+</footer>
+
+</html>

@@ -18,7 +18,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/grid.css">
+    <link rel="stylesheet" href="../../css/random.css">
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -48,10 +48,10 @@
         $('document').ready(async () => {
 
             //Importo la sidebar
-            $('#sidebar').load('../templates/sidebar.html')
+            //$('#sidebar').load('../templates/sidebar.html')
 
             //Importo l'header
-            $('#header').load('../templates/loggedHeader.html')
+            $('#header').load('../templates/navHeader.html')
 
             const idCustomer = sessionStorage.getItem('idCustomer')
             let customer = await api.customers.getSingle(idCustomer)
@@ -138,55 +138,53 @@
 
 <body>
     <div class="containero">
-        <div id="sidebar" class="nav-link"></div>
-        <div id="body">
-            <div id="header"></div>
-            <div id="content" class="row">
+        <div id="header"></div>
+        <div id="content" class="row">
 
-                <div class="col-sm-6 d-flex justify-content-end">
-                    <div class="row d-flex justify-content-end">
-                        <img class="img-fluid rounded" id="profilepicture" style="height: 18em; width: 18em;"><br>
-                        <textarea id="description" class="mt-3" disabled="disabled"></textarea>
-                    </div>
-
+            <div class="col-sm-6 d-flex justify-content-end">
+                <div class="row d-flex justify-content-end">
+                    <img class="img-fluid rounded" id="profilepicture" style="height: 18em; width: 18em;"><br>
+                    <textarea id="description" class="mt-3" disabled="disabled"></textarea>
                 </div>
 
-                <div class="col-sm-6">
-                    <form id="customerInfo">
-                        <label for="username">Username: </label><br>
-                        <input id="username" disabled="disabled"><br>
-                        <label for="firstname">Name: </label><br>
-                        <input id="firstname" disabled="disabled"><br>
-                        <label for="lastname">Surname: </label><br>
-                        <input id="lastname" disabled="disabled"><br>
-                        <label for="dateOfBirth">Date of birth: </label><br>
-                        <input id="dateOfBirth" disabled="disabled"><br>
-                        <label for="country">Country: </label><br>
-                        <input id="country" disabled="disabled"><br>
-                        <label for="city">City: </label><br>
-                        <input id="city" disabled="disabled"><br>
-                        <label for="streetAddress">streetAddress: </label><br>
-                        <input id="streetAddress" disabled="disabled"><br>
-                    </form>
-                </div>
+            </div>
 
-                <div id="buttonPanel" class="d-flex justify-content-center mt-3">
-                    <button type="button" class="btn btn-primary" id="modify" value="Modifica">Modify</button>
-                    <div style="width: 10em;"></div>
-                    <div id="wrapperdelete" data-toggle="tooltip" title="Non è possibile eliminare un cliente che ha noleggi aperti o che ne ha conclusi altri">
-                        <button type="button" class="btn btn-danger" id="delete" data-toggle="tooltip"
-                            title="wow">Delete</button>
-                    </div>
-                </div>
+            <div class="col-sm-6">
+                <form id="customerInfo">
+                    <label for="username">Username: </label><br>
+                    <input id="username" disabled="disabled"><br>
+                    <label for="firstname">Name: </label><br>
+                    <input id="firstname" disabled="disabled"><br>
+                    <label for="lastname">Surname: </label><br>
+                    <input id="lastname" disabled="disabled"><br>
+                    <label for="dateOfBirth">Date of birth: </label><br>
+                    <input id="dateOfBirth" disabled="disabled"><br>
+                    <label for="country">Country: </label><br>
+                    <input id="country" disabled="disabled"><br>
+                    <label for="city">City: </label><br>
+                    <input id="city" disabled="disabled"><br>
+                    <label for="streetAddress">streetAddress: </label><br>
+                    <input id="streetAddress" disabled="disabled"><br>
+                </form>
+            </div>
 
-                <!-- Informazioni su rent pending & aperti -->
-                <!-- Informazioni tutti i rent effettuati  -->
-                <!-- Info sui prodotti che cerca più frequentemente  ?? -->
-                <div id="rentInfo" class="mt-5">
-                    <div id="pendingRent" class="row d-flex justify-content-evenly"></div>
-                    <div id="openRent" class="row d-flex justify-content-evenly"></div>
-                    <div id="closeRent" class="row d-flex justify-content-evenly"></div>
+            <div id="buttonPanel" class="d-flex justify-content-center mt-3">
+                <button type="button" class="btn btn-primary" id="modify" value="Modifica">Modify</button>
+                <div style="width: 10em;"></div>
+                <div id="wrapperdelete" data-toggle="tooltip"
+                    title="Non è possibile eliminare un cliente che ha noleggi aperti o che ne ha conclusi altri">
+                    <button type="button" class="btn btn-danger" id="delete" data-toggle="tooltip"
+                        title="wow">Delete</button>
                 </div>
+            </div>
+
+            <!-- Informazioni su rent pending & aperti -->
+            <!-- Informazioni tutti i rent effettuati  -->
+            <!-- Info sui prodotti che cerca più frequentemente  ?? -->
+            <div id="rentInfo" class="mt-5">
+                <div id="pendingRent" class="row d-flex justify-content-evenly"></div>
+                <div id="openRent" class="row d-flex justify-content-evenly"></div>
+                <div id="closeRent" class="row d-flex justify-content-evenly"></div>
             </div>
         </div>
 

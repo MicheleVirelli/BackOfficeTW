@@ -1,25 +1,20 @@
-function clearifyDate(date) {
+function serializeFormJson(form) {
+    return Array.from(form.querySelectorAll('input, select, textarea'))
+      .filter(element => element.name)
+      .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
+  }
 
-    //TODO: implementare un controllo regex 
-    let data = {
-        year: '',
-        month: '',
-        day: '',
-        time: {
-            hour: '',
-            minute: '',
-            seconds: '',
-        }
-    }
+  $('#loginsubmit').click(async function (event) {
+    event.preventDefault()
 
-    data.year = date.slice(0,4)
-    data.month = date.slice(5,7)
-    data.day = date.slice(8,10)
+    const data = serializeFormJson(loginForm);
 
-    const start = date.indexOf('T') +1 
-    data.time.hour = date.slice(start, start + 2) 
-    data.time.minute = date.slice(start + 3, start + 5)
-    data.time.seconds = date.slice(start + 6, start + 8)
+    const response = await api.employees.login(data);
 
-    return data
-}
+    if (response.status == 200)
+      config.setToken(response.headers.authorization, data.remember)
+    console.log(config.getToken())
+    //1) inidirizzo di base 
+    //2) solo server side 
+    document.location.href = "/html/authenticatedPage/authIndex.html"
+  });

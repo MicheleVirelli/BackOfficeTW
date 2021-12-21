@@ -1,32 +1,13 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="it">
 
 <head>
-  <title>ThePrivilege employee stuff</title>
-
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-  <!-- Option 1: Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-
-  <!--Stylesheet -->
-  <link rel="stylesheet" href="../../css/random.css">
-
-  <!-- Jquery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-  <!-- Awesome CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  </script>
 
   <!-- Axios -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -35,39 +16,44 @@
   <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
   <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
-  <script>    
-    async function checkToken() {
-        const logged = await config.loggedIn()
-        if (logged)
-            document.location.href = "html/authenticatedPage/authIndex.html"
-    }
-    checkToken()
-</script>
+  <script>
+    $.get('html/templates/head.html', (data) => {
+      $('head').append(data)
+    })
+  </script>
 </head>
 
 <body>
-  <div class="containero">
-      <div id="header"></div>
-      <div id ="content">
-        <h1>Inventory</h1>
-        <table class="table">
-          <head>
-          <tr>
-            <th>Aviability</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Subcategory</th>
-            <th>Number of alternative Products</th>
-            <th>Number of units</th>
-          </tr>
-          </head>
-
-        </table>
-        <div id="productlist">
-        </div>
-
-      </div>
+  <div id="content">
+    <div class="d-flex justify-content-center">
+      <h1>Inventario</h1>
     </div>
+    <div>
+
+      <form class="d-flex">
+
+        <div class="input-group mb-3">
+          <span class="input-group-default" id="basic-addon1">
+            <select class="form-select" id="field">
+              <option>Scegli in che campo cercare</option>
+              <option>Nome</option>
+              <option>Categoria</option>
+              <option>Sottocateoria</option>
+              <option>Tag</option>
+            </select>
+          </span>
+          <input type="text" class="form-control" placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui"
+            aria-label="Username" aria-describedby="basic-addon1">
+          <button id="submit" class="btn" type="submit"
+            style="background-color: #212529; color: white; border-color:white;">Cerca</button>
+        </div>
+      </form>
+    </div>
+    <!-- TODO: La classe bootstrap non va!  perché si aspetta che ci sia tutto dentro !! -->
+
+    <div id="productlist">
+    </div>
+
   </div>
 
   <!--login modal-->
@@ -113,22 +99,35 @@
 
 </body>
 
-
 <footer>
   <script>
-
-    /* Import della sidebar e dell'header */
-    $('document').ready(() => {
-      $('#header').load('html/templates/nauthNav.html')
-    })
-
-    /* Caricamento dati inventario */
     const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
 
+    function productPage(id) {
+      localStorage.removeItem('idProduct')
+      localStorage.setItem("idProduct", id);
+      document.location.href = "nauthProductPage.html";
+    }
+
     $.get(urlproducts, (products) => {
+      $('#content').append(`
+      <table class="table table-stripped table-dark">
+      <header>
+        <tr>
+          <th>Disponibilità oggi</th>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>SottoCategoria</th>
+          <th>Prodotti alternativi associati</th>
+          <th>Unità associate</th>
+        </tr>
+      </header>
+
+    </table>
+    `)
       products.docs.forEach(element => {
         $('.table').append(`
-          <tr class="clickable-row" data-href="${element._id}">
+          <tr class="clickable-row" onclick="productPage('${element._id}')">
             <td>Boh</td>
             <td>${element.name}</td>
             <td>${element.category}</td>
@@ -137,31 +136,53 @@
           </tr>
         `)
       })
-      $('.clickable-row').on('click', () => { 
-        localStorage.setItem("idProduct", $('.clickable-row').attr('data-href'));
-        document.location.href = "/html/inventoryPages/productPage.html";
-      })
-
     })
 
-    // $.get(urlproducts, function (products) {
-    //   //TODO: non è accessibile
-    //   products.docs.forEach(element => {
-    //     $("#productlist").append(
-    //       `<a><div class="card noproducts cardmargin mb-3" onclick="productPage('${element._id}')">
-    //           <div class="card box aviable"></div>
-    //           <nobr class="pinfo">${element.name} ,${element.category}, ${element.subcategory}, n° ${element.altproducts.length}, ${element.tags}</nobr>
-    //           </div></a>`);
-    //   });
-    // });
 
-    // /* Setto l'id del prodotto in cui devo andare a vedere la pagina */
-    // function productPage(id) {
-    //   localStorage.setItem("idProduct", id);
+    //TODO: Implementare la ricerca carattere per carattere ...
+    $('#submit').on('click', async (event) => {
+      event.preventDefault()
 
-    //   document.location.href = "/html/inventoryPages/productPage.html";
-    // }
+      $('.table').remove()
 
+      $('#content').append(`
+      <table class="table table-stripped table-dark">
+      <header>
+        <tr>
+          <th>Disponibilità oggi</th>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>SottoCategoria</th>
+          <th>Prodotti alternativi associati</th>
+          <th>Unità associate</th>
+        </tr>
+      </header>
+
+    </table>
+    `)
+
+      let query = {
+        limit: 0,
+        name: $('#name').val()
+      }
+
+      const products = (await api.products.get(query)).data.docs
+
+      products.forEach(element => {
+        $('.table').append(`
+          <tr class="clickable-row" onclick="productPage('${element._id}')"">
+            <td>Boh</td>
+            <td>${element.name}</td>
+            <td>${element.category}</td>
+            <td>${element.subcategory}</td>
+            <td>${element.altproducts.length}</td>
+          </tr>
+        `)
+      })
+    })
+  </script>
+
+  <script>
     function serializeFormJson(form) {
       return Array.from(form.querySelectorAll('input, select, textarea'))
         .filter(element => element.name)
