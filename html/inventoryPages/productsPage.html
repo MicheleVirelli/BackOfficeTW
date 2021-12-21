@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
     <title>ThePrivilege employee stuff</title>
@@ -8,9 +8,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -18,10 +22,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/grid.css">
-
-    <!-- Jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
 
     <!-- Awesome CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -35,48 +36,137 @@
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
+    </script>
+
+    <script>
+        async function checkToken() {
+            const logged = await config.loggedIn()
+            if (logged == false)
+                document.location.href = "../../nauthHome.html"
+        }
+        checkToken()
+    </script>
+
 </head>
 
 <body>
-    <div class="containero">
-        <div id="sidebar" class="nav-link">
-        </div>
-        <div id="body">
-            <div id="header">
+    <div id="content">
+        <form class="d-flex">
+
+            <div class="input-group mb-3">
+                <span class="input-group-default" id="basic-addon1">
+                    <select class="form-select" id="field">
+                        <option>Scegli in che campo cercare</option>
+                        <option>Nome</option>
+                        <option>Categoria</option>
+                        <option>Sottocateoria</option>
+                        <option>Tag</option>
+                    </select>
+                </span>
+                <input type="text" class="form-control"
+                    placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui" aria-label="Username"
+                    aria-describedby="basic-addon1" id="name">
+                <button id="submit" class="btn" type="submit"
+                    style="background-color: #212529; color: white;">Cerca</button>
             </div>
-            <div id="content">
-            </div>
-        </div>
-        <div>
+        </form>
+    </div>
 </body>
 
 <footer>
     <script>
-        //Import della sidebar e dell'header
-        $('document').ready(() => {
-            $('#sidebar').load('../templates/sidebar.html')
-            $('#header').load('../templates/loggedHeader.html')
-        })
+        const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
 
         function productPage(id) {
+            localStorage.removeItem('idProduct')
             localStorage.setItem("idProduct", id);
-
-            document.location.href = "/html/inventoryPages/productPage.html";
+            document.location.href = "productPage.html";
         }
-        
 
-        //Import dei prodotti
-        $('document').ready(async () => {
-            const products = (await api.products.get(1)).data.docs
+        $.get(urlproducts, (products) => {
+            $('#content').append(`
+          <table class="table table-stripped table-dark pb-3">
+          <header>
+            <tr>
+              <th>Disponibilità oggi</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>SottoCategoria</th>
+              <th>Prodotti alternativi associati</th>
+              <th>Unità associate</th>
+            </tr>
+          </header>
+    
+        </table>
+        `)
+            products.docs.forEach(element => {
+                $('.table').append(`
+              <tr class="clickable-row" onclick="productPage('${element._id}')">
+                <td>
+                    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#007bff"></rect>
+                    </svg>
+                </td>
+                <td>${element.name}</td>
+                <td>${element.category}</td>
+                <td>${element.subcategory}</td>
+                <td>${element.altproducts.length}</td>
+              </tr>
+            `)
+            })
+        })
 
-            products.forEach(product => {
-                $("#content").append(
-                    `<a><div class="card noproducts cardmargin mb-3" onclick="productPage('${product._id}')">
-              <div class="card box aviable"></div>
-              <nobr class="pinfo">${product.name} ,${product.category}, ${product.subcategory}, n° ${product.altproducts.length}, ${product.tags}</nobr>
-              </div></a>`);
-            });
+
+        //TODO: Implementare la ricerca carattere per carattere ...
+        $('#submit').on('click', async (event) => {
+            event.preventDefault()
+
+            $('.table').remove()
+
+                $('#content').append(`
+          <table class="table table-stripped table-dark">
+          <header>
+            <tr>
+              <th>Disponibilità oggi</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>SottoCategoria</th>
+              <th>Prodotti alternativi associati</th>
+              <th>Unità associate</th>
+            </tr>
+          </header>
+    
+        </table>
+        `)
+
+            let query = {
+                limit: 0,
+                name: $('#name').val()
+            }
+
+            const products = (await api.products.get(query)).data.docs
+
             console.log(products)
+
+            products.forEach(element => {
+                $('.table').append(`
+              <tr class="clickable-row" onclick="productPage('${element._id}')"">
+                <td>Boh</td>
+                <td>${element.name}</td>
+                <td>${element.category}</td>
+                <td>${element.subcategory}</td>
+                <td>${element.altproducts.length}</td>
+              </tr>
+            `)
+            })
         })
     </script>
 </footer>

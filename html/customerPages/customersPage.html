@@ -35,6 +35,9 @@
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
     <script>
         $.get('../templates/authNav.html', (data) => {
             $('body').append(data)
@@ -77,7 +80,7 @@
                 <div class="card" onclick="customerPage('${customer._id}')" style=" margin-bottom:3em;">
                 <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
                 <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-                <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0,10)}</div>
+                <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0, 10)}</div>
                 <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
                 </div>
                 </div>

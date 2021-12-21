@@ -1,61 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Il resto dello head -->
-    <script> $('head').load('../templates/gridHead.html') </script>
-    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
+    </script>
+
+    <script>
+        async function checkToken() {
+            const logged = await config.loggedIn()
+            if (logged == false)
+                document.location.href = "../../nauthHome.html"
+        }
+        checkToken()
+    </script>
+
 </head>
 
 <body>
-    <div>
-        <h1>Stai vedendo la pagina di <span id="productname"></span></h1>
-        <h4><span id="productcategory"></span><span id="productsubcategory"></span></h4>
-    </div>
-
-    <img id="image"></img>
-
-    <div id="description" class="card">
-    </div>
-    <div>
-        <p>Sono disponibili x unita per questo prodotto</p>
-        <div id="productunit">
-        </div>
-    </div>
-    </div>
-    <div>
+    <div id="content">
+        <div id="basicinfo" class="row mb-4"></div>
+        <div id="unitinfo" class="row mb-4"></div>
+        <div id="altproductsinfo" class="row mb-4"></div>
+        <div id="rentinfo" class="row mb-4"></div>
     </div>
 </body>
+
 <footer>
     <script>
         const idProduct = localStorage.getItem("idProduct");
-        const urlProduct = `https://site202120.tw.cs.unibo.it/api/products/${idProduct}`;
-
-
-        async function Funzion() {
-            let product = await $.get(urlProduct);
-
-            $("#productname").append(`${product.name}`);
-            $('#productcategory').append(`${product.category}`);
-            $('#productsubcategory').append(`${product.subcategory}`);
-
-
-            $('#image').attr('scr', `https://site202120.tw.cs.unibo.it${product.image}`);
-
-            $('#description').append(`${product.description}`);
-
-            product.altproducts.forEach(element => {
-                $.get(`https://site202120.tw.cs.unibo.it/api/products/${element}`, function (data) {
-                    $('#altproduct').append(`${data.name} <br>`);
-                })
-            });
-        }
 
         $(document).ready(async function () {
-            await Funzion()
+            let query = {
+                populate: true 
+            }
+
+            const product = (await api.products.getSingle(idProduct,query)).data
+
+            //TODO: Risolvere il problema delle chiamate multiple
+            // let altproducts
+            // product.altproducts.forEach(idAltProducts => {
+            //     console.log(idAltProducts)
+            //     altproducts = (await api.products.getSingle(idAltProducts)).data
+            //     console.log(altproducts)
+            // });
+
+            //Informazioni base sul prodotto
+            $('#basicinfo').append(`
+            <div class="card" style="background-color:#B2A8B9;">
+                <div class="row g-0">
+                    <div class="col-md-4  pt-4">
+                        <img src="https://site202120.tw.cs.unibo.it/${product.image}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text">${product.category}, ${product.subcategory}</p>
+                            <p class="card-text">${product.description}</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `)
+
+            //TODO: Non si vede perché non si sono unit associate
+            //Informazioni sulle unità legate al prodotto
+            product.units == undefined ? 
+            $('#unitinfo').append(`
+            <div class="card mb-3" style="background-color:#B2A8B9;">
+                <div class="row g-0">
+                    <h4>Questo prodotto non ha ancora unità associate</h4>
+
+                </div>
+            </div>
+            `)
+            :
+            $('#unitinfo').append(`
+            <div class="card mb-3" style="background-color:#B2A8B9;">
+                <div class="row g-0">
+                    <h4>Questo prodotto ha ${product.units.length} associate</h4>
+                    <p>Aggiungere lo stato ed il prezzo per ognuna</p>
+                </div>  
+            </div>
+            `)
+
+            //Informazioni sui prodotti alternativi
+            $('#altproductsinfo').append(`
+            <div class="card mb-3" style="background-color:#B2A8B9;">
+                <p>Funzioni al momento non disponibili</p>
+            </div>
+            `)
+
+            //Informazioni sui rent
+            $('#rentinfo').append(`
+            <div class="card mb-3" style="background-color:#B2A8B9;">
+                <p>Funzioni al momento non disponibili</p>
+            </div>
+            `)
+
+            //TODO: Sarebbe bello vedere i kit legati al prodotto ...
+            
         })
     </script>
 </footer>
