@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor" class="bi bi-gem icon" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor" class="bi bi-gem icon"
+                viewBox="0 0 16 16">
                 <title>Gem</title>
                 <desc>An image of a cut diamond, it's a link for the home page</desc>
                 <path
@@ -17,25 +18,29 @@
         <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="# ">Home</a>
+                    <a class="nav-link" href="../authenticatedPage/authIndex.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Notifications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Switch account</a>
+                    <a class="nav-link" href="../customerPages/customersPage.html">Clienti</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown"
-                        aria-expanded="false">Settings</a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                        aria-expanded="false">Inventario</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="../inventoryPages/productsPage.html">Cerca un prodotto</a></li>
+                        <li><a class="dropdown-item" href="../inventoryPages/productsManagement.html">Gestisci i prodotti</a></li>
                     </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                        aria-expanded="false">Noleggi</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="../rentPages/rentalsPage.html">Cerca noleggio</a></li>
+                        <li><a class="dropdown-item" href="../rentPages/rentalForecast.html">Crea un noleggio</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout">LogOut</a>
                 </li>
             </ul>
             <form class="d-flex">
@@ -45,18 +50,8 @@
         </div>
     </div>
 </nav>
-<!-- LogOut ed altre opzioni per l'utente -->
-<!--<a href="#" id="logout">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-        class="bi bi-box-arrow-left" viewBox="0 0 16 16">
-        <path fill-rule="evenodd"
-            d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
-        <path fill-rule="evenodd"
-            d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
-    </svg>
-    <nobr>LogOut</nobr>
-</a>
-
+<!--Opzioni per l'utente -->
+<!--
  <div class="dropdown"> 
     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
         id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">

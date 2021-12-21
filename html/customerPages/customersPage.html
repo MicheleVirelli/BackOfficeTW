@@ -18,7 +18,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/random.css">
+    <link rel="stylesheet" href="../../css/style.css">
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -34,20 +34,30 @@
     <!-- Richiesta Api dal backend -->
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+    <script>
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
+    </script>
+
+    <script>
+        async function checkToken() {
+            const logged = await config.loggedIn()
+            if (logged == false)
+                document.location.href = "../../nauthHome.html"
+        }
+        checkToken()
+    </script>
+
 </head>
 
 <body>
-    <div class="containero">
-            <div id="header"></div>
-            <div id="content"></div>
-    </div>
+    <div id="content" class="row"></div>
 </body>
 
 <footer>
     <script>
-        //Import del header
-        $('#header').load('../templates/navHeader.html')
-
         //Funzione per andare in altre pagine
         function customerPage(id) {
             sessionStorage.setItem("idCustomer", id)
