@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <title>ThePrivilege employee stuff</title>
@@ -7,6 +7,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,10 +21,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/grid.css">
-
-    <!-- Jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
 
     <!-- Awesome CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -35,35 +35,27 @@
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
-</head>
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
+    </script>
 
 <body>
-    <div class="containero">
-        <div id="sidebar" class="nav-link">
-        </div>
-        <div id="body">
-            <div id="header">
-            </div>
-            <div id="content">
-            </div>
-        </div>
-        <div>
+    <div id="content">
+    </div>
 </body>
+
 <footer>
     <script>
-        //Import della sidebar e dell'header
-        $('document').ready(() => {
-            $('#sidebar').load('../templates/sidebar.html')
-            $('#header').load('../templates/loggedHeader.html')
-        })
-
-        //Go to single rental page
-        function rentalPage(id){
+        function rentalPage(id) {
             localStorage.setItem('idRental', id)
 
             document.location.href = "./rentalPage.html"
         }
-        
 
         //Get all rentals
         $('document').ready(async () => {
@@ -71,21 +63,23 @@
                 limit: 20,
                 populate: true,
             }
+
             const rentals = (await api.rentals.get(query)).data.docs
-            
+            console.log(rentals)
+
             //TODO: Posso fare veramente un sacco di cose qui ...
             rentals.forEach(rental => {
 
-                let value 
-                if(rental.state == 'pending')
+                let value
+                if (rental.state == 'pending')
                     value = 'Prenotation Date: ' + rental.prenotationDate
-                if(rental.state == 'open')
+                if (rental.state == 'open')
                     value = 'Expected end Date: ' + rental.expectedEndDate
-                if(rental.state == 'close')
+                if (rental.state == 'close')
                     value = 'End Date: ' + rental.expectedEndDate
 
                 $('#content').append(`
-                <div class="card mb-3" onclick="rentalPage('${rental._id}')">
+                <div class="card mb-3" onclick="rentalPage('${rental._id}')" style="background-color:#B2A8B9;">
                     <h4>${rental.unit.name} / ${rental.customer.lastname}</h4>
                     <p>${rental.state}</p>
                     <p>${value}</p>

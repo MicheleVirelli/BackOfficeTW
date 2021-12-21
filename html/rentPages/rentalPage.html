@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <title>ThePrivilege employee stuff</title>
@@ -7,6 +7,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,10 +21,7 @@
         crossorigin="anonymous"></script>
 
     <!--Stylesheet -->
-    <link rel="stylesheet" href="../../css/grid.css">
-
-    <!-- Jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
 
     <!-- Awesome CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -35,116 +35,103 @@
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
     <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
-    <script src="../../js/helper.js"></script>
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
 
     <script>
-
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
     </script>
 
-</head>
-
 <body>
-    <div class="containero">
-        <div id="sidebar" class="nav-link">
-        </div>
-        <div id="body">
-            <div id="header">
-            </div>
-            <div id="content">
-                <!-- 
-                    Il prodotto noleggiato
-                    Il nome del cliente e qualche info base sul personaggio
-                    Lo state del noleggio
-                    
-                    La visualizzasione cambia in base allo state ? => MEGLIO DI NO 
+    <div id="content">
+        <!-- 
+                Il prodotto noleggiato
+                Il nome del cliente e qualche info base sul personaggio
+                Lo state del noleggio
+                
+                La visualizzasione cambia in base allo state ? => MEGLIO DI NO 
 
-                    Quindi vedo da che data a che data andava il rent
-                    Se questo è finito quando ci si aspettava 
+                Quindi vedo da che data a che data andava il rent
+                Se questo è finito quando ci si aspettava 
 
-                     !!! Questa parte cambia in base allo state !!!
-                    Voglio vedere chi è l'impiegato se è pendig
-                    La bill se è chiuso, la price estimation se è aperto
+                 !!! Questa parte cambia in base allo state !!!
+                Voglio vedere chi è l'impiegato se è pendig
+                La bill se è chiuso, la price estimation se è aperto
                 -->
 
-                <div id="unitInfo"></div>
-                <div id="clientInfo"></div>
-                <div id="stateInfo"></div>
-                <div id="dateInfo"></div>
-                <div id="employeeInfo"></div>
-                <div id="priceInfo"></div>
+        <div id="unitInfo"></div>
+        <div id="clientInfo"></div>
+        <div id="stateInfo"></div>
+        <div id="dateInfo"></div>
+        <div id="employeeInfo"></div>
+        <div id="priceInfo"></div>
 
-                <div id="buttonPanel">
-                    <button id="modify" data-bs-toggle="modal" data-bs-target="#rentalModal">Modifica</button>
-                    <button id="delete">Cancella</button>
+        <div id="buttonPanel">
+            <button id="modify" data-bs-toggle="modal" data-bs-target="#rentalModal">Modifica</button>
+            <button id="delete">Cancella</button>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="rentalModal" tabindex="-1" aria-labelledby="rentalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--header-->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Modifica i campi del Rent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <!--body-->
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3 mt-3">
+                            <label for="customer" class="form-label">Customer: </label>
+                            <input type="text" class="form-control" id="customer">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="employee" class="form-label">Employee: </label>
+                            <input type="text" class="form-control" id="employee">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="state" class="form-label">Rental State: </label>
+                            <input type="text" class="form-control" id="state">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="prenotationDate" class="form-label">Prenotation Date: </label>
+                            <input type="date" class="form-control" id="prenotationDate">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="startDate" class="form-label">Start Date: </label>
+                            <input type="date" class="form-control" id="startDate">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="expectedEndDate" class="form-label">Expected End Date: </label>
+                            <input type="date" class="form-control" id="expectedEndDate">
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="endDate" class="form-label">End Date: </label>
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+                        <div>
+                            <!-- TODO: Aggiungere un campo che ricarichi una priceEstimation -->
+                        </div>
 
+                    </form>
+                </div>
+                <!--footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="modifyRental" type="button" class="btn btn-primary">Modify Rental</button>
+                </div>
             </div>
         </div>
-        <div>
-
-            <div class="modal fade" id="rentalModal" tabindex="-1" aria-labelledby="rentalModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!--header-->
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="loginModalLabel">Modifica i campi del Rent</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <!--body-->
-                        <div class="modal-body">
-                            <form id="loginForm">
-                                <div class="mb-3 mt-3">
-                                    <label for="customer" class="form-label">Customer: </label>
-                                    <input type="text" class="form-control" id="customer">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="employee" class="form-label">Employee: </label>
-                                    <input type="text" class="form-control" id="employee">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="state" class="form-label">Rental State: </label>
-                                    <input type="text" class="form-control" id="state">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="prenotationDate" class="form-label">Prenotation Date: </label>
-                                    <input type="date" class="form-control" id="prenotationDate">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="startDate" class="form-label">Start Date: </label>
-                                    <input type="date" class="form-control" id="startDate">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="expectedEndDate" class="form-label">Expected End Date: </label>
-                                    <input type="date" class="form-control" id="expectedEndDate">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="endDate" class="form-label">End Date: </label>
-                                    <input type="date" class="form-control" id="endDate">
-                                </div>
-                                <div>
-                                    <!-- TODO: Aggiungere un campo che ricarichi una priceEstimation -->
-                                </div>
-
-                            </form>
-                        </div>
-                        <!--footer-->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="modifyRental" type="button" class="btn btn-primary">Modify Rental</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
 </body>
 
 <footer>
     <script>
-        //Import della sidebar e dell'header
-        $('document').ready(() => {
-            $('#sidebar').load('../templates/sidebar.html')
-            $('#header').load('../templates/header.html')
-        })
 
         $('document').ready(async () => {
             //get dello strumento
@@ -244,7 +231,7 @@
             return rental
         }
 
-        $('#modifyRental').on('click', async(event) => {
+        $('#modifyRental').on('click', async (event) => {
             event.preventDefault()
 
             const oldRental = localStorage.getItem('idRental')
@@ -255,7 +242,7 @@
             let query = {
                 name: ''
             }
-            
+
             query.firstname = rental.customer
             rental.customer = await api.customers.get(query)
             console.log(rental.customer)
@@ -269,9 +256,9 @@
             // rental.unit = await api.products.get(query)
 
             rental.unit = oldRental.unit
-            
+
             //TODO: Fare una patch
-            
+
             //const response = await api.rentals.patchSingle(oldRental, rental)
             console.log(response)
         })
