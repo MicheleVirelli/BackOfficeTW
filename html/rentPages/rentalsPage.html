@@ -47,6 +47,39 @@
 
 <body>
     <div id="content">
+        <form class="d-flex">
+
+            <div class="input-group mb-3">
+                <span class="input-group-default">
+                    <select class="form-select" id="field">
+                        <option>Scegli come cercare</option>
+                        <option>Nome Cliente</option>
+                        <option>Nome Impiegato</option>
+                        <option>Stato del Noleggio</option>
+                        <option>Data del noleggio</option>
+                        <option>Prezzo del noleggio</option>
+                    </select>
+                </span>
+                <input type="text" class="form-control"
+                    placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui" aria-label="Username"
+                    aria-describedby="basic-addon1" id="name">
+                <button id="submit" class="btn" type="submit"
+                    style="background-color: #212529; color: white;">Cerca</button>
+            </div>
+        </form>
+
+        <div class="card mb-5 p-2" style="background-color:#B2A8B9; overflow: hidden;">
+            <table class="table table-danger" id="rentable">
+            </table>
+        </div>
+
+        <div class="pb-3">
+            <nav>
+                <ul id="navlist" class="pagination justify-content-center">
+                </ul>
+            </nav>
+        </div>
+
     </div>
 </body>
 
@@ -58,37 +91,158 @@
             document.location.href = "./rentalPage.html"
         }
 
+        let paginate = []
+
+        function refreshTable(value) {
+            $('#rentable').children().remove()
+
+            $('#rentable').append(`
+            <thead>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>Impiegato</td>
+                        <td>Prodotto</td>
+                        <td>Stato</td>
+                        <td>Data Inizio</td>
+                        <td>Data Fine</td>
+                    </tr>
+            </thead>
+            `)
+
+            console.log('Refresh with ' + value)
+            paginate[value].forEach(rental => {
+
+                let employee
+                let endDate
+                let startDate = rental.startDate
+
+                switch (rental.state) {
+                    case 'pending':
+                        employee = 'Nessuno'
+                        endDate = rental.expectedEndDate
+                        break;
+                    case 'open':
+                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        endDate = rental.expectedEndDate
+                        break;
+                    case 'close':
+                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        endDate = rental.endDate || rental.expectedEndDate
+                        break;
+                    default:
+                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        endDate = rental.expectedEndDate
+                        break;
+                }
+
+                endDate = (new Date(endDate)).toString().slice(0, 16)
+                startDate = (new Date(startDate)).toString().slice(0, 16)
+
+                $('#rentable').append(`
+                <tr class="clickable-row" onclick="rentalPage('${rental._id}')">
+                    <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
+                    <td>${employee}</td>
+                    <td>${rental.unit.name}</td>
+                    <td>${rental.state}</td>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                </tr>
+                `)
+            });
+        }
+
         //Get all rentals
         $('document').ready(async () => {
+            let rentForPage = 50
             let query = {
-                limit: 20,
+                limit: 0,
                 populate: true,
             }
 
             const rentals = (await api.rentals.get(query)).data.docs
             console.log(rentals)
 
-            //TODO: Posso fare veramente un sacco di cose qui ...
-            rentals.forEach(rental => {
+            //Gestisco la paginazione lato client dei rental
+            let i = []
+            let c = 1
 
-                let value
-                if (rental.state == 'pending')
-                    value = 'Prenotation Date: ' + rental.prenotationDate
-                if (rental.state == 'open')
-                    value = 'Expected end Date: ' + rental.expectedEndDate
-                if (rental.state == 'close')
-                    value = 'End Date: ' + rental.expectedEndDate
+            for (let rental of rentals) {
+                if (c % rentForPage == 0) {
+                    i.push(rental)
+                    paginate.push(i)
+                    i = []
+                }
+                else {
+                    i.push(rental)
+                }
+                c++
+            }
 
-                $('#content').append(`
-                <div class="card mb-3" onclick="rentalPage('${rental._id}')" style="background-color:#B2A8B9;">
-                    <h4>${rental.unit.name} / ${rental.customer.lastname}</h4>
-                    <p>${rental.state}</p>
-                    <p>${value}</p>
-                </div>
+            console.log(paginate)
+
+            //Gestisco la visualizzazione iniziale dei rental
+            // paginate[0].forEach(rental => {
+
+            //     let employee
+            //     let endDate
+            //     let startDate = rental.startDate
+
+            //     switch (rental.state) {
+            //         case 'pending':
+            //             employee = 'Nessuno'
+            //             endDate = rental.expectedEndDate
+            //             break;
+            //         case 'open':
+            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
+            //             endDate = rental.expectedEndDate
+            //             break;
+            //         case 'close':
+            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
+            //             endDate = rental.endDate || rental.expectedEndDate
+            //             break;
+            //         default:
+            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
+            //             endDate = rental.expectedEndDate
+            //             break;
+            //     }
+
+            //     endDate = (new Date(endDate)).toString().slice(0, 16)
+            //     startDate = (new Date(startDate)).toString().slice(0, 16)
+
+            //     $('#rentable').append(`
+            //     <tr class="clickable-row" onclick="rentalPage('${rental._id}')">
+            //         <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
+            //         <td>${employee}</td>
+            //         <td>${rental.unit.name}</td>
+            //         <td>${rental.state}</td>
+            //         <td>${startDate}</td>
+            //         <td>${endDate}</td>
+            //     </tr>
+            //     `)
+            // });
+
+            //Gestisco il numero di pagine della navPage
+
+            // $('#navlist').append(`
+            // <li class="page-item disabled">
+            //     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            // </li>
+            // `)
+            refreshTable(0)
+
+            c = 0
+            paginate.forEach(page => {
+                c++
+                $('#navlist').append(`
+                <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c})">${c}</a></li>
                 `)
-            });
+            })
 
-
+            // $('#navlist').append(`
+            // <li class="page-item">
+            //     <a class="page-link" href="#">Next</a>
+            // </li>
+            // `)
         })
 
     </script>
