@@ -18,7 +18,6 @@ async function logIn(loginForm){
 
     if (response.status == 200)
         config.setToken(response.headers.authorization, data.remember)
-    console.log(config.getToken())
     document.location.href = "/html/authenticatedPage/authIndex.html"
 
 }

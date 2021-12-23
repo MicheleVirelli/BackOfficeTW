@@ -57,24 +57,88 @@
 
 <body>
     <div id="content">
+        <!-- Ci sono due casi, voglio aggiungere una post o una unit -->
+        <div class="card p-5" style="background-color:#B2A8B9;">
+            <!-- Campi della unit: nome -> quello del prodotto, prezzo, condizione [perfect, minor flaw, major flow, broken] -->
+            <!-- Campi del rental: customer, employee, state, prenotationDate, bill, startDate, expectedEndDate, actualEndDate, unit, id, priceEstimation -->
+            <!-- Campi della bill: customer, employee, basePrice, modifier, finalPrice, startRent, endRent, unit -->
+            <!-- Campi della priceEstimation:  -->
+
+            <!-- Creo una o più unit per un prodotto -->
+            <form>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Prodotto:</span>
+                    <select class="form-select" id="inputproduct">
+                        <option value="undefined">Scegli il prodotto a cui aggiungere le unità</option>
+                    </select> 
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Prezzo:</span>
+                    <span class="input-group-text">$</span>
+                    <input id="inputprice" type="text" class="form-control" placeholder="Inserisci il prezzo della specifica unit">
+                    <span class="input-group-text">.00</span>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Condizione:</span>
+                    <select class="form-select" id="inputcondition">
+                        <option value="perfect">Perfetto</option>
+                        <option value="minor flaw">Leggermente rovianto</option>
+                        <option value="major flaw">Abbastanza rovinato</option>
+                        <option value="broken">Rotto</option>
+                    </select>
+                  </div>
+                <button id="submitunit" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+
+    </div>
+
+    <!-- <div id="content">
         <h2>Page for the management of the products</h2>
         <button id="searchP">Search products</button><br><br>
         <button id="addP">Add a product</button>
 
         <div id="showPanel"></div>
 
-    </div>
+    </div> -->
+
 </body>
 <footer>
     <script>
-        //Import della sidebar e dell'header
-        $('document').ready(() => {
-            $('#sidebar').load('../templates/sidebar.html')
-            $('#header').load('../templates/loggedHeader.html')
+        $(document).ready(async () => {
+            let query = { limit: 0 }
+            const products = (await api.products.get(query)).data.docs
+            console.log(products)
+
+            products.forEach(product => {
+                $('#inputproduct').append(`
+                    <option value="${product._id}">${product.name}</option>
+                `)
+            })
+            
         })
 
-        //TODO: trova prodotti solo se digiti correttamente il nome
-        //Io voglio che li aggiorni ogni volta che inserisco un carattere
+        $('#submitunit').on('click', async (event) => {
+            event.preventDefault()
+            let unit = {
+                name: $('#inputproduct').text(),
+                condition: $('#inputcondition').val(),
+                price: $('#inputprice').val(),
+                product: $('#inputproduct').val(),
+                rentals: []
+            }
+            console.log(unit)
+            
+            const response = await api.units.post(unit, unit.product)
+            console.log(response)
+            
+        })
+    </script>
+
+    <!-- <script>
+        
+        Io voglio che li aggiorni ogni volta che inserisco un carattere
         $('#searchP').click(() => {
             $('#showPanel').children('div').remove()
 
@@ -129,7 +193,7 @@
             return data
         }
 
-        //Spazio per fare la post di un prodotto
+        Spazio per fare la post di un prodotto
         $('#addP').click(() => {
             $('#showPanel').children('div').remove()
 
@@ -170,7 +234,7 @@
 
         })
 
-    </script>
+    </script> -->
 </footer>
 
 </html>

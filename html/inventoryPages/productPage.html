@@ -58,8 +58,26 @@
 <body>
     <div id="content">
         <div id="basicinfo" class="row mb-4"></div>
-        <div id="unitinfo" class="row mb-4"></div>
-        <div id="altproductsinfo" class="row mb-4"></div>
+
+        <div id="unitinfo" class="row mb-4">
+            <div class="card mb-3 p-3" style="background-color:#B2A8B9;">
+                <table class="table table-hover" id="unitpart">
+                    <tr>
+                        <td>Unit</td>
+                        <td>Price</td>
+                        <td>Stato</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <div class="card mb-3 row" style="background-color:#B2A8B9;">
+                <div class="container-fluid row p-0 m-0" id="altproductsinfo">
+                </div>
+            </div>
+        </div>
+
         <div id="rentinfo" class="row mb-4"></div>
     </div>
 </body>
@@ -70,10 +88,15 @@
 
         $(document).ready(async function () {
             let query = {
-                populate: true 
+                populate: true
             }
 
-            const product = (await api.products.getSingle(idProduct,query)).data
+            const product = (await api.products.getSingle(idProduct, query)).data
+            console.log(product)
+
+            const units = (await api.units.get()).data
+            console.log(units)
+            
 
             //TODO: Risolvere il problema delle chiamate multiple
             // let altproducts
@@ -102,32 +125,35 @@
             </div>
             `)
 
-            //TODO: Non si vede perché non si sono unit associate
             //Informazioni sulle unità legate al prodotto
-            product.units == undefined ? 
-            $('#unitinfo').append(`
-            <div class="card mb-3" style="background-color:#B2A8B9;">
-                <div class="row g-0">
-                    <h4>Questo prodotto non ha ancora unità associate</h4>
 
-                </div>
-            </div>
-            `)
-            :
-            $('#unitinfo').append(`
-            <div class="card mb-3" style="background-color:#B2A8B9;">
-                <div class="row g-0">
-                    <h4>Questo prodotto ha ${product.units.length} associate</h4>
-                    <p>Aggiungere lo stato ed il prezzo per ognuna</p>
-                </div>  
-            </div>
-            `)
+            let i = 0
+            units.forEach(unit => {
+                i++
+                $('#unitpart').append(`
+                    <tr>
+                        <td>Unit n°${i}</td>
+                        <td>${unit.price}</td>
+                        <td>${unit.condition}</td>
+                    </tr>
+                `)
+            });
 
             //Informazioni sui prodotti alternativi
-            $('#altproductsinfo').append(`
-            <div class="card mb-3" style="background-color:#B2A8B9;">
-                <p>Funzioni al momento non disponibili</p>
-            </div>
+            // $('#altproductsinfo').append(`
+            // <div class="card mb-3 row" style="background-color:#B2A8B9;">
+
+            // </div>
+            // `)
+                let rental = {boh: 'placeholder', unit: 'placeholder'}
+            $('#altproductinfo').appned(`
+                <div class="card col-sm-4">
+                    <img src="https://site202120.tw.cs.unibo.it/${rental.boh}" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">${rental.unit}/h5>
+                        <p class="card-text">${rental.boh}</p>
+                    </div>
+                </div>
             `)
 
             //Informazioni sui rent
@@ -138,7 +164,7 @@
             `)
 
             //TODO: Sarebbe bello vedere i kit legati al prodotto ...
-            
+
         })
     </script>
 </footer>
