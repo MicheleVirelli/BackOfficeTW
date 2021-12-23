@@ -52,12 +52,11 @@
             <div class="input-group mb-3">
                 <span class="input-group-default">
                     <select class="form-select" id="field">
-                        <option>Scegli come cercare</option>
-                        <option>Nome Cliente</option>
-                        <option>Nome Impiegato</option>
-                        <option>Stato del Noleggio</option>
-                        <option>Data del noleggio</option>
-                        <option>Prezzo del noleggio</option>
+                        <option value="">Scegli come cercare</option>
+                        <option value="customer">Nome Cliente</option>
+                        <option value="employee">Nome Impiegato</option>
+                        <option value="unit">Nome prodotto</option>
+                        <option value="state">Stato del Noleggio</option>
                     </select>
                 </span>
                 <input type="text" class="form-control"
@@ -92,8 +91,9 @@
         }
 
         let paginate = []
+        let rentals
 
-        function refreshTable(value) {
+        function refreshTable(value, paginate) {
             $('#rentable').children().remove()
 
             $('#rentable').append(`
@@ -110,6 +110,9 @@
             `)
 
             console.log('Refresh with ' + value)
+
+            console.log(paginate)
+
             paginate[value].forEach(rental => {
 
                 let employee
@@ -151,6 +154,17 @@
             });
         }
 
+
+        // function refreshNavPage(array) {
+        //     $('#navlist').children().remove()
+        //     c = 0
+        //     array.forEach(page => {
+        //         $('#navlist').append(`
+        //             <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c},paginate)">${c + 1}</a></li>
+        //         `)
+        //         c++
+        //     })
+        // }
         //Get all rentals
         $('document').ready(async () => {
             let rentForPage = 50
@@ -159,93 +173,80 @@
                 populate: true,
             }
 
-            const rentals = (await api.rentals.get(query)).data.docs
+            rentals = (await api.rentals.get(query)).data.docs
             console.log(rentals)
 
             //Gestisco la paginazione lato client dei rental
-            let i = []
-            let c = 1
-
-            for (let rental of rentals) {
-                if (c % rentForPage == 0) {
-                    i.push(rental)
-                    paginate.push(i)
-                    i = []
-                }
-                else {
-                    i.push(rental)
-                }
-                c++
-            }
-
-            console.log(paginate)
-
-            //Gestisco la visualizzazione iniziale dei rental
-            // paginate[0].forEach(rental => {
-
-            //     let employee
-            //     let endDate
-            //     let startDate = rental.startDate
-
-            //     switch (rental.state) {
-            //         case 'pending':
-            //             employee = 'Nessuno'
-            //             endDate = rental.expectedEndDate
-            //             break;
-            //         case 'open':
-            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
-            //             endDate = rental.expectedEndDate
-            //             break;
-            //         case 'close':
-            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
-            //             endDate = rental.endDate || rental.expectedEndDate
-            //             break;
-            //         default:
-            //             employee = rental.employee.lastname + ', ' + rental.employee.firstname
-            //             endDate = rental.expectedEndDate
-            //             break;
-            //     }
-
-            //     endDate = (new Date(endDate)).toString().slice(0, 16)
-            //     startDate = (new Date(startDate)).toString().slice(0, 16)
-
-            //     $('#rentable').append(`
-            //     <tr class="clickable-row" onclick="rentalPage('${rental._id}')">
-            //         <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
-            //         <td>${employee}</td>
-            //         <td>${rental.unit.name}</td>
-            //         <td>${rental.state}</td>
-            //         <td>${startDate}</td>
-            //         <td>${endDate}</td>
-            //     </tr>
-            //     `)
-            // });
+            paginate = paginator(rentForPage, rentals)
 
             //Gestisco il numero di pagine della navPage
-
-            // $('#navlist').append(`
-            // <li class="page-item disabled">
-            //     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            // </li>
-            // `)
-            refreshTable(0)
+            refreshTable(0, paginate)
 
             c = 0
             paginate.forEach(page => {
-                c++
                 $('#navlist').append(`
-                <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c})">${c}</a></li>
+                <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c},paginate)">${c + 1}</a></li>
                 `)
+                c++
             })
+        })
 
-            // $('#navlist').append(`
-            // <li class="page-item">
-            //     <a class="page-link" href="#">Next</a>
-            // </li>
-            // `)
+        //Gestione della ricerca
+        $('#submit').on('click', (event) => {
+            event.preventDefault()
+
+            let field = $('#field').val()
+            let value = ($('#name').val()).toString()
+            let searchedRent = []
+
+            //Cerco tra tutti i rent quelli che contengono la sottostringa value nel campo field
+            switch (field) {
+                case 'customer':
+                    rentals.forEach(rent => {
+                        if (rent.customer.firstname.includes(value) || rent.customer.lastname.includes(value))
+                            searchedRent.push(rent)
+                    })
+                    break;
+                case 'employee':
+                    rentals.forEach(rent => {
+                        if (rent.employee != undefined)
+                            if (rent.employee.firstname.includes(value) || rent.employee.lastname.includes(value))
+                                searchedRent.push(rent)
+                    })
+                    break;
+                case 'unit':
+                    rentals.forEach(rent => {
+                        if (rent.unit.name.includes(value))
+                            searchedRent.push(rent)
+                    })
+                    break;
+                case 'state':
+                    rentals.forEach(rent => {
+                        if (rent.state.includes(value))
+                            searchedRent.push(rent)
+                    })
+                    break;
+
+                default:
+                    rentals.forEach(rent => {
+                        if (rent.customer.firstname.includes(value) || rent.customer.lastname.includes(value))
+                            searchedRent.push(rent)
+                    })
+                    break;
+            }
+
+            //console.log(searchedRent)
+
+            searchedRent = paginator(50, searchedRent)
+            console.log(searchedRent)
+
+            refreshTable(0, searchedRent)
+            refreshNavPage(searchedRent)
         })
 
     </script>
+
+
 </footer>
 
 </html>

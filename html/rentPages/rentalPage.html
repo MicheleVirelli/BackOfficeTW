@@ -46,222 +46,169 @@
 
 <body>
     <div id="content">
-        <!-- 
-                Il prodotto noleggiato
-                Il nome del cliente e qualche info base sul personaggio
-                Lo state del noleggio
-                
-                La visualizzasione cambia in base allo state ? => MEGLIO DI NO 
+        <div class="card mb-3 p-4" style="background-color:#B2A8B9;">
+            <h1>Informazioni sul noleggio</h1>
+            <form class="form ">
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Nome prodotto: </span><br>
+                    <input type="text" disabled="disabled" id="unitname" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Data del noleggio: </span><br>
+                    <input type="date" disabled="disabled" id="prenotationdate" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Stato del noleggio: </span><br>
+                    <input type="text" disabled="disabled" id="state" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Cliente: </span><br>
+                    <input type="text" disabled="disabled" id="customer" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Impiegato: </span><br>
+                    <select class="form-select" disabled="disabled" id="employee" class="form-control">
+                        <option selected>Il nome dell impiegato</option>
+                    </select>
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Data di inizio</span><br>
+                    <input type="date" disabled="disabled" id="startdate" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Data fine programmata:</span><br>
+                    <input type="date" disabled="disabled" id="expectedenddate" class="form-control">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Data fine effettiva</span><br>
+                    <input type="date" disabled="disabled" id="actualstartdate" class="form-control">
+                </div>
+                <div id="buttonpanel" class="d-flex justify-content-around">
+                    <button id="modify" class="btn btn-primary me-2">Modifica</button>
+                    <button id="delete" class="btn btn-danger me-2">Elimina</button>
+                </div>
+            </form>
 
-                Quindi vedo da che data a che data andava il rent
-                Se questo è finito quando ci si aspettava 
-
-                 !!! Questa parte cambia in base allo state !!!
-                Voglio vedere chi è l'impiegato se è pendig
-                La bill se è chiuso, la price estimation se è aperto
-                -->
-
-        <div id="unitInfo"></div>
-        <div id="clientInfo"></div>
-        <div id="stateInfo"></div>
-        <div id="dateInfo"></div>
-        <div id="employeeInfo"></div>
-        <div id="priceInfo"></div>
-
-        <div id="buttonPanel">
-            <button id="modify" data-bs-toggle="modal" data-bs-target="#rentalModal">Modifica</button>
-            <button id="delete">Cancella</button>
         </div>
 
-    </div>
-
-    <div class="modal fade" id="rentalModal" tabindex="-1" aria-labelledby="rentalModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!--header-->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Modifica i campi del Rent</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!--body-->
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3 mt-3">
-                            <label for="customer" class="form-label">Customer: </label>
-                            <input type="text" class="form-control" id="customer">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="employee" class="form-label">Employee: </label>
-                            <input type="text" class="form-control" id="employee">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="state" class="form-label">Rental State: </label>
-                            <input type="text" class="form-control" id="state">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="prenotationDate" class="form-label">Prenotation Date: </label>
-                            <input type="date" class="form-control" id="prenotationDate">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="startDate" class="form-label">Start Date: </label>
-                            <input type="date" class="form-control" id="startDate">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="expectedEndDate" class="form-label">Expected End Date: </label>
-                            <input type="date" class="form-control" id="expectedEndDate">
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="endDate" class="form-label">End Date: </label>
-                            <input type="date" class="form-control" id="endDate">
-                        </div>
-                        <div>
-                            <!-- TODO: Aggiungere un campo che ricarichi una priceEstimation -->
-                        </div>
-
-                    </form>
-                </div>
-                <!--footer-->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="modifyRental" type="button" class="btn btn-primary">Modify Rental</button>
-                </div>
-            </div>
+        <div class="card mb-3 p-4" style="background-color: #B2A8B9;">
+            <h1>Informazioni sulla bill o sulla price estimation</h1>
         </div>
     </div>
+
+
 </body>
 
 <footer>
     <script>
+        let rental
+        let modifyState = true
 
-        $('document').ready(async () => {
-            //get dello strumento
-            const idRental = localStorage.getItem('idRental')
+        //Get del rental e caricamento dei dati nel form
+        $(document).ready(async () => {
             let query = { populate: true }
+            const idRental = localStorage.getItem('idRental')
 
-            const rental = (await api.rentals.getSingle(idRental, query)).data
+            rental = (await api.rentals.getSingle(idRental, query)).data
             console.log(rental)
 
-            //Caricamento dati nei campi 
-            //TODO: rendere campi cliccabili per vedere il prodotto/cliente
-            $('#unitInfo').append(`
-                <h3>Product name: ${rental.unit.name}</h3>
+            $('#unitname').val(rental.unit.name)
+            $('#prenotationdate').val((rental.prenotationDate).toString().slice(0, 10))
+            $('#state').val(rental.state)
+            $('#employee').val(rental.employee.lastname + ' ' + rental.employee.firstname)
+            $('#startdate').val((rental.startDate).toString().slice(0, 10))
+            $('#expectedenddate').val((rental.expectedEndDate).toString().slice(0, 10))
+
+            //L'effettiva data di termine del noleggio può non essere definita:
+            if (rental.actualEndDate)
+                $('#actualenddate').val((rental.actualEndDate).toString().slice(0, 10))
+
+            
+            $('#employee').append(`
+            <option selected value="${rental.employee._id}">${rental.employee.lastname} ${rental.employee.firstname}</option> 
             `)
-            $('#clientInfo').append(`
-                <h3>Customer: ${rental.customer.firstname}, ${rental.customer.lastname}</h3>
-            `)
-            $('#stateInfo').append(`
-                <h3>State: ${rental.state}</h3>
-            `)
 
-            let prenotationDate = (new Date(rental.prenotationDate)).toString()
-            let startDate = (new Date(rental.startDate)).toString()
-            let expectedEndDate = (new Date(rental.expectedEndDate)).toString()
-            let end = prenotationDate.indexOf("GMT")
-
-            prenotationDate = prenotationDate.substring(0, end)
-            startDate = startDate.substring(0, end)
-            expectedEndDate = expectedEndDate.substring(0, end)
-
-            //TODO: migliorare la visualizzazione con un calendario
-            switch (rental.state) {
-                case 'pending':
-                    //carico la dateInfo e la price Info
-                    $('#dateInfo').append(`
-                        <h5>Date information</h5>
-                        <p>Reservation made: ${prenotationDate}</p>
-                        <p>Start date of the rental:  ${startDate}</p>
-                        <p>End date of the rental:  ${expectedEndDate}</p>
-                    `)
-                    //Aggiungere le informazioni sulla priceEstimation
-                    break;
-                case 'open':
-                    $('#dateInfo').append(`
-                        <h5>Date information</h5>
-                        <p>Reservation made: ${prenotationDate}</p>
-                        <p>Start date of the rental:  ${startDate}</p>
-                        <p>End date of the rental:  ${expectedEndDate}</p>
-                    `)
-
-                    $('#employeeInfo').append(`
-                        <h5>Employee information</h5>
-                        <p>Name: ${rental.employee.firstname}, ${rental.employee.lastname}</p>
-                    `)
-                    //Aggiungere le informazioni sulla price Esitmation
-                    break;
-                case 'close':
-                    $('#dateInfo').append(`
-                        <h5>Date information</h5>
-                        <p>Reservation made: ${prenotationDate}</p>
-                        <p>Start date of the rental:  ${startDate}</p>
-                        <p>End date of the rental:  ${expectedEndDate}</p>
-                    `)
-                    //Aggiungere le informazioni sulla bill
-                    break;
-
-                default:
-                    break;
-            }
-
-            //Modale che permette la riceca di informazioni per completare il rent
-
-            //Gestione del bottone del cancella
+            //gestione particolare per il customer
+            quer = { limit: 1}
+            const employees = (await api.employees.get(query)).data.docs
+            console.log(employees)
+            employees.forEach(employee => {
+                $('#employee').append(`
+                <option value="${employee._id}"> ${employee.lastname} ${employee.firstname}</option>
+                `)
+            })
+            $('#customer').val(rental.customer.lastname + ' ' + rental.customer.firstname)
         })
 
-        function getModifyRentalForm() {
-            let rental = {
-                customer: '',
-                employee: '',
-                state: '',
-                prenotationDate: '',
-                startDate: '',
-                expectedEndDate: '',
-                endDate: '',
-                product: '',
-                unit: '',
-            }
-
-            rental.customer = $('#customer').val()
-            rental.employee = $('#employee').val()
-            rental.state = $('#state').val()
-            rental.prenotationDate = $('#prenotationDate').val() + 'T00:00:00.000Z'
-            rental.startDate = $('#startDate').val() + 'T00:00:00.000Z'
-            rental.expectedEndDate = $('#expectedEndDate').val() + 'T00:00:00.000Z'
-            rental.endDate = $('#endDate').val() + 'T00:00:00.000Z'
-
-            return rental
-        }
-
-        $('#modifyRental').on('click', async (event) => {
+        $('#modify').on('click', (event) => {
             event.preventDefault()
 
-            const oldRental = localStorage.getItem('idRental')
-            //TODO: Rimuovere i campi riempiti precedentemente
-            //cleanModifyRentalForm()
-            //TODO: Prendere i dati dal form  
-            let rental = getModifyRentalForm()
-            let query = {
-                name: ''
+            if (modifyState) {
+                //Rendo i campi non fondamentali modificabili
+                $('#state').removeAttr('disabled')
+                $('#employee').removeAttr('disabled')
+                $('#startdate').removeAttr('disabled')
+                $('#expectedenddate').removeAttr('disabled')
+                $('#actualenddate').removeAttr('disabled')
+                $('#actualenddate').removeAttr('disabled')
+
+                //Creo il bottone di submit
+                $('#buttonpanel').append(`
+                    <button id="submit" class="btn btn-success">Conferma</button>
+                `)
+
+                //Scrivo la funzione del bottone di submit
+                $('#submit').on('click', async (event) => {
+                    event.preventDefault()
+
+                    let newRental = rental
+                    newRental.customer = rental.customer._id
+                    newRental.employee = rental.employee._id
+                    newRental.unit = rental.unit._id
+
+                    //Prendo i dati dal form e creo un nuovo rental da quello di partenza
+                    newRental.state = $('#state').val()
+
+                    $('#employee')
+
+                    newRental.startDate = $('#startdate').val() + 'T00:00:00.000Z'
+                    newRental.expectedEndDate = $('#expectedenddate').val() + 'T00:00:00.000Z'
+                    newRental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
+
+                    const response = await api.rentals.patchSingle(rental._id, newRental)
+                    console.log(resposne)
+                    //rimuovo la possibilità di modicare momentaneamente e rimuovo il pulsante di modifica
+                })
+
+                modifyState = false
+            }
+            else {
+                // i campi ritornano disabilitati ed il pulsante viene rimosso 
+                $('#state').attr('disabled', 'disabled')
+                $('#employee').attr('disabled', 'disabled')
+                $('#startdate').attr('disabled', 'disabled')
+                $('#expectedenddate').attr('disabled', 'disabled')
+                $('#actualenddate').attr('disabled', 'disabled')
+                $('#actualenddate').attr('disabled', 'disabled')
+
+                $('#submit').remove()
+
+                modifyState = true
+
             }
 
-            query.firstname = rental.customer
-            rental.customer = await api.customers.get(query)
-            console.log(rental.customer)
 
-            query.firstname = rental.employee
-            rental.employee = await api.employees.get(query)
-            console.log(rental.employee)
-
-            //TODO: Non è possibile cambiare le unit
-            // query.name = rental.product
-            // rental.unit = await api.products.get(query)
-
-            rental.unit = oldRental.unit
-
-            //TODO: Fare una patch
-
-            //const response = await api.rentals.patchSingle(oldRental, rental)
-            console.log(response)
+            // $('#unitname')
+            // $('#prenotationdate')
+            // $('#state')
+            // $('#customer')
+            // $('#employee')
+            // $('#startdate')
+            // $('#expectedenddate')
+            // $('#actualenddate')
+            // $('#actualenddate')
         })
+
     </script>
 </footer>
 
