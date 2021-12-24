@@ -3,7 +3,19 @@ body {
   width: 100vw;
   padding: 5em;
   margin: 0;
-  background-color: #7d7484;
+  background-color: #372c2e;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+#content{
+  color:#de9e48;
+}
+
+.navbar{
+  background-color: #563727;
+}
+
+.navbar a{
+  color: #de9e48;
 }
