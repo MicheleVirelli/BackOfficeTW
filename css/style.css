@@ -16,6 +16,11 @@ body {
   background-color: #563727;
 }
 
+
 .navbar a{
   color: #de9e48;
+}
+
+.navbar a:hover {
+  color: #ffffff;
 }
