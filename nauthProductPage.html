@@ -102,9 +102,10 @@
 
         async function Funzion() {
             let product = await $.get(urlProduct);
+            console.log(product)
 
             $('#content').append(`
-            <div class="card mb-3" style="background-color:#B2A8B9;">
+            <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="https://site202120.tw.cs.unibo.it/${product.image}" class="img-fluid rounded-start" alt="...">

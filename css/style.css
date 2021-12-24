@@ -3,9 +3,14 @@ body {
   width: 100vw;
   padding: 5em;
   margin: 0;
+  /*background-color:#;*/
   background-color: #372c2e;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.card{
+  background-color: #563727;
+  /* background-color: #B2A8B9; */
 }
 
 #content{
@@ -13,6 +18,7 @@ body {
 }
 
 .navbar{
+  /* background-color: #563727; */
   background-color: #563727;
 }
 
