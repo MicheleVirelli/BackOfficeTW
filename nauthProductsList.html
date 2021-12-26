@@ -55,28 +55,31 @@
     <div>
 
       <form class="d-flex">
-
         <div class="input-group mb-3">
           <span class="input-group-default" id="basic-addon1">
             <select class="form-select" id="field">
-              <option>Scegli in che campo cercare</option>
-              <option>Nome</option>
-              <option>Categoria</option>
-              <option>Sottocateoria</option>
-              <option>Tag</option>
+              <option value="name">Scegli in che campo cercare</option>
+              <option value="name">Nome</option>
+              <option value="category">Categoria</option>
+              <option value="subcategory">Sottocateoria</option>
             </select>
           </span>
           <input type="text" class="form-control" placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui"
-            aria-label="Username" aria-describedby="basic-addon1">
-          <button id="submit" class="btn" type="submit"
-            style="background-color: #212529; color: white; border-color:white;">Cerca</button>
+            id="value">
+          <button id="submit" class="btn btn-search" type="submit">Cerca</button>
         </div>
       </form>
     </div>
-    <!-- TODO: La classe bootstrap non va!  perché si aspetta che ci sia tutto dentro !! -->
 
     <div id="productlist">
     </div>
+
+    <div class="pb-3">
+      <nav>
+          <ul id="navlist" class="pagination justify-content-center">
+          </ul>
+      </nav>
+  </div>
 
   </div>
 
@@ -124,87 +127,36 @@
 
 <footer>
   <script>
-    const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
+    let products
+    let query
+    let elementForPage = 50
+    let paginateProducts
+    let searchProducts
 
-    function productPage(id) {
-      localStorage.removeItem('idProduct')
-      localStorage.setItem("idProduct", id);
-      document.location.href = "nauthProductPage.html";
-    }
+    $(document).ready(async () => {
+      query = { limit: 0 }
+      products = (await api.products.get(query)).data.docs
+      
+      paginateProducts = paginator(elementForPage,products)
 
-    $.get(urlproducts, (products) => {
-      $('#content').append(`
-      <table class="table table-stripped table-dark">
-      <header>
-        <tr>
-          <th>Disponibilità oggi</th>
-          <th>Nome</th>
-          <th>Categoria</th>
-          <th>SottoCategoria</th>
-          <th>Prodotti alternativi associati</th>
-          <th>Unità associate</th>
-        </tr>
-      </header>
-
-    </table>
-    `)
-      products.docs.forEach(element => {
-        $('.table').append(`
-          <tr class="clickable-row" onclick="productPage('${element._id}')">
-            <td>Boh</td>
-            <td>${element.name}</td>
-            <td>${element.category}</td>
-            <td>${element.subcategory}</td>
-            <td>${element.altproducts.length}</td>
-          </tr>
-        `)
-      })
+      refreshNauthTable(paginateProducts, 0)
+      refreshNavPage(paginateProducts, 'paginateProducts')
     })
 
-
-    //TODO: Implementare la ricerca carattere per carattere ...
-    $('#submit').on('click', async (event) => {
+    //Funzione per la ricerca
+    $('#submit').on('click', (event) => {
       event.preventDefault()
 
-      $('.table').remove()
-
-      $('#content').append(`
-      <table class="table table-stripped table-dark">
-      <header>
-        <tr>
-          <th>Disponibilità oggi</th>
-          <th>Nome</th>
-          <th>Categoria</th>
-          <th>SottoCategoria</th>
-          <th>Prodotti alternativi associati</th>
-          <th>Unità associate</th>
-        </tr>
-      </header>
-
-    </table>
-    `)
-
-      let query = {
-        limit: 0,
-        name: $('#name').val()
-      }
-
-      const products = (await api.products.get(query)).data.docs
-
-      products.forEach(element => {
-        $('.table').append(`
-          <tr class="clickable-row" onclick="productPage('${element._id}')"">
-            <td>Boh</td>
-            <td>${element.name}</td>
-            <td>${element.category}</td>
-            <td>${element.subcategory}</td>
-            <td>${element.altproducts.length}</td>
-          </tr>
-        `)
-      })
+      searchProducts = filterBy(products, $('#field').val(), $('#value').val())
+      searchProducts = paginator(elementForPage, searchProducts)
+      refreshNauthTable(searchProducts, 0)
+      refreshNavPage(searchProducts, 'searchProducts')
     })
+
   </script>
 
+
+  <!-- Script per il login -->
   <script>
     $('#loginsubmit').on('click', async (event) => {
       event.preventDefault()
