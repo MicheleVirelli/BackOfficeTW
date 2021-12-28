@@ -36,7 +36,7 @@ body {
   color: var(--text-color);
 }
 
-.navbar a:hover, button:hover {
+.navbar a:hover, a:active, a:focus, button:hover {
   color: var(--main-lastcolor);
 }
 
@@ -56,4 +56,9 @@ body {
 .tr{
   background-color: var(--main-secondary);
   color:var(--text-color);  
+}
+
+.modal-content{
+  background-color: var(--main-secondary);
+  color: var(--text-color)
 }

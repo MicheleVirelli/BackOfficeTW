@@ -95,10 +95,11 @@ function refreshNauthTable(paginateArray, value) {
 
 function filterBy(array, field, value) {
   let filtered = []
-
+  value = value.trim().toLowerCase()
+  
   array.forEach(element => {
     if(element != undefined)
-      if(element[field].includes(value))
+      if(element[field].trim().toLowerCase().includes(value))
         filtered.push(element)
   });
 
