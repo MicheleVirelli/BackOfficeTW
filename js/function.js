@@ -47,44 +47,46 @@ function paginator(elemForPage, array) {
 
 // TODO: aggiungere il nome della variabile passata
 function refreshNavPage(array, arrayName, tableName) {
-  console.log('Refreshing:' + tableName )
+  console.log("Refreshing:" + tableName);
   $("#pagenav").children().remove();
 
-  $('#pagenav').append(`
+  $("#pagenav").append(`
   <nav>
     <ul id="navlist" class="pagination justify-content-center">
     </ul>
   </nav>
-  `)
+  `);
 
   pageNum = 0;
   array.forEach((page) => {
     $("#navlist").append(`
-    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum})">${pageNum+1}</a></li>
+    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum})">${
+      pageNum + 1
+    }</a></li>
     `);
     pageNum++;
   });
 }
 
 function productPage(id) {
-  localStorage.removeItem('idProduct')
+  localStorage.removeItem("idProduct");
   localStorage.setItem("idProduct", id);
   document.location.href = "nauthProductPage.html";
 }
 
 function customerPage(id) {
-  localStorage.setItem("idCustomer", id)
+  localStorage.setItem("idCustomer", id);
   document.location.href = "customerPage.html";
 }
 
 function refreshNauthTable(paginateArray, value) {
-  let boolColor = true
+  let boolColor = true;
 
   $("#productlist").children().remove();
 
   $("#productlist").append(`
   <table id="nauthTable" class="table">
-    <tr  class="${boolColor ? 'td' : 'tr'}">
+    <tr  class="${boolColor ? "td" : "tr"}">
       <td>Nome Prodotto</td>
       <td>Categoria</td>
       <td>Sottocategoria</td>
@@ -96,9 +98,11 @@ function refreshNauthTable(paginateArray, value) {
   console.log(paginateArray);
 
   paginateArray[value].forEach((product) => {
-    boolColor = !boolColor
+    boolColor = !boolColor;
     $("#nauthTable").append(`
-      <tr class="clickable-row ${boolColor ? 'td' : 'tr'}" onclick="productPage('${product._id}')">
+      <tr class="clickable-row ${
+        boolColor ? "td" : "tr"
+      }" onclick="productPage('${product._id}')">
         <td>${product.name}</td>
         <td>${product.category}</td>
         <td>${product.subcategory}</td>
@@ -107,33 +111,42 @@ function refreshNauthTable(paginateArray, value) {
   });
 }
 
-function filterBy(array, field, value) {
-  let filtered = []
-  value = value.trim().toLowerCase()
-  
-  array.forEach(element => {
-    if(element != undefined)
-      if(element[field].trim().toLowerCase().includes(value))
-        filtered.push(element)
+function filterBy(array, fields, value) {
+  let filtered = [];
+  value = value.trim().toLowerCase();
+
+  array.forEach((element) => {
+    if (element != undefined) {
+      fields.forEach((field) => {
+        if (element[field].trim().toLowerCase().includes(value))
+          filtered.push(element);
+      });
+    }
   });
 
-  return filtered
+  return filtered;
 }
 
 function refreshClientGrid(paginateArray, value) {
-  $("#clientlist").children().remove()
+  $("#clientlist").children().remove();
 
-  $('#clientlist').append(
-    paginateArray[value].forEach(customer => {
-    $('#clientlist').append(`
+  $("#clientlist").append(
+    paginateArray[value].forEach((customer) => {
+      $("#clientlist").append(`
     <div class="col-sm-3">
     <div class="card mb-5" onclick="customerPage('${customer._id}')">
     <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
     <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-    <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0, 10)}</div>
-    <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
+    <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(
+      0,
+      10
+    )}</div>
+    <div class="card-text">Indirizzo: ${customer.address.city}, ${
+        customer.address.country
+      }</div>
     </div>
     </div>
-    `)
+    `);
     })
-  )}
+  );
+}

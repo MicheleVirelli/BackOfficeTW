@@ -141,7 +141,7 @@
     $('#submit').on('click', (event) => {
       event.preventDefault()
 
-      searchProducts = filterBy(products, $('#field').val(), $('#value').val())
+      searchProducts = filterBy(products, [$('#field').val()], $('#value').val())
       searchProducts = paginator(elementForPage, searchProducts)
       refreshNauthTable(searchProducts, 0)
       refreshNavPage(searchProducts, 'searchProducts', 'refreshNauthTable')

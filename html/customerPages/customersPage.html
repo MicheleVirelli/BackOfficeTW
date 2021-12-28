@@ -94,7 +94,6 @@
 
             paginateCustomers = paginator(elementForPage, customers)
 
-            //refreshNauthTable(paginateCustomers, 0)
             refreshClientGrid(paginateCustomers, 0)
             refreshNavPage(paginateCustomers, 'paginateCustomers', 'refreshClientGrid')
         })
@@ -103,9 +102,13 @@
         $('#submit').on('click', (event) => {
             event.preventDefault()
 
-            searchCustomers = filterBy(customers, 'firstname', $('#value').val())
+            if($('value').val() == undefined)
+                searchCustomers = filterBy(customers, ['firstname'], $('#value').val())
+            else
+                searchCustomers = filterBy(customers, ['firstname', 'lastname'], $('#value').val())
+            
             searchCustomers = paginator(elementForPage, searchCustomers)
-            //refreshNauthTable(searchCustomers, 0)
+            
             refreshClientGrid(searchCustomers, 0)
             refreshNavPage(searchCustomers, 'searchCustomers', 'refreshClientGrid')
         })
