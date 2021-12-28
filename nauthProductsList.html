@@ -52,8 +52,8 @@
     <div class="d-flex justify-content-center">
       <h1>Inventario</h1>
     </div>
-    <div>
 
+    <div>
       <form class="d-flex">
         <div class="input-group mb-3">
           <span class="input-group-default" id="basic-addon1">
@@ -71,15 +71,9 @@
       </form>
     </div>
 
-    <div id="productlist">
-    </div>
+    <div id="productlist"></div>
 
-    <div class="pb-3">
-      <nav>
-          <ul id="navlist" class="pagination justify-content-center">
-          </ul>
-      </nav>
-  </div>
+    <div id="pagenav" class="pb-3"></div>
 
   </div>
 
@@ -140,7 +134,7 @@
       paginateProducts = paginator(elementForPage,products)
 
       refreshNauthTable(paginateProducts, 0)
-      refreshNavPage(paginateProducts, 'paginateProducts')
+      refreshNavPage(paginateProducts, 'paginateProducts', 'refreshNauthTable')
     })
 
     //Funzione per la ricerca
@@ -150,7 +144,7 @@
       searchProducts = filterBy(products, $('#field').val(), $('#value').val())
       searchProducts = paginator(elementForPage, searchProducts)
       refreshNauthTable(searchProducts, 0)
-      refreshNavPage(searchProducts, 'searchProducts')
+      refreshNavPage(searchProducts, 'searchProducts', 'refreshNauthTable')
     })
 
   </script>

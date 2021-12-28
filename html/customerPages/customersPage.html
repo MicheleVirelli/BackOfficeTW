@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <title>ThePrivilege employee stuff</title>
@@ -56,39 +56,61 @@
 </head>
 
 <body>
-    <div id="content" class="row"></div>
+    <div id="content">
+        <div class="d-flex justify-content-center">
+            <h1>Clienti</h1>
+        </div>
+
+        <div>
+            <form class="d-flex mb-5 mt-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Cerca per Nome e Cognome</span>
+                    <input type="text" class="form-control" id="value">
+                    <button id="submit" class="btn btn-search" type="submit">Cerca</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="clientlist" class="row"></div>
+
+        <div id="pagenav" class="pb-3"></div>
+
+    </div>
+
 </body>
 
 <footer>
+
     <script>
-        //Funzione per andare in altre pagine
-        function customerPage(id) {
-            sessionStorage.setItem("idCustomer", id)
+        let customers
+        let query
+        let elementForPage = 10
+        let paginateCustomers
+        let searchCustomers
 
-            document.location.href = "customerPage.html";
-        }
+        $(document).ready(async () => {
+            query = { limit: 0 }
+            customers = (await api.customers.get(query)).data.docs
 
-        //Get e append di tutti i customers
-        $('document').ready(async () => {
-            const customers = (await api.customers.get(0)).data.docs
+            paginateCustomers = paginator(elementForPage, customers)
 
-            console.log(customers)
-            //TODO: Uniformare la visualizzazione
-            customers.forEach(customer => {
-                $('#content').append(`
-                <div class="col-sm-3">
-                <div class="card" onclick="customerPage('${customer._id}')" style=" margin-bottom:3em;">
-                <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
-                <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-                <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0, 10)}</div>
-                <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
-                </div>
-                </div>
-                `)
-            });
+            //refreshNauthTable(paginateCustomers, 0)
+            refreshClientGrid(paginateCustomers, 0)
+            refreshNavPage(paginateCustomers, 'paginateCustomers', 'refreshClientGrid')
         })
-    </script>
 
+        //Funzione per la ricerca
+        $('#submit').on('click', (event) => {
+            event.preventDefault()
+
+            searchCustomers = filterBy(customers, 'firstname', $('#value').val())
+            searchCustomers = paginator(elementForPage, searchCustomers)
+            //refreshNauthTable(searchCustomers, 0)
+            refreshClientGrid(searchCustomers, 0)
+            refreshNavPage(searchCustomers, 'searchCustomers', 'refreshClientGrid')
+        })
+
+    </script>
 </footer>
 
 </html>
