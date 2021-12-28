@@ -28,7 +28,7 @@ async function logIn(loginForm) {
 
   if (response.status == 200)
     config.setToken(response.headers.authorization, data.remember);
-  document.location.href = "/html/authenticatedPage/authIndex.html";
+  document.location.href = "../backoffice/html/authenticatedPage/authIndex.html";
 }
 
 function paginator(elemForPage, array) {
