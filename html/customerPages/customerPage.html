@@ -54,20 +54,80 @@
         checkToken()
     </script>
 
+</head>
 
-    <!-- Carico il prodotto dal sessionStorage -->
+<body>
+    <div id="content" class="row">
+        <div class="d-flex justify-content-center">
+            <h1>Informazioni sul cliente</h1>
+        </div>
+
+        <div class="col-sm-6 d-flex justify-content-end">
+            <div class="row d-flex justify-content-end">
+                <img class="img-fluid rounded" id="profilepicture" style="height: 18em; width: 18em;"><br>
+                <textarea id="description" class="mt-3" disabled="disabled"></textarea>
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+            <form id="customerInfo">
+                <label for="username">Username: </label><br>
+                <input id="username" disabled="disabled"><br>
+                <label for="firstname">Nome: </label><br>
+                <input id="firstname" disabled="disabled"><br>
+                <label for="lastname">Cognome: </label><br>
+                <input id="lastname" disabled="disabled"><br>
+                <label for="dateOfBirth">Data di nascita: </label><br>
+                <input id="dateOfBirth" disabled="disabled"><br>
+                <label for="country">Paese: </label><br>
+                <input id="country" disabled="disabled"><br>
+                <label for="city">Città: </label><br>
+                <input id="city" disabled="disabled"><br>
+                <label for="streetAddress">Indirizzo: </label><br>
+                <input id="streetAddress" disabled="disabled"><br>
+                <label for="zipcode">Codice postale: </label><br>
+                <input id="zipcode" disabled="disabled"><br>
+            </form>
+        </div>
+
+        <div id="buttonPanel" class="d-flex justify-content-evenly mt-3">
+            <button type="button" class="btn btn-primary" id="modify">Modify</button>
+            <div id="wrapperdelete" data-toggle="tooltip"
+                title="Non è possibile eliminare un cliente che ha noleggi aperti o chiusi">
+                <button type="button" class="btn btn-danger" id="delete">Delete</button>
+            </div>
+            <button type="button" class="btn btn-warning" id="submit">Submit</button>
+        </div>
+
+        <!-- Informazioni su rent pending & aperti -->
+        <!-- Informazioni tutti i rent effettuati  -->
+        <!-- Info sui prodotti che cerca più frequentemente  ?? -->
+        <div id="rentInfo" class="mt-5">
+            <div id="pendingRent" class="row">
+                <h1>Noleggi in attesa di conferma: </h1>
+            </div>
+            <div id="openRent" class="row">
+                <h1>Noleggi aperti:</h1>
+            </div>
+            <div id="closeRent" class="row">
+                <h1>Noleggi conclusi:</h1>
+            </div>
+        </div>
+    </div>
+</body>
+
+<footer>
+
     <script>
-        function rentalPage(id) {
-            localStorage.setItem('idRental', id)
-
-            document.location.href = "../rentPages/rentalPage.html"
-        }
+        let customer
+        let state = true
 
         $('document').ready(async () => {
 
             const idCustomer = localStorage.getItem('idCustomer')
-            let customer = await api.customers.getSingle(idCustomer)
-            customer = customer.data
+            customer = (await api.customers.getSingle(idCustomer)).data
+
             let query = {
                 paginatorLimit: 0,
                 populate: true
@@ -78,15 +138,16 @@
             //Aggiungo le info come placeholder del form
             $('#username').attr('value', `${customer.loginInfo.username}`)
             $('#firstname').attr('value', `${customer.firstname}`)
-            $('#lastname').attr('value', ` ${customer.lastname}`)
-            $('#dateOfBirth').attr('value', `${customer.dateOfBirth}`)
+            $('#lastname').attr('value', `${customer.lastname}`)
+            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
             $('#country').attr('value', `${customer.address.country}`)
             $('#city').attr('value', `${customer.address.city}`)
             $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
+            $('#zipcode').attr('value', `${customer.address.zipcode}`)
 
             //Aggiungo altre informazioni dell'utente
             $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
-            $('#description').attr('value', `${customer.description}`)
+            $('#description').val(customer.description)
 
             //Prendo le rent
             let rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
@@ -106,9 +167,8 @@
                     closeRentals.push(rent)
             });
 
-            if (openRentals.length > 0 || closeRentals > 0) {
+            if (openRentals.length > 0 || closeRentals.length > 0) {
                 $('#delete').addClass('disabled')
-                console.log('entrato')
             }
             //TODO: formattare le date in modo umano
             pendingRentals.forEach(rent => {
@@ -144,64 +204,26 @@
             });
 
         })
-    </script>
 
-</head>
-
-<body>
-    <div id="content" class="row">
-
-        <div class="col-sm-6 d-flex justify-content-end">
-            <div class="row d-flex justify-content-end">
-                <img class="img-fluid rounded" id="profilepicture" style="height: 18em; width: 18em;"><br>
-                <textarea id="description" class="mt-3" disabled="disabled"></textarea>
-            </div>
-
-        </div>
-
-        <div class="col-sm-6">
-            <form id="customerInfo">
-                <label for="username">Username: </label><br>
-                <input id="username" disabled="disabled"><br>
-                <label for="firstname">Name: </label><br>
-                <input id="firstname" disabled="disabled"><br>
-                <label for="lastname">Surname: </label><br>
-                <input id="lastname" disabled="disabled"><br>
-                <label for="dateOfBirth">Date of birth: </label><br>
-                <input id="dateOfBirth" disabled="disabled"><br>
-                <label for="country">Country: </label><br>
-                <input id="country" disabled="disabled"><br>
-                <label for="city">City: </label><br>
-                <input id="city" disabled="disabled"><br>
-                <label for="streetAddress">streetAddress: </label><br>
-                <input id="streetAddress" disabled="disabled"><br>
-            </form>
-        </div>
-
-        <div id="buttonPanel" class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary" id="modify" value="Modifica">Modify</button>
-            <div style="width: 10em;"></div>
-            <div id="wrapperdelete" data-toggle="tooltip"
-                title="Non è possibile eliminare un cliente che ha noleggi aperti o che ne ha conclusi altri">
-                <button type="button" class="btn btn-danger" id="delete" data-toggle="tooltip"
-                    title="wow">Delete</button>
-            </div>
-        </div>
-
-        <!-- Informazioni su rent pending & aperti -->
-        <!-- Informazioni tutti i rent effettuati  -->
-        <!-- Info sui prodotti che cerca più frequentemente  ?? -->
-        <div id="rentInfo" class="mt-5">
-            <div id="pendingRent" class="row d-flex justify-content-evenly"></div>
-            <div id="openRent" class="row d-flex justify-content-evenly"></div>
-            <div id="closeRent" class="row d-flex justify-content-evenly"></div>
-        </div>
-    </div>
-</body>
-
-<footer>
-    <script>
-        let state = true
+        function getFormCustomer() {    
+            let newCustomer = {
+                firstname: $('#firstname').val(),
+                lastname: $('#lastname').val(),
+                dateOfBirth: $('#dateOfBirth').val(),
+                loginInfo: customer.loginInfo,
+                address: {
+                    city: $('#city').val(),
+                    country: $('#country').val(),
+                    streetAddress: $('#streetAddress').val(),
+                    zipcode: $('#zipcode').val(),
+                },
+                description: $('#description').val() || "",
+                profilePicture: "image/profile/placeholder.png",
+                _id: customer._id
+            }
+            console.log(newCustomer)
+            return newCustomer
+        }
 
         $('#modify').click(async () => {
             if (state) {
@@ -212,9 +234,11 @@
                 $('#country').removeAttr('disabled')
                 $('#city').removeAttr('disabled')
                 $('#streetAddress').removeAttr('disabled')
+                $('#zipcode').removeAttr('disabled')
+                $('#description').removeAttr('disabled')
 
                 state = false
-                addSubmit()
+                // addSubmit()
             }
             else {
                 $('#username').attr('disabled', 'disabled')
@@ -224,10 +248,11 @@
                 $('#country').attr('disabled', 'disabled')
                 $('#city').attr('disabled', 'disabled')
                 $('#streetAddress').attr('disabled', 'disabled')
+                $('#zipcode').attr('disabled', 'disabled')
+                $('#description').attr('disabled', 'disabled')
 
                 state = true
-                $('#submit').remove()
-                $('#otherspace').remove()
+                // $('#submit').remove()
             }
 
         })
@@ -235,18 +260,23 @@
         //Devo aggiungere un bottone per fare il submit
         function addSubmit() {
             $('#buttonPanel').append(`
-        <div id="otherspace" style="width:10em;"></div>
-        <button id="submit" class="btn btn-warning" >Submit</button>`)
+            <button id="submit" class="btn btn-warning>Submit</button>
+            `)
         }
 
-        $('#submit').click(() => {
-            console.log('Fare una patch della submit')
+        $('#delete').on('click', async (event) => {
+            event.preventDefault()
+
+            const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
+            console.log(response)
         })
 
-        $('#delete').click(async () => {
+        $('#submit').on('click', async (event) => {
+            event.preventDefault()
+
+            const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
+            console.log(response)
         })
-
-
     </script>
 </footer>
 

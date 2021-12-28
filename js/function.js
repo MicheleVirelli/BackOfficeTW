@@ -45,7 +45,6 @@ function paginator(elemForPage, array) {
   return paginate;
 }
 
-// TODO: aggiungere il nome della variabile passata
 function refreshNavPage(array, arrayName, tableName) {
   console.log("Refreshing:" + tableName);
   $("#pagenav").children().remove();
@@ -77,6 +76,12 @@ function productPage(id) {
 function customerPage(id) {
   localStorage.setItem("idCustomer", id);
   document.location.href = "customerPage.html";
+}
+
+function rentalPage(id) {
+  localStorage.setItem("idRental", id);
+
+  document.location.href = "../rentPages/rentalPage.html";
 }
 
 function refreshNauthTable(paginateArray, value) {
@@ -149,4 +154,14 @@ function refreshClientGrid(paginateArray, value) {
     `);
     })
   );
+}
+
+function serializeFormsJson(form) {
+  let json
+
+  form.querySelectorAll("input, select, textarea").forEach(element => {
+      json[element.id] = element.value
+  });
+
+  return json
 }
