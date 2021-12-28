@@ -46,11 +46,6 @@
     </script>
 
     <script>
-        async function checkToken() {
-            const logged = await config.loggedIn()
-            if (logged == false)
-                document.location.href = "../../nauthHome.html"
-        }
         checkToken()
     </script>
 
@@ -58,37 +53,32 @@
 
 <body>
     <div id="content">
-        <form class="d-flex">
+        <div class="d-flex justify-content-center"><h1>Prodotti</h1>
+        </div>
 
+        <form class="d-flex">
             <div class="input-group mb-3">
                 <span class="input-group-default" id="basic-addon1">
                     <select class="form-select" id="field">
-                        <option>Scegli in che campo cercare</option>
-                        <option>Nome</option>
-                        <option>Categoria</option>
-                        <option>Sottocateoria</option>
-                        <option>Tag</option>
+                        <option value="name">Scegli in che campo cercare</option>
+                        <option value="name">Nome</option>
+                        <option value="category">Categoria</option>
+                        <option value="subcategory">Sottocateoria</option>
                     </select>
                 </span>
-                <input type="text" class="form-control"
-                    placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui" aria-label="Username"
-                    aria-describedby="basic-addon1" id="name">
-                <button id="submit" class="btn" type="submit"
-                    style="background-color: #212529; color: white;">Cerca</button>
+                <input type="text" class="form-control" id="value">
+                <button id="submit" class="btn  btn-search" type="submit">Cerca</button>
             </div>
         </form>
+
+        <div id="productlist"></div>
+        <div id="pagenav" class="pb-3"></div>
     </div>
 </body>
 
 <footer>
-    <script>
+    <!-- <script>
         const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
-
-        function productPage(id) {
-            localStorage.removeItem('idProduct')
-            localStorage.setItem("idProduct", id);
-            document.location.href = "productPage.html";
-        }
 
         $.get(urlproducts, (products) => {
             $('#content').append(`
@@ -168,6 +158,35 @@
             `)
             })
         })
+    </script> -->
+
+    <script>
+        let products
+        let query
+        let elementForPage = 50
+        let paginateProducts
+        let searchProducts
+
+        $(document).ready(async () => {
+            query = { limit: 0 }
+            products = (await api.products.get(query)).data.docs
+
+            paginateProducts = paginator(elementForPage, products)
+
+            refreshNauthTable(paginateProducts, 0, 'productPage')
+            refreshNavPage(paginateProducts, 'paginateProducts', 'refreshNauthTable')
+        })
+
+        //Funzione per la ricerca
+        $('#submit').on('click', (event) => {
+            event.preventDefault()
+
+            searchProducts = filterBy(products, [$('#field').val()], $('#value').val())
+            searchProducts = paginator(elementForPage, searchProducts)
+            refreshNauthTable(searchProducts, 0, 'productPage')
+            refreshNavPage(searchProducts, 'searchProducts', 'refreshNauthTable')
+        })
+
     </script>
 </footer>
 

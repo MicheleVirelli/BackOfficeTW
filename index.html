@@ -1,189 +1,119 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="it">
 
 <head>
-  <title>ThePrivilege employee stuff</title>
+    <title>ThePrivilege employee stuff</title>
 
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  <!-- Option 1: Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  <!--Stylesheet -->
-  <link rel="stylesheet" href="../../css/random.css">
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
-  <!-- Jquery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/style.css">
 
-  <!-- Awesome CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  </script>
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </script>
 
-  <!-- Axios -->
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-  <!-- Richiesta Api dal backend -->
-  <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
-  <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
-  <script>    
-    async function checkToken() {
-        const logged = await config.loggedIn()
-        if (logged)
-            document.location.href = "html/authenticatedPage/authIndex.html"
-    }
-    checkToken()
-</script>
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        //Import dell'header
+        $.get('html/templates/nauthNav.html', (data) => {
+            $('body').append(data)
+        })
+    </script>
 </head>
 
 <body>
-  <div class="containero">
-      <div id="header"></div>
-      <div id ="content">
-        <h1>Inventory</h1>
-        <table class="table">
-          <head>
-          <tr>
-            <th>Aviability</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Subcategory</th>
-            <th>Number of alternative Products</th>
-            <th>Number of units</th>
-          </tr>
-          </head>
-
-        </table>
-        <div id="productlist">
+    <div id="content">
+        <div id="title" class="d-flex justify-content-center">
+            <h1>Pagina degli impiegati</h1>
         </div>
-
-      </div>
+        <div class="d-flex justify-content-center">
+            <div id="contenuto" class=" w-50 h-50">
+                <p>Questa pagina contiene alcune funzioni basilari che possono essere effettuate senza essere
+                    autenticati.</p>
+                <p>Per utilizzare le funzioni complete del sito è necessario eseguire l'accesso</p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!--login modal-->
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!--header-->
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Login</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- login modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--header-->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!--body-->
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password"
+                                name="password">
+                        </div>
+                        <div class="form-check mb-3">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                            </label>
+                        </div>
+                        <!-- TODO: pagina di registrazione -->
+                        <div class="form-check mb-3">
+                            <a href="#">Non sei ancora registrato ?</a>
+                        </div>
+                        <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <!--footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
-        <!--body-->
-        <div class="modal-body">
-          <form id="loginForm">
-            <div class="mb-3 mt-3">
-              <label for="email" class="form-label">Email:</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-            </div>
-            <div class="mb-3">
-              <label for="pwd" class="form-label">Password:</label>
-              <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
-            </div>
-            <div class="form-check mb-3">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-              </label>
-            </div>
-            <!-- TODO: pagina di registrazione -->
-            <div class="form-check mb-3">
-              <a href="#">Non sei ancora registrato ?</a>
-            </div>
-            <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-        <!--footer-->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
 
 </body>
 
-
 <footer>
-  <script>
+    <script>
 
-    /* Import della sidebar e dell'header */
-    $('document').ready(() => {
-      $('#header').load('html/templates/nauthNav.html')
-    })
+        $('#loginsubmit').on('click', async (event) => {
+            event.preventDefault()
 
-    /* Caricamento dati inventario */
-    const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
+            logIn(loginForm)
+        })
 
-    $.get(urlproducts, (products) => {
-      products.docs.forEach(element => {
-        $('.table').append(`
-          <tr class="clickable-row" data-href="${element._id}">
-            <td>Boh</td>
-            <td>${element.name}</td>
-            <td>${element.category}</td>
-            <td>${element.subcategory}</td>
-            <td>${element.altproducts.length}</td>
-          </tr>
-        `)
-      })
-      $('.clickable-row').on('click', () => { 
-        localStorage.setItem("idProduct", $('.clickable-row').attr('data-href'));
-        document.location.href = "/html/inventoryPages/productPage.html";
-      })
-
-    })
-
-    // $.get(urlproducts, function (products) {
-    //   //TODO: non è accessibile
-    //   products.docs.forEach(element => {
-    //     $("#productlist").append(
-    //       `<a><div class="card noproducts cardmargin mb-3" onclick="productPage('${element._id}')">
-    //           <div class="card box aviable"></div>
-    //           <nobr class="pinfo">${element.name} ,${element.category}, ${element.subcategory}, n° ${element.altproducts.length}, ${element.tags}</nobr>
-    //           </div></a>`);
-    //   });
-    // });
-
-    // /* Setto l'id del prodotto in cui devo andare a vedere la pagina */
-    // function productPage(id) {
-    //   localStorage.setItem("idProduct", id);
-
-    //   document.location.href = "/html/inventoryPages/productPage.html";
-    // }
-
-    function serializeFormJson(form) {
-      return Array.from(form.querySelectorAll('input, select, textarea'))
-        .filter(element => element.name)
-        .reduce((json, element) => { json[element.name] = element.type === 'checkbox' ? element.checked : element.value; return json; }, {});
-    }
-
-    $('#loginsubmit').click(async function (event) {
-      event.preventDefault()
-
-      const data = serializeFormJson(loginForm);
-
-      const response = await api.employees.login(data);
-
-      if (response.status == 200)
-        config.setToken(response.headers.authorization, data.remember)
-      console.log(config.getToken())
-      //1) inidirizzo di base 
-      //2) solo server side 
-      document.location.href = "/html/authenticatedPage/authIndex.html"
-    });
-
-  </script>
+    </script>
 </footer>
 
 </html>

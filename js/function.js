@@ -2,7 +2,13 @@ function logOut() {
   sessionStorage.removeItem("authToken");
   localStorage.removeItem("authToken");
 
-  document.location.href = "../../nauthHome.html";
+  document.location.href = "../../index.html";
+}
+
+async function checkToken() {
+  const logged = await config.loggedIn()
+  if (logged == false)
+      document.location.href = "../../index.html"
 }
 
 function serializeFormJson(form) {
@@ -67,7 +73,7 @@ function refreshNavPage(array, arrayName, tableName) {
   });
 }
 
-function productPage(id) {
+function nauthProductPage(id) {
   localStorage.removeItem("idProduct");
   localStorage.setItem("idProduct", id);
   document.location.href = "nauthProductPage.html";
@@ -84,7 +90,13 @@ function rentalPage(id) {
   document.location.href = "../rentPages/rentalPage.html";
 }
 
-function refreshNauthTable(paginateArray, value) {
+function productPage(id) {
+  localStorage.removeItem('idProduct')
+  localStorage.setItem("idProduct", id);
+  document.location.href = "productPage.html";
+}
+
+function refreshNauthTable(paginateArray, value, pageFunction) {
   let boolColor = true;
 
   $("#productlist").children().remove();
@@ -107,7 +119,7 @@ function refreshNauthTable(paginateArray, value) {
     $("#nauthTable").append(`
       <tr class="clickable-row ${
         boolColor ? "td" : "tr"
-      }" onclick="productPage('${product._id}')">
+      }" onclick="${pageFunction}('${product._id}')">
         <td>${product.name}</td>
         <td>${product.category}</td>
         <td>${product.subcategory}</td>
@@ -119,7 +131,7 @@ function refreshNauthTable(paginateArray, value) {
 function filterBy(array, fields, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
-
+  
   array.forEach((element) => {
     if (element != undefined) {
       fields.forEach((field) => {
