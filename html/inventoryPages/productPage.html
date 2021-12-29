@@ -42,9 +42,6 @@
         $.get('../templates/authNav.html', (data) => {
             $('body').append(data)
         })
-    </script>
-
-    <script>
         checkToken()
     </script>
 
@@ -66,11 +63,7 @@
             </div>
         </div>
 
-        <div class="mb-4">
-            <div class="card mb-3 row">
-                <div class="container-fluid row p-0 m-0" id="altproductsinfo">
-                </div>
-            </div>
+        <div id="altproductsinfo" class="row mb-4">
         </div>
 
         <div id="rentinfo" class="row mb-4"></div>
@@ -92,15 +85,6 @@
             const units = (await api.units.get()).data
             console.log(units)
             
-
-            //TODO: Risolvere il problema delle chiamate multiple
-            // let altproducts
-            // product.altproducts.forEach(idAltProducts => {
-            //     console.log(idAltProducts)
-            //     altproducts = (await api.products.getSingle(idAltProducts)).data
-            //     console.log(altproducts)
-            // });
-
             //Informazioni base sul prodotto
             $('#basicinfo').append(`
             <div class="card">
