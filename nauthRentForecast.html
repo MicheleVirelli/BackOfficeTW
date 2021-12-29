@@ -49,32 +49,25 @@
 
 <body>
   <div id="content">
-    <form class="myform card row g-5 mt-3 ms-auto me-auto p-3 pt-0" >
+    <form class="myform card row g-5 mt-3 ms-auto me-auto p-3 pt-0">
       <h1>Previsione di un noleggio</h1>
       <h4>Inserisci il nome del prodotto e le date in cui lo stai cercando</h4>
       <div class="row">
-        <!-- <div class="col-md-4">
-          <label>Nome Prodotto</label>
-          <input type="text" class="form-control is-invalid" id="productname" style="background-color: #FEE9FF;">
-          <div class="invalid-feedback">
-            Questo prodotto non esiste
-          </div> -->
         <div class="input-group mb-3">
           <span class="input-group-default">
             <select class="form-select" id="field">
-              <option>Scegli in che campo cercare</option>
-              <option>Nome</option>
-              <option>Categoria</option>
-              <option>Sottocateoria</option>
-              <option>Tag</option>
+              <option value="name">Scegli in che campo cercare</option>
+              <option value="name">Nome</option>
+              <option value="category">Categoria</option>
+              <option value="subcategory">Sottocateoria</option>
             </select>
           </span>
           <input id="productname" type="text" class="form-control"
             placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui">
-          <button id="submit" class="btn" type="submit" style="background-color: #212529; color: white;">Cerca</button>
+          <button id="submit" class="btn btn-search" type="submit">Cerca</button>
         </div>
-
       </div>
+
       <div class="row">
         <div class="input-group mb-3 col-md-4">
           <span class="input-group-text" id="basic-addon1">Data inizio: </span>
@@ -137,33 +130,24 @@
     //TODO: Voglio cambiare il metodo di ricerca con uno che si aggiorna per carattere  
     $('#submit').on('click', async (event) => {
       event.preventDefault()
-
-      const name = $('#productname').val()
-      const startDate = $('#productstartdate').val() + 'T00:00:00.000Z'
-      const endDate = $('#productenddate').val() + 'T00:00:00.000Z'
-      const date = new Date()
+      $('#productsAvailable').children('.card ').remove()
 
       let query = {
-        name: name,
+        name: $('#productname').val(),
+        from: $('#productstartdate').val() + 'T00:00:00.000Z',
+        to: $('#productenddate').val() + 'T00:00:00.000Z',
       }
 
       const products = (await api.products.get(query)).data.docs
       console.log(products)
 
-      query = {
-        from: startDate,
-        to: endDate
-      } 
+      const availability = (await api.products.available(products[0]._id, query)).data
+      console.log(availability)
+      console.log(!availability.available)
 
-      const response = (await api.products.available(products[0]._id, query)).data
-      console.log(response)
+      //Se il prodotto non è definito, se è lungo 0 e se la disponibilità è false => notifica dell'errore
 
-      //TODO: Devo fare la ricerca che sia disponibile
-
-      //TODO: Migliorare la card dei prodotti e provare a fare uno scorrimento orizontale
-      $('#productsAvailable').children('div').remove()
-
-      products.length == 0 ?
+      products.length == 0 && !availability.available ?
         $('#productsAvailable').append(`
         <div class="card mt-3">
         <h4> Non ci sono prodotti disponibili o il prodotto cercato non esiste </h4>
@@ -172,9 +156,9 @@
         :
         products.forEach(product => {
           $('#productsAvailable').append(`
-          <div class="card mt-3" style="background-color:#B2A8B9;">
-          <h4>${product.name}</h4>
-          <p>Caricare l'immagine</p>
+          <div class="card mt-3">
+          <h4>${product.name} è disponibile !</h4>
+          <img src="https://site202120.tw.cs.unibo.it/${product.image}"></img>
           <p>Proporre il prezzo</p>
           </div>`)
         })
@@ -182,6 +166,11 @@
 
   </script>
 
+
+
+
+
+  <!-- Script per far funzionare il modale -->
   <script>
     $('#loginsubmit').on('click', async (event) => {
       event.preventDefault()
