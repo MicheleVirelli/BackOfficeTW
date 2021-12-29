@@ -53,6 +53,12 @@ body {
   background-color: var(--main-primary);
   color:var(--text-color);  
 }
+
+.td:hover{
+  background-color: var(--main-secondary);
+  color: var(--text-color)
+}
+
 .tr{
   background-color: var(--main-secondary);
   color:var(--text-color);  
@@ -61,4 +67,9 @@ body {
 .modal-content{
   background-color: var(--main-secondary);
   color: var(--text-color)
+}
+
+.bg-static{
+  background-color: var(--main-primary);
+  color:var(--text-color);  
 }
