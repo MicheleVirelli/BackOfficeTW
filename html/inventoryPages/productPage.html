@@ -51,20 +51,9 @@
     <div id="content">
         <div id="basicinfo" class="row mb-4"></div>
 
-        <div id="unitinfo" class="row mb-4">
-            <div class="card mb-3 p-3">
-                <table class="table table-hover" id="unitpart">
-                    <tr>
-                        <td>Unit</td>
-                        <td>Price</td>
-                        <td>Stato</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        <div id="unitinfo" class="row mb-4"></div>
 
-        <div id="altproductsinfo" class="row mb-4">
-        </div>
+        <div id="altproductsinfo" class="row mb-4"></div>
 
         <div id="rentinfo" class="row mb-4"></div>
     </div>
@@ -84,66 +73,11 @@
 
             const units = (await api.units.get()).data
             console.log(units)
-            
-            //Informazioni base sul prodotto
-            $('#basicinfo').append(`
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4  pt-4">
-                        <img src="https://site202120.tw.cs.unibo.it/${product.image}" class="img-fluid rounded-start" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text">${product.category}, ${product.subcategory}</p>
-                            <p class="card-text">${product.description}</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `)
 
-            //Informazioni sulle unità legate al prodotto
 
-            let i = 0
-            units.forEach(unit => {
-                i++
-                $('#unitpart').append(`
-                    <tr>
-                        <td>Unit n°${i}</td>
-                        <td>${unit.price}</td>
-                        <td>${unit.condition}</td>
-                    </tr>
-                `)
-            });
-
-            //Informazioni sui prodotti alternativi
-            // $('#altproductsinfo').append(`
-            // <div class="card mb-3 row" style="background-color:#B2A8B9;">
-
-            // </div>
-            // `)
-                let rental = {boh: 'placeholder', unit: 'placeholder'}
-            $('#altproductinfo').append(`
-                <div class="card col-sm-4">
-                    <img src="https://site202120.tw.cs.unibo.it/${rental.boh}" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">${rental.unit}/h5>
-                        <p class="card-text">${rental.boh}</p>
-                    </div>
-                </div>
-            `)
-
-            //Informazioni sui rent
-            $('#rentinfo').append(`
-            <div class="card mb-3">
-                <p>Funzioni al momento non disponibili</p>
-            </div>
-            `)
-
-            //TODO: Sarebbe bello vedere i kit legati al prodotto ...
-
+            //Informazioni di base sul prodotto: 
+             
+            //Informazioni sulle unit del prodoto:
         })
     </script>
 </footer>

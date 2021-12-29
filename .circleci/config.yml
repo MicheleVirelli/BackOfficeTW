@@ -37,9 +37,6 @@ jobs:
             scp -r html/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
             scp -r js/ michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
             scp nauthHome.html michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
-            scp nauthProductPage.html michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
-            scp nauthProductsList.html michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
-            scp nauthRentForecast.html michele.virelli2@donpasquale.cs.unibo.it:/home/web/site202120/html/public/frontend/backoffice/
 
 
 
