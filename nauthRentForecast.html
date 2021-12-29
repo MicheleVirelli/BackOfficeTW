@@ -137,9 +137,10 @@
     //TODO: Voglio cambiare il metodo di ricerca con uno che si aggiorna per carattere  
     $('#submit').on('click', async (event) => {
       event.preventDefault()
+
       const name = $('#productname').val()
-      const startDate = $('#productstartdate').val()
-      const endDate = $('#productenddate').val()
+      const startDate = $('#productstartdate').val() + 'T00:00:00.000Z'
+      const endDate = $('#productenddate').val() + 'T00:00:00.000Z'
       const date = new Date()
 
       let query = {
@@ -147,8 +148,15 @@
       }
 
       const products = (await api.products.get(query)).data.docs
-
       console.log(products)
+
+      query = {
+        from: startDate,
+        to: endDate
+      } 
+
+      const response = (await api.products.available(products[0]._id, query)).data
+      console.log(response)
 
       //TODO: Devo fare la ricerca che sia disponibile
 
@@ -157,7 +165,7 @@
 
       products.length == 0 ?
         $('#productsAvailable').append(`
-        <div class="card mt-3" style="background-color:#B2A8B9;">
+        <div class="card mt-3">
         <h4> Non ci sono prodotti disponibili o il prodotto cercato non esiste </h4>
         </div>
         `)

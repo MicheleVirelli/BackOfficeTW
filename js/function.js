@@ -2,13 +2,13 @@ function logOut() {
   sessionStorage.removeItem("authToken");
   localStorage.removeItem("authToken");
 
-  document.location.href = "../../index.html";
+  document.location.href = "../../nauthHome.html";
 }
 
 async function checkToken() {
   const logged = await config.loggedIn()
   if (logged == false)
-      document.location.href = "../../index.html"
+      document.location.href = "../../nauthHome.html"
 }
 
 function serializeFormJson(form) {
