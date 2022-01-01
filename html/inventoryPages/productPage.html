@@ -51,33 +51,206 @@
     <div id="content">
         <div id="basicinfo" class="row mb-4"></div>
 
-        <div id="unitinfo" class="row mb-4"></div>
+        <div id="taginfo" class="mb-4">Tags del prodotto:</div>
+
+        <div class="d-flex justify-content-end col-sm-12 mb-4 ">
+            <button id="addunits" class="btn btn-search">Aggiungi unit al prodotto</button>
+        </div>
+
+        <div id="unitinfo" class="container mb-4"></div>
+
+        <form id="altproductform" class="mb-4">
+            <div class="input-group">
+                <span class="input-group-text">Scegli un prodotto da aggiungere a quelli alternativi</span>
+                <select id="alternative" class="form-select">
+                </select>
+                <button class="btn btn-search" id="confirmaltproduct">Conferma</button>
+            </div>
+        </form>
 
         <div id="altproductsinfo" class="row mb-4"></div>
 
-        <div id="rentinfo" class="row mb-4"></div>
+        <div id="rentinfo" class="row mb-4">
+
+        </div>
     </div>
 </body>
 
 <footer>
     <script>
         const idProduct = localStorage.getItem("idProduct");
+        let product
 
         $(document).ready(async function () {
             let query = {
                 populate: true
             }
 
-            const product = (await api.products.getSingle(idProduct, query)).data
+            product = (await api.products.getSingle(idProduct, query)).data
             console.log(product)
 
-            const units = (await api.units.get()).data
+            const units = (await api.products.getUnits(idProduct)).data
             console.log(units)
 
+            query = { limit: 0 }
+            const products = (await api.products.get(query)).data.docs
+            console.log(products)
 
-            //Informazioni di base sul prodotto: 
-             
+            let altproducts = []
+            product.altproducts.forEach(altprod => {
+                products.forEach(prod => {
+                    if (prod._id == altprod)
+                        altproducts.push(prod)
+                })
+            })
+            console.log(altproducts)
+
+            query = {product: idProduct , limit: 0}
+
+            const rentals = (await api.rentals.get(query)).data.docs
+            console.log(rentals)
+
+            function refreshUnits() {
+                let i = 0
+                units.forEach(unit => {
+                    i++
+                    $('#unitinfo').append(`
+                <div id="${unit._id}" class="row mb-2 card p-1" style="flex-direction:row;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-2 d-flex align-items-center">Unit n° ${i}</div>
+                    <div class="col-sm-3 d-flex align-items-center">Condizione: ${unit.condition}</div>
+                    <div class="col-sm-3 d-flex align-items-center">Prezzo: ${unit.price}</div>
+                    <button class="col-sm-2 btn btn-search id="deleteunit">Cancella</button>
+                    <div class="col-sm-1"></div>
+                </div>
+                `)
+                    //TODO: Units non ha delete su api
+                    $('#deleteunit').on('click', async () => {
+
+                    })
+                })
+            }
+
+            function deleteAltProduct(id) {
+                let i = 0
+                altproducts.forEach(altprod => {
+                    if(altprod._id == id)
+                        delete altproducts[i]
+                    i++
+                })
+            }
+
+            async function refreshAltProducts() {
+                altproducts.forEach(altprod => {
+                    $('#altproductsinfo').append(`
+                        <div class="card col-sm-3 me-5">
+                            <img src="https://site202120.tw.cs.unibo.it/${altprod.image}">
+                            <p class="card-text">${altprod.name}</p>
+                            <button class="btn btn-search" id="removealtproduct" onClick="deleteAltProduct(${altprod._id})">Rimuovi</button>
+                        </div>
+                    `)
+                    
+                    refreshAltProducts()
+                })
+            }
+
+            //TODO: Bottone di modifica delle informazioni 
+            //Informazioni di base sul prodotto:
+            $('#basicinfo').append(`
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4  pt-4">
+                        <img src="https://site202120.tw.cs.unibo.it/${product.image}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text">${product.category}, ${product.subcategory}</p>
+                            <p class="card-text">${product.description}</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `)
+
             //Informazioni sulle unit del prodoto:
+            refreshUnits()
+
+            $('#addunits').on('click', async (event) => {
+                event.preventDefault()
+
+                //Append in cima con campi dove posso inserire il testo
+                $('#unitinfo').prepend(`
+                <div id="newUnit" class="row mb-2 card p-2" style="flex-direction:row;">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="value" disabled="disabled" placeholder="${product.name}">
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-select" id="condition">
+                            <option value="broken">Rovinato</option>
+                            <option value="major flaw">Leggermente rovinato</option>
+                            <option value="minor flaw">Quasi perfetto</option>
+                            <option value="prefect">Perfetto </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="price" placeholder="Prezzo: ">
+                    </div>
+                    <button id="confirmunit" class="col-sm-2 btn btn-search">Conferma</button>
+                    <button id="deleteunitcard" class="col-sm-2 btn btn-search">Cancella</button>
+                </div>
+                `)
+
+                $('#deleteunitcard').on('click', () => {
+                    $('#newUnit').remove()
+                })
+
+                $('#confirmunit').on('click', async () => {
+                    let newUnit = {
+                        name: product.name,
+                        condition: $('#condition').val(),
+                        price: $('#price').val(),
+                    }
+
+                    const response = (await api.units.post(newUnit, product._id)).data
+                    console.log(response)
+
+                    $('#unitinfo').children('div').remove()
+
+                    //Faccio il refresh delle unit
+                    refreshUnits()
+                })
+            })
+
+            //Informazioni sui rental del prodotto:
+
+
+            //Informazioni sui prodotti alternativi al prodotto
+            //Inserisco i prodotti possibili nel select
+            products.forEach(prod => {
+                $('#alternative').append(`
+                <option value="${prod._id}">${prod.name}</option>
+                `)
+            })
+
+            //Bottone per aggiungere i prodotti alternativi
+            $('#confirmaltproduct').on('click', async (event) => {
+                event.preventDefault()
+
+                product.altproducts.push($('#alternative').val())
+
+                const response = (await api.products.patchSingle(product._id, product))
+                console.log(response)
+
+                refreshAltProducts()
+            })
+
+            //Cerco tra questi quali fanno già parte dei prodotti alternativi e faccio una card 
+
+            refreshAltProducts()
+
+
         })
     </script>
 </footer>

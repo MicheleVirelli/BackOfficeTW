@@ -33,7 +33,11 @@
 
     <!-- Richiesta Api dal backend -->
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
-    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script> 
+
+    <!-- Richiesta Api da locale 
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>-->
 
     <!-- Funzioni di supporto -->
     <script src="js/function.js"></script>
@@ -114,12 +118,18 @@
 
 <footer>
     <script>
-
+        //IMPORTANTE: Da usare quando il server torna a funzionare
         $('#loginsubmit').on('click', async (event) => {
             event.preventDefault()
 
             logIn(loginForm)
+            // event.preventDefault()
+
+            // config.setToken()
+            // document.location.href="./html/authenticatedPage/authIndex.html"
         })
+
+        
 
     </script>
 </footer>
