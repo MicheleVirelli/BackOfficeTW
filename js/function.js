@@ -142,11 +142,11 @@ function filterBy(array, fields, value) {
   return filtered;
 }
 
-function filterByForRentals(array, fields, value) {
+function filterByForRentals(array, field, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
 
-  if(fields == 'unit'){
+  if(field == 'unit'){
     array.forEach((element) => {
       if (element != undefined) {
         if (element.unit.name.trim().toLowerCase().includes(value))
