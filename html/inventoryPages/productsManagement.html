@@ -75,7 +75,7 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">Descrizione:</span>
                     <textarea type="text" class="form-control" id="description" name="description"
-                        style="height:20em;"></textarea>
+                        style="height:10em;"></textarea>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Immagine del prodotto:</span>
@@ -123,38 +123,6 @@
 
         })
     </script>
-
-
-    <!-- <script>
-        $(document).ready(async () => {
-            let query = { limit: 0 }
-            const products = (await api.products.get(query)).data.docs
-            console.log(products)
-
-            products.forEach(product => {
-                $('#inputproduct').append(`
-                    <option value="${product._id}">${product.name}</option>
-                `)
-            })
-
-        })
-
-        $('#submitunit').on('click', async (event) => {
-            event.preventDefault()
-            let unit = {
-                name: $('#inputproduct').text(),
-                condition: $('#inputcondition').val(),
-                price: $('#inputprice').val(),
-                product: $('#inputproduct').val(),
-                rentals: []
-            }
-            console.log(unit)
-
-            const response = await api.units.post(unit, unit.product)
-            console.log(response)
-
-        })
-    </script> -->
 </footer>
 
 </html>
