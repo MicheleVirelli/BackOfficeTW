@@ -48,16 +48,47 @@
 
 <body>
     <div id="content">
-        <div class="card p-5">
-            <!-- Campi della unit: nome -> quello del prodotto, prezzo, condizione [perfect, minor flaw, major flow, broken] -->
-            <!-- Campi del rental: customer, employee, state, prenotationDate, bill, startDate, expectedEndDate, actualEndDate, unit, id, priceEstimation -->
-            <!-- Campi della bill: customer, employee, basePrice, modifier, finalPrice, startRent, endRent, unit -->
-            <!-- Campi della priceEstimation:  -->
-
-            <!-- Creo le info base del prodotto -->
-
+        <!-- Campi della unit: nome -> quello del prodotto, prezzo, condizione [perfect, minor flaw, major flow, broken] -->
+        <!-- Campi del rental: customer, employee, state, prenotationDate, bill, startDate, expectedEndDate, actualEndDate, unit, id, priceEstimation -->
+        <!-- Campi della bill: customer, employee, basePrice, modifier, finalPrice, startRent, endRent, unit -->
+        <!-- Campi della priceEstimation:  ... -->
+        <!-- Creo le info base del prodotto -->
+        <div class="d-flex justify-content-center ">
+            <h1>Aggiungi un prodotto</h1>
         </div>
-        
+        <hr>
+
+        <div class="card mb-4">
+            <form id="addProduct" class="row d-flex justify-content-center m-4 mt-5">
+                <div class="input-group mb-3 me-5 ms-5">
+                    <span class="input-group-text">Nome del Prodotto:</span>
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Categoria:</span>
+                    <input type="text" class="form-control" id="category" name="category">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Sottocategoria:</span>
+                    <input type="text" class="form-control" id="subcategory" name="subcategory">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Descrizione:</span>
+                    <textarea type="text" class="form-control" id="description" name="description"
+                        style="height:20em;"></textarea>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Immagine del prodotto:</span>
+                    <input type="file" class="form-control" id="image" name="image">
+                </div>
+                <div class="mb-3 ">
+                    <button class="btn btn-search" id="createProduct">Conferma</button>
+                    <button class="btn btn-search" id="FormCleanerTest">FormCleanerTest</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="productCard" class="mb-4"></div>
 
     </div>
 
@@ -65,6 +96,36 @@
 
 <footer>
     <script>
+        $('#createProduct').on('click', async (event) => {
+            event.preventDefault()
+
+            //Prendo i dati del form e posto l'oggetto (altprod = [])
+            let product = new FormData(addProduct)
+            console.log(product)
+
+            const response = (await api.products.post(product)).data
+            console.log(response)
+
+            //Pulisco il form
+            $('#name').val('')
+            $('#category').val('')
+            $('#subcategory').val('')
+            $('#image').val('')
+            $('#description').val('')
+
+            //Creo una card per mandare al prodotto se vogliono fare altre modifiche
+            $('#productCard').append(`
+            <div class="card mt-4" >
+                <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
+                <h2 class="d-flex justify-content-center">Clicca sulla card per continuare a modificare il prodotto </h2>
+            </div>
+            `)
+
+        })
+    </script>
+
+
+    <!-- <script>
         $(document).ready(async () => {
             let query = { limit: 0 }
             const products = (await api.products.get(query)).data.docs
@@ -75,7 +136,7 @@
                     <option value="${product._id}">${product.name}</option>
                 `)
             })
-            
+
         })
 
         $('#submitunit').on('click', async (event) => {
@@ -88,111 +149,11 @@
                 rentals: []
             }
             console.log(unit)
-            
+
             const response = await api.units.post(unit, unit.product)
             console.log(response)
-            
-        })
-    </script>
-
-    <!-- <script>
-        
-        Io voglio che li aggiorni ogni volta che inserisco un carattere
-        $('#searchP').click(() => {
-            $('#showPanel').children('div').remove()
-
-            //Mostra una searchBar nello show panel
-            $('#showPanel').append(`
-            <div>
-            <form id="searchProduct">
-                <input class="form-control me-2" type="search" placeholder="Search Products by name" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-            <div id="searchPanel"></div>
-            </div>
-            `)
-
-            $('#searchProduct').on('submit', async (event) => {
-                event.preventDefault()
-                //Rimuove le ricerche precedenti
-                $('#searchPanel').children('div').remove()
-
-                let query = { name: $('#searchProduct').children('input').val() }
-
-                const data = (await api.products.get(query)).data.docs
-
-                data.forEach(async element => {
-
-                    $('#searchPanel').append(`
-                    <div class="card">
-                        <h3>${element.name}</h3><br>
-                        <h5>${element.category}, ${element.subcategory}</h5><br>
-                        <p>${element.description}</p><br>
-                        <p>${element.tags}</p><br>
-                        <br><br>
-                        
-                    </div>
-                    `)
-
-                });
-
-            })
-        })
-
-        function getCreateFormData() {
-            let data = {
-                name: $('#createForm').children('#name').val(),
-                description: $('#createForm').children('#description').val(),
-                category: $('#createForm').children('#category').val(),
-                subcategory: $('#createForm').children('#subcategory').val(),
-                //TODO: pensare alla gestione di IMAGE TAGS ed gli ALTPRODUCTS
-                tags: $('#createForm').children('#tag').val() || [],
-                altproducts: $('#createForm').children('#altproducts').val() || [],
-            }
-            return data
-        }
-
-        Spazio per fare la post di un prodotto
-        $('#addP').click(() => {
-            $('#showPanel').children('div').remove()
-
-            //Mostra una searchBar nello show panel
-            $('#showPanel').append(`
-            <div>
-            <form id="createForm">
-                <label for="name">Product Name: </label><br>
-                <input id="name" type="text"><br>
-                <label for="description">Product Description: </label><br>
-                <textarea id="description" rows="2" cols="25"></textarea><br>
-                <label for="image">Product Image: </label><br>
-                <input id="image" type="file"><br>
-                <label for="category">Products Category: </label><br>
-                <input id="category" type="text"><br>
-                <label for="subcategory">Products Subcategory: </label><br>
-                <input id="subcategory" type="text"><br>
-                <label for="tags">Products Tag: </label><br>
-                <input id="tags" disabled="disabled" type="text"><br>
-                <label for="altproducts">Alternative to the Products: </label><br>
-                <input id="altproducts" disabled="disabled" type="text"><br>
-            
-
-                <button type="submit"> Create Products</button>
-            </form>
-            <div>
-            `)
-
-            $("#createForm").on("submit", async function (event) {
-                event.preventDefault()
-                let product = getCreateFormData()
-                console.log(product)
-
-                //Ora devo fare una post !!
-                const response = await api.products.post(product)
-                console.log(response)
-            });
 
         })
-
     </script> -->
 </footer>
 
