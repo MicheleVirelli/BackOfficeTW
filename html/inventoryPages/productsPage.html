@@ -52,7 +52,8 @@
 
 <body>
     <div id="content">
-        <div class="d-flex justify-content-center"><h1>Prodotti</h1>
+        <div class="d-flex justify-content-center">
+            <h1>Prodotti</h1>
         </div>
 
         <form class="d-flex">
@@ -66,99 +67,17 @@
                     </select>
                 </span>
                 <input type="text" class="form-control" id="value">
-                <button id="submit" class="btn  btn-search" type="submit">Cerca</button>
+                <button id="submit" class="btn btn-search" type="submit">Cerca</button>
             </div>
         </form>
 
         <div id="productlist"></div>
+
         <div id="pagenav" class="pb-3"></div>
     </div>
 </body>
 
 <footer>
-    <!-- <script>
-        const urlproducts = "https://site202120.tw.cs.unibo.it/api/products";
-
-        $.get(urlproducts, (products) => {
-            $('#content').append(`
-          <table class="table table-stripped table-dark pb-3">
-          <header>
-            <tr>
-              <th>Disponibilità oggi</th>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>SottoCategoria</th>
-              <th>Prodotti alternativi associati</th>
-              <th>Unità associate</th>
-            </tr>
-          </header>
-    
-        </table>
-        `)
-            products.docs.forEach(element => {
-                $('.table').append(`
-              <tr class="clickable-row" onclick="productPage('${element._id}')">
-                <td>
-                    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false">
-                        <title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#007bff"></rect>
-                    </svg>
-                </td>
-                <td>${element.name}</td>
-                <td>${element.category}</td>
-                <td>${element.subcategory}</td>
-                <td>${element.altproducts.length}</td>
-              </tr>
-            `)
-            })
-        })
-
-
-        //TODO: Implementare la ricerca carattere per carattere ...
-        $('#submit').on('click', async (event) => {
-            event.preventDefault()
-
-            $('.table').remove()
-
-                $('#content').append(`
-          <table class="table table-stripped table-dark">
-          <header>
-            <tr>
-              <th>Disponibilità oggi</th>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>SottoCategoria</th>
-              <th>Prodotti alternativi associati</th>
-              <th>Unità associate</th>
-            </tr>
-          </header>
-    
-        </table>
-        `)
-
-            let query = {
-                limit: 0,
-                name: $('#name').val()
-            }
-
-            const products = (await api.products.get(query)).data.docs
-
-            console.log(products)
-
-            products.forEach(element => {
-                $('.table').append(`
-              <tr class="clickable-row" onclick="productPage('${element._id}')"">
-                <td>Boh</td>
-                <td>${element.name}</td>
-                <td>${element.category}</td>
-                <td>${element.subcategory}</td>
-                <td>${element.altproducts.length}</td>
-              </tr>
-            `)
-            })
-        })
-    </script> -->
-
     <script>
         let products
         let query

@@ -48,73 +48,66 @@
 
 <body>
     <div id="content">
-        <form class="d-flex">
+        <div class="d-flex justify-content-center">
+            <h1>Noleggi</h1>
+        </div>
 
+        <form class="d-flex">
             <div class="input-group mb-3">
                 <span class="input-group-default">
                     <select class="form-select" id="field">
-                        <option value="">Scegli come cercare</option>
+                        <option value="customer">Scegli come cercare</option>
                         <option value="customer">Nome Cliente</option>
                         <option value="employee">Nome Impiegato</option>
                         <option value="unit">Nome prodotto</option>
                         <option value="state">Stato del Noleggio</option>
                     </select>
                 </span>
-                <input type="text" class="form-control"
-                    placeholder="Seleziona il campo che vuoi cercare e poi scrivi qui" aria-label="Username"
-                    aria-describedby="basic-addon1" id="name">
-                <button id="submit" class="btn" type="submit">Cerca</button>
+                <input type="text" class="form-control" id="value">
+                <button id="submit" class="btn btn-search" type="submit">Cerca</button>
             </div>
         </form>
 
-        <div class="card mb-5 p-2" style="overflow: hidden;">
-            <table class="table " id="rentable">
-            </table>
-        </div>
+        <div id="rentlist" class="mb-5 p-2"></div>
 
-        <div class="pb-3">
-            <nav>
-                <ul id="navlist" class="pagination justify-content-center">
-                </ul>
-            </nav>
-        </div>
+        <div id="pagenav" class="pb-3"></div>
 
     </div>
 </body>
 
 <footer>
     <script>
-        function rentalPage(id) {
-            localStorage.setItem('idRental', id)
-
-            document.location.href = "./rentalPage.html"
-        }
-
         let paginate = []
         let rentals
+        let boolColor = true
+        let searchedRent = []
+        let elementForPage = 50
 
-        function refreshTable(value, paginate) {
-            $('#rentable').children().remove()
+        function refreshTable(paginate, value) {
+            $('#rentlist').children().remove()
 
-            $('#rentable').append(`
-            <thead>
-                    <tr>
-                        <td>Cliente</td>
-                        <td>Impiegato</td>
-                        <td>Prodotto</td>
-                        <td>Stato</td>
-                        <td>Data Inizio</td>
-                        <td>Data Fine</td>
+            //Append dell'head della table
+            $('#rentlist').append(`
+            <table class="table" id="rentable">
+                <thead>
+                    <tr class="${boolColor ? 'td' : 'tr'}">
+                    <td>Cliente</td>
+                    <td>Impiegato</td>
+                    <td>Prodotto</td>
+                    <td>Stato</td>
+                    <td>Data Inizio</td>
+                    <td>Data Fine</td>
                     </tr>
-            </thead>
+                </thead>
+            </table>
             `)
 
             console.log('Refresh with ' + value)
-
             console.log(paginate)
 
+            //Append delle pagine dell'head 
             paginate[value].forEach(rental => {
-
+                boolColor = !boolColor
                 let employee
                 let endDate
                 let startDate = rental.startDate
@@ -125,15 +118,15 @@
                         endDate = rental.expectedEndDate
                         break;
                     case 'open':
-                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        employee = rental.employee.lastname + ' ' + rental.employee.firstname
                         endDate = rental.expectedEndDate
                         break;
                     case 'close':
-                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        employee = rental.employee.lastname + ' ' + rental.employee.firstname
                         endDate = rental.endDate || rental.expectedEndDate
                         break;
                     default:
-                        employee = rental.employee.lastname + ', ' + rental.employee.firstname
+                        employee = rental.employee.lastname + ' ' + rental.employee.firstname
                         endDate = rental.expectedEndDate
                         break;
                 }
@@ -142,7 +135,7 @@
                 startDate = (new Date(startDate)).toString().slice(0, 16)
 
                 $('#rentable').append(`
-                <tr class="clickable-row" onclick="rentalPage('${rental._id}')">
+                <tr class="clickable-row  ${boolColor ? "td" : "tr"}" onclick="rentalPage('${rental._id}')" >
                     <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
                     <td>${employee}</td>
                     <td>${rental.unit.name}</td>
@@ -155,98 +148,33 @@
         }
 
 
-        // function refreshNavPage(array) {
-        //     $('#navlist').children().remove()
-        //     c = 0
-        //     array.forEach(page => {
-        //         $('#navlist').append(`
-        //             <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c},paginate)">${c + 1}</a></li>
-        //         `)
-        //         c++
-        //     })
-        // }
-        //Get all rentals
+        //Funzione per refreshare le pag e la table 
         $('document').ready(async () => {
             let rentForPage = 50
-            let query = {
-                limit: 0,
-                populate: true,
-            }
+            let query = { limit: 0, populate: true }
 
             rentals = (await api.rentals.get(query)).data.docs
+            console.log('Tutti i noleggi:')
             console.log(rentals)
 
             //Gestisco la paginazione lato client dei rental
             paginate = paginator(rentForPage, rentals)
 
             //Gestisco il numero di pagine della navPage
-            refreshTable(0, paginate)
-
-            c = 0
-            paginate.forEach(page => {
-                $('#navlist').append(`
-                <li class="page-item"><a class="page-link" href="#" onclick="refreshTable(${c},paginate)">${c + 1}</a></li>
-                `)
-                c++
-            })
+            refreshTable(paginate, 0)
+            refreshNavPage(paginate, 'paginate', 'refreshTable')
         })
 
         //Gestione della ricerca
         $('#submit').on('click', (event) => {
             event.preventDefault()
 
-            let field = $('#field').val()
-            let value = ($('#name').val()).toString()
-            let searchedRent = []
-
-            //Cerco tra tutti i rent quelli che contengono la sottostringa value nel campo field
-            switch (field) {
-                case 'customer':
-                    rentals.forEach(rent => {
-                        if (rent.customer.firstname.includes(value) || rent.customer.lastname.includes(value))
-                            searchedRent.push(rent)
-                    })
-                    break;
-                case 'employee':
-                    rentals.forEach(rent => {
-                        if (rent.employee != undefined)
-                            if (rent.employee.firstname.includes(value) || rent.employee.lastname.includes(value))
-                                searchedRent.push(rent)
-                    })
-                    break;
-                case 'unit':
-                    rentals.forEach(rent => {
-                        if (rent.unit.name.includes(value))
-                            searchedRent.push(rent)
-                    })
-                    break;
-                case 'state':
-                    rentals.forEach(rent => {
-                        if (rent.state.includes(value))
-                            searchedRent.push(rent)
-                    })
-                    break;
-
-                default:
-                    rentals.forEach(rent => {
-                        if (rent.customer.firstname.includes(value) || rent.customer.lastname.includes(value))
-                            searchedRent.push(rent)
-                    })
-                    break;
-            }
-
-            //console.log(searchedRent)
-
-            searchedRent = paginator(50, searchedRent)
-            console.log(searchedRent)
-
-            refreshTable(0, searchedRent)
-            refreshNavPage(searchedRent)
+            searchProducts = filterByForRentals(rentals, [$('#field').val()], $('#value').val())
+            searchProducts = paginator(elementForPage, searchProducts)
+            refreshTable(searchProducts, 0)
+            refreshNavPage(searchProducts, 'searchProducts', 'refreshTable')
         })
-
     </script>
-
-
 </footer>
 
 </html>

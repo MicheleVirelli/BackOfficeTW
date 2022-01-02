@@ -8,7 +8,7 @@ function logOut() {
 async function checkToken() {
   const logged = await config.loggedIn()
   if (logged == false)
-      document.location.href = "../../nauthHome.html"
+    document.location.href = "../../nauthHome.html"
 }
 
 function serializeFormJson(form) {
@@ -65,9 +65,8 @@ function refreshNavPage(array, arrayName, tableName) {
   pageNum = 0;
   array.forEach((page) => {
     $("#navlist").append(`
-    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum})">${
-      pageNum + 1
-    }</a></li>
+    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum})">${pageNum + 1
+      }</a></li>
     `);
     pageNum++;
   });
@@ -117,8 +116,7 @@ function refreshNauthTable(paginateArray, value, pageFunction) {
   paginateArray[value].forEach((product) => {
     boolColor = !boolColor;
     $("#nauthTable").append(`
-      <tr class="clickable-row ${
-        boolColor ? "td" : "tr"
+      <tr class="clickable-row ${boolColor ? "td" : "tr"
       }" onclick="${pageFunction}('${product._id}')">
         <td>${product.name}</td>
         <td>${product.category}</td>
@@ -131,7 +129,7 @@ function refreshNauthTable(paginateArray, value, pageFunction) {
 function filterBy(array, fields, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
-  
+
   array.forEach((element) => {
     if (element != undefined) {
       fields.forEach((field) => {
@@ -140,6 +138,28 @@ function filterBy(array, fields, value) {
       });
     }
   });
+
+  return filtered;
+}
+
+function filterByForRentals(array, fields, value) {
+  let filtered = [];
+  value = value.trim().toLowerCase();
+
+  if(fields == 'unit'){
+    array.forEach((element) => {
+      if (element != undefined) {
+        if (element.unit.name.trim().toLowerCase().includes(value))
+          filtered.push(element);
+      }});
+  }
+  else{
+    array.forEach((element) => {
+      if (element != undefined) {
+        if (element.customer.lastname.trim().toLowerCase().includes(value) || element.customer.firstname.trim().toLowerCase().includes(value))
+          filtered.push(element);
+      }});
+  }
 
   return filtered;
 }
@@ -155,12 +175,11 @@ function refreshClientGrid(paginateArray, value) {
     <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
     <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
     <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(
-      0,
-      10
-    )}</div>
-    <div class="card-text">Indirizzo: ${customer.address.city}, ${
-        customer.address.country
-      }</div>
+        0,
+        10
+      )}</div>
+    <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country
+        }</div>
     </div>
     </div>
     `);
@@ -172,7 +191,7 @@ function serializeFormsJson(form) {
   let json
 
   form.querySelectorAll("input, select, textarea").forEach(element => {
-      json[element.id] = element.value
+    json[element.id] = element.value
   });
 
   return json
