@@ -48,53 +48,21 @@
 
 <body>
     <div id="content">
-        <!-- Ci sono due casi, voglio aggiungere una post o una unit -->
         <div class="card p-5">
             <!-- Campi della unit: nome -> quello del prodotto, prezzo, condizione [perfect, minor flaw, major flow, broken] -->
             <!-- Campi del rental: customer, employee, state, prenotationDate, bill, startDate, expectedEndDate, actualEndDate, unit, id, priceEstimation -->
             <!-- Campi della bill: customer, employee, basePrice, modifier, finalPrice, startRent, endRent, unit -->
             <!-- Campi della priceEstimation:  -->
 
-            <!-- Creo una o più unit per un prodotto -->
-            <form>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Prodotto:</span>
-                    <select class="form-select" id="inputproduct">
-                        <option value="undefined">Scegli il prodotto a cui aggiungere le unità</option>
-                    </select> 
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Prezzo:</span>
-                    <span class="input-group-text">$</span>
-                    <input id="inputprice" type="text" class="form-control" placeholder="Inserisci il prezzo della specifica unit">
-                    <span class="input-group-text">.00</span>
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Condizione:</span>
-                    <select class="form-select" id="inputcondition">
-                        <option value="perfect">Perfetto</option>
-                        <option value="minor flaw">Leggermente rovianto</option>
-                        <option value="major flaw">Abbastanza rovinato</option>
-                        <option value="broken">Rotto</option>
-                    </select>
-                  </div>
-                <button id="submitunit" type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
+            <!-- Creo le info base del prodotto -->
 
+        </div>
+        
 
     </div>
 
-    <!-- <div id="content">
-        <h2>Page for the management of the products</h2>
-        <button id="searchP">Search products</button><br><br>
-        <button id="addP">Add a product</button>
-
-        <div id="showPanel"></div>
-
-    </div> -->
-
 </body>
+
 <footer>
     <script>
         $(document).ready(async () => {

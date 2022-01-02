@@ -69,7 +69,7 @@
 
         <div id="altproductsinfo" class="row mb-4"></div>
 
-        <div id="rentinfo" class="row mb-4">
+        <div id="rentinfo" class="row mb-4"></div>
 
         </div>
     </div>
@@ -77,44 +77,32 @@
 
 <footer>
     <script>
+
+        //TODO: fare le richieste e non mante
         const idProduct = localStorage.getItem("idProduct");
+        let altproducts = []
+        let units = []
         let product
+        let rentals 
 
-        $(document).ready(async function () {
-            let query = {
-                populate: true
-            }
+        async function deleteAltProducts(index) {
+            altproducts.splice(index, 1)
 
-            product = (await api.products.getSingle(idProduct, query)).data
-            console.log(product)
+            product.altproducts = altproducts
 
-            const units = (await api.products.getUnits(idProduct)).data
-            console.log(units)
+            const response = (await api.products.patchSingle(idProduct, product))
+            console.log(response)
 
-            query = { limit: 0 }
-            const products = (await api.products.get(query)).data.docs
-            console.log(products)
+            refreshAltProducts()
+        }
 
-            let altproducts = []
-            product.altproducts.forEach(altprod => {
-                products.forEach(prod => {
-                    if (prod._id == altprod)
-                        altproducts.push(prod)
-                })
-            })
-            console.log('I prodotti alternativi')
-            console.log(altproducts)
+        function refreshUnits() {
+            console.log('refresh delle units')
 
-            query = {product: idProduct , limit: 0}
-
-            const rentals = (await api.rentals.get(query)).data.docs
-            console.log(rentals)
-
-            function refreshUnits() {
-                let i = 0
-                units.forEach(unit => {
-                    i++
-                    $('#unitinfo').append(`
+            let i = 0
+            units.forEach(unit => {
+                i++
+                $('#unitinfo').append(`
                 <div id="${unit._id}" class="row mb-2 card p-1" style="flex-direction:row;">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-2 d-flex align-items-center">Unit n° ${i}</div>
@@ -124,24 +112,56 @@
                     <div class="col-sm-1"></div>
                 </div>
                 `)
-                    //TODO: Units non ha delete su api
-                    $('#deleteunit').on('click', async () => {
+                //TODO: Units non ha delete su api
+                $('#deleteunit').on('click', async () => {
 
-                    })
                 })
-            }
+            })
+        }
 
-            async function refreshAltProducts() {
-                altproducts.forEach(altprod => {
-                    $('#altproductsinfo').append(`
-                        <div class="card col-sm-3 me-5">
+        async function refreshAltProducts() {
+            console.log('refresh degli alternative products ')
+            $('#altproductsinfo').children('div').remove()
+
+            let i = 0
+            altproducts.forEach(altprod => {
+                $('#altproductsinfo').append(`
+                        <div class="card col-sm-3 me-5 mb-3 ">
                             <img src="https://site202120.tw.cs.unibo.it/${altprod.image}">
                             <p class="card-text">${altprod.name}</p>
-                            <button class="btn btn-search" id="removealtproduct">Rimuovi</button>
+                            <button class="btn btn-search" id="removealtproduct" onClick="deleteAltProducts(${i})">Rimuovi</button>
                         </div>
                     `)
+                i++
+            })
+        }
+
+        $(document).ready(async function () {
+            let query = { populate: true }
+
+            product = (await api.products.getSingle(idProduct, query)).data
+            console.log('Il prodotto: ')
+            console.log(product)
+
+            units = (await api.products.getUnits(idProduct)).data
+            console.log('Le units associate: ')
+            console.log(units)
+
+            query = { limit: 0 }
+            const products = (await api.products.get(query)).data.docs
+
+            product.altproducts.forEach(altprod => {
+                products.forEach(prod => {
+                    if (prod._id == altprod)
+                        altproducts.push(prod)
                 })
-            }
+            })
+
+            query = { product: idProduct, limit: 0, populate: true }
+            rentals = (await api.rentals.get(query)).data.docs
+            console.log('I rentals associati: ')
+            console.log(rentals)
+
 
             //TODO: Bottone di modifica delle informazioni 
             //Informazioni di base sul prodotto:
@@ -180,7 +200,7 @@
                             <option value="broken">Rovinato</option>
                             <option value="major flaw">Leggermente rovinato</option>
                             <option value="minor flaw">Quasi perfetto</option>
-                            <option value="prefect">Perfetto </option>
+                            <option value="perfect">Perfetto </option>
                         </select>
                     </div>
                     <div class="col-sm-3">
@@ -191,6 +211,7 @@
                 </div>
                 `)
 
+                //rimuovo la card e poi modifico
                 $('#deleteunitcard').on('click', () => {
                     $('#newUnit').remove()
                 })
@@ -200,22 +221,37 @@
                         name: product.name,
                         condition: $('#condition').val(),
                         price: $('#price').val(),
+                        rentals: []
                     }
+
+                    units.push(newUnit)
 
                     const response = (await api.units.post(newUnit, product._id)).data
                     console.log(response)
 
                     $('#unitinfo').children('div').remove()
 
-                    //Faccio il refresh delle unit
                     refreshUnits()
                 })
             })
 
             //Informazioni sui rental del prodotto:
+            rentals.forEach(rental => {
+                let value = 'Nessuno'
+                if(rental.state == 'open' || rental.state == 'close')
+                    value = rental.employee.lastname + ' ' + rental.employee.firstname
+                $('#rentinfo').append(`
+                <div class="col-sm-3">
+                <div class="card m-4 " onclick="rentalPage('${rental._id}')">
+                    <h5>Noleggio codice: ${rental._id}</h5>
+                    <p>Stato del noleggio: ${rental.state}</p>
+                    <p>Noleggiato da ${rental.customer.lastname}, ${rental.customer.firstname}</p>
+                    <p>Impiegato associato: ${value}</p>
+                </div>
+                </div>
+                `)
+            })
 
-
-            //Informazioni sui prodotti alternativi al prodotto
             //Inserisco i prodotti possibili nel select
             products.forEach(prod => {
                 $('#alternative').append(`
@@ -228,18 +264,17 @@
                 event.preventDefault()
 
                 product.altproducts.push($('#alternative').val())
+                altproducts.push($('#alternative').val())
 
-                const response = (await api.products.patchSingle(product._id, product))
+                console.log(altproducts)
+
+                const response = (await api.products.patchSingle(product._id, product)).data
                 console.log(response)
 
                 refreshAltProducts()
             })
 
-            //Cerco tra questi quali fanno già parte dei prodotti alternativi e faccio una card 
-
             refreshAltProducts()
-
-
         })
     </script>
 </footer>
