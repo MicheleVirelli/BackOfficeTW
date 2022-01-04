@@ -169,7 +169,7 @@
         $('#submit').on('click', (event) => {
             event.preventDefault()
 
-            searchProducts = filterByForRentals(rentals, [$('#field').val()], $('#value').val())
+            searchProducts = filterByForRentals(rentals, $('#field').val(), $('#value').val())
             searchProducts = paginator(elementForPage, searchProducts)
             refreshTable(searchProducts, 0)
             refreshNavPage(searchProducts, 'searchProducts', 'refreshTable')

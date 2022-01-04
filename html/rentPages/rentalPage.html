@@ -48,8 +48,11 @@
 
 <body>
     <div id="content">
-        <div class="card mb-3 p-4" >
+        <div class="mb-4 d-flex justify-content-center">
             <h1>Informazioni sul noleggio</h1>
+        </div>
+
+        <div class="card mb-4 p-4">
             <form class="form ">
                 <div class="input-group mb-2">
                     <span class="input-group-text">Nome prodotto: </span><br>
@@ -61,7 +64,11 @@
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Stato del noleggio: </span><br>
-                    <input type="text" disabled="disabled" id="state" class="form-control">
+                    <select id="state" class="form-select"  disabled="disabled">
+                        <option id="pending" value="pending">In attesa</option>
+                        <option id="open" value="open">Aperto</option>
+                        <option id="close" value="close">Chiuso</option>
+                    </select>
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Cliente: </span><br>
@@ -69,8 +76,8 @@
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Impiegato: </span><br>
-                    <select class="form-select" disabled="disabled" id="employee" class="form-control">
-                        <option selected>Il nome dell impiegato</option>
+                    <select id="employee" class="form-select"  disabled="disabled">
+                        <option id="undefined" value="undefined">Nessuno</option>
                     </select>
                 </div>
                 <div class="input-group mb-2">
@@ -81,23 +88,32 @@
                     <span class="input-group-text">Data fine programmata:</span><br>
                     <input type="date" disabled="disabled" id="expectedenddate" class="form-control">
                 </div>
-                <div class="input-group mb-2">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Data fine effettiva</span><br>
-                    <input type="date" disabled="disabled" id="actualstartdate" class="form-control">
+                    <input type="date" disabled="disabled" id="actualenddate" class="form-control">
                 </div>
-                <div id="buttonpanel" class="d-flex justify-content-around">
-                    <button id="modify" class="btn btn-primary me-2">Modifica</button>
-                    <button id="delete" class="btn btn-danger me-2">Elimina</button>
+                <div id="buttonpanel" class="row d-flex justify-content-center">
+                    <button id="modify" class="btn btn-search col-sm-3 me-4 ">Modifica</button>
+                    <button id="delete" class="btn btn-search col-sm-3 me-4">Elimina</button>
                 </div>
             </form>
-
         </div>
 
-        <div class="card mb-3 p-4">
+        <!-- Nella pagina del prodotto voglio:
+            Modificare i campi del rental (non tutti)
+            Voglio poterlo cancellare !!
+            Devo poter fare una patch del rent all'occasione => Richiedere e gestire una nuova price estimation
+
+            Se il rent è open/pending => priceEstimation 
+            Altrimenti => bill
+
+            ---------------------------------------------------
+        -->
+    
+        <div id="priceinfo" class="card mb-3">
             <h1>Informazioni sulla bill o sulla price estimation</h1>
-        </div>
+        </div>  
     </div>
-
 
 </body>
 
@@ -106,80 +122,120 @@
         let rental
         let modifyState = true
 
-        //Get del rental e caricamento dei dati nel form
+        //Inserisco i campi del rent
         $(document).ready(async () => {
             let query = { populate: true }
             const idRental = localStorage.getItem('idRental')
 
             rental = (await api.rentals.getSingle(idRental, query)).data
+            console.log('Il noleggio populate: ')
             console.log(rental)
+
+            query = { limit: 0 }
+            const employees = (await api.employees.get(query)).data.docs
+            console.log('Impiegati: ')
+            console.log(employees)
+
+            employees.forEach(employee => {
+                $('#employee').append(`
+                <option id="${employee._id}" value="${employee._id}">${employee.lastname} ${employee.firstname}</option>
+                `)
+            });
 
             $('#unitname').val(rental.unit.name)
             $('#prenotationdate').val((rental.prenotationDate).toString().slice(0, 10))
-            $('#state').val(rental.state)
-            $('#employee').val(rental.employee.lastname + ' ' + rental.employee.firstname)
+            $('#customer').val(rental.customer.lastname + ' ' + rental.customer.firstname)
+            $('#' + rental.state).attr('selected', 'selected')
+            $('#' + rental.employee._id).attr('selected', 'selected')
             $('#startdate').val((rental.startDate).toString().slice(0, 10))
             $('#expectedenddate').val((rental.expectedEndDate).toString().slice(0, 10))
 
-            //L'effettiva data di termine del noleggio può non essere definita:
             if (rental.actualEndDate)
                 $('#actualenddate').val((rental.actualEndDate).toString().slice(0, 10))
 
-            
-            $('#employee').append(`
-            <option selected value="${rental.employee._id}">${rental.employee.lastname} ${rental.employee.firstname}</option> 
-            `)
+            //Gestisco le informazioni sul prezzo
+            if(rental.state == 'close'){
+                //TODO: Come cazzo è fatta una bill
+            }
+            else {
+                //Se la price Estimation non è presente allora ne richiedo una e la salvo nel rental
+                if(rental.priceEstimation == undefined){
+                    query = { from: rental.startDate, to: rental.expectedEndDate }
+                    let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
+                    console.log('priceEstimation') 
+                    console.log(priceEstimation)
 
-            //gestione particolare per il customer
-            quer = { limit: 1}
-            const employees = (await api.employees.get(query)).data.docs
-            console.log(employees)
-            employees.forEach(employee => {
-                $('#employee').append(`
-                <option value="${employee._id}"> ${employee.lastname} ${employee.firstname}</option>
-                `)
-            })
-            $('#customer').val(rental.customer.lastname + ' ' + rental.customer.firstname)
+                    rental.priceEstimation = priceEstimation[0]
+
+                    const response = (await api.rentals.patchSingle(rental._id, rental))
+                    console.log('Risposta alla patch')
+                    console.log(response)
+
+                    //TODO: Cosa devo fare dopo 
+                    }
+                else{
+                    $('#priceinfo').append(`
+                    <p>Noleggio stimato di ${rental.priceEstimation.daysCount} giorni.</p>
+                    <p>Prezzo senza sconti ${rental.priceEstimation.basePrice} €</p>
+                    <ul id="modifierslist">
+                    </ul>
+                    `)
+
+                    rental.priceEstimation.modifiersList.forEach(modifier => {
+                        $('#modifierslist').append(`
+                        <li>${modifier.longExplanation}</li>
+                        `)
+                    })
+
+                    $('#priceinfo').append(`
+                    <p>Prezzo finale: ${rental.priceEstimation.finalPrice} €</p>
+                    `)
+                }
+            }
         })
-
+        //Bottone Modifica
         $('#modify').on('click', (event) => {
             event.preventDefault()
 
             if (modifyState) {
-                //Rendo i campi non fondamentali modificabili
+                //Rendo i campi non fondamentali modificabili {prodotto,cliente, data prenotazione}
                 $('#state').removeAttr('disabled')
                 $('#employee').removeAttr('disabled')
                 $('#startdate').removeAttr('disabled')
                 $('#expectedenddate').removeAttr('disabled')
                 $('#actualenddate').removeAttr('disabled')
-                $('#actualenddate').removeAttr('disabled')
 
                 //Creo il bottone di submit
                 $('#buttonpanel').append(`
-                    <button id="submit" class="btn btn-success">Conferma</button>
+                    <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
                 `)
 
                 //Scrivo la funzione del bottone di submit
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
 
+                    //Prendo i dati dal form e creo un nuovo rental da quello di partenza
                     let newRental = rental
                     newRental.customer = rental.customer._id
                     newRental.employee = rental.employee._id
                     newRental.unit = rental.unit._id
 
-                    //Prendo i dati dal form e creo un nuovo rental da quello di partenza
+                    
                     newRental.state = $('#state').val()
-
-                    $('#employee')
 
                     newRental.startDate = $('#startdate').val() + 'T00:00:00.000Z'
                     newRental.expectedEndDate = $('#expectedenddate').val() + 'T00:00:00.000Z'
-                    newRental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
-
+                    console.log($('#actualenddate').val())
+                        if($('#actualenddate').val().includes('-'))
+                            newRental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
+                        else 
+                            newRental.actualEndDate = undefined
+                            //TODO: Verificare ^
+                
                     const response = await api.rentals.patchSingle(rental._id, newRental)
-                    console.log(resposne)
-                    //rimuovo la possibilità di modicare momentaneamente e rimuovo il pulsante di modifica
+                    console.log(response)
+
+                    document.location.href="./rentalPage.html"
                 })
 
                 modifyState = false
@@ -191,26 +247,22 @@
                 $('#startdate').attr('disabled', 'disabled')
                 $('#expectedenddate').attr('disabled', 'disabled')
                 $('#actualenddate').attr('disabled', 'disabled')
-                $('#actualenddate').attr('disabled', 'disabled')
 
                 $('#submit').remove()
 
                 modifyState = true
-
             }
-
-
-            // $('#unitname')
-            // $('#prenotationdate')
-            // $('#state')
-            // $('#customer')
-            // $('#employee')
-            // $('#startdate')
-            // $('#expectedenddate')
-            // $('#actualenddate')
-            // $('#actualenddate')
         })
+    
+        //Bottone Delete
+        $('#delete').on('click', async(event) => {
+            event.preventDefault()
 
+            const response = (await api.rentals.deleteSingle(rental._id)).data
+            console.log(response)
+
+            document.location.href="./rentalsPage.html"
+        })
     </script>
 </footer>
 

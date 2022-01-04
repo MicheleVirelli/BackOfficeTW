@@ -141,24 +141,43 @@ function filterBy(array, fields, value) {
 
   return filtered;
 }
-
+  //TODO: Fa schifo mettere uno switch
 function filterByForRentals(array, field, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
+  console.log(field)
 
-  if(field == 'unit'){
+  if (field == 'unit') {
     array.forEach((element) => {
       if (element != undefined) {
         if (element.unit.name.trim().toLowerCase().includes(value))
           filtered.push(element);
-      }});
+      }
+    });
   }
-  else{
+  else if (field == 'customer') {
     array.forEach((element) => {
       if (element != undefined) {
         if (element.customer.lastname.trim().toLowerCase().includes(value) || element.customer.firstname.trim().toLowerCase().includes(value))
           filtered.push(element);
-      }});
+      }
+    });
+  }
+  else if (field == 'employee') {
+    array.forEach((element) => {
+      if (element != undefined && element.employee != undefined) {
+        if (element.employee.lastname.trim().toLowerCase().includes(value) || element.employee.firstname.trim().toLowerCase().includes(value))
+          filtered.push(element);
+      }
+    });
+  }
+  else {
+    array.forEach((element) => {
+      if (element != undefined) {
+        if (element[field].trim().toLowerCase().includes(value))
+          filtered.push(element);
+      }
+    });
   }
 
   return filtered;
