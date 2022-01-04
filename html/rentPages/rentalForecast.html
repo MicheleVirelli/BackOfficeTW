@@ -48,14 +48,91 @@
 
 <body>
     <div id="content">
-        <!--
-                    Voglio cercare un prodotto e sapere se esiste prima del noleggio
-                    Successivamente immetto le date e vedo se sono disponibili dopo il submit
-                    
-                    In alternativa posso aggiungere noleggi nel passato e nel futuro
-                    si possono fare alla stessa maniera se sono disponibili 
-                -->
-    </div>
+        <div class="d-flex justify-content-center mb-4 ">
+            <h1>Creazione di noleggi</h1>
+        </div>
+
+        <div class="card mb-4 p-4">
+            <form>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Nome prodotto: </span>
+                    <select id="productname" class="form-select">
+                    </select>
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Inizio del noleggio: </span>
+                    <input type="date" id="startRent" class="form-control">
+                </div>
+                <div class="input-group mb-4">
+                    <span class="input-group-text">Fine del noleggio: </span>
+                    <input type="date" id="expectedEndRent" class="form-control">
+                </div>
+                <div id="buttonpanel">
+                    <button id="submit" class="btn btn-search col-sm-3 me-4 ">Verifica Disponibilità</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="searchedProducts" class="card"></div>
+    </div>  
 </body>
+
+<footer>
+    <!-- 
+        Qui cerco il prodotto inserito: indico disponibilità, 
+        prezzo, la unit interessata, la price estimation, 
+        poi rimando alla pagina specifica per la modifica degli altri campi
+
+        Creare un rent lo mette automaticamente open ed associato al employee che l'ha creato ????
+        (Di base NO)
+    -->
+    <script>
+        $(document).ready(async() => {
+            //Carico tutti i prodotti per il select
+
+            let query = { limit: 0 }
+            const products = (await api.products.get(query)).data.docs
+            console.log(products)
+
+            products.forEach(product => {
+                $('#productname').append(`
+                <option value="${product._id}">${product.name}</option>
+                `)
+            });
+            
+        })
+
+        $('#submit').on('click', async(event) => {
+            event.preventDefault()
+            let productID = $('#productname').val()
+            let query = {
+                from: $('#startRent').val() + 'T00:00:00.000Z',
+                to: $('#expectedEndRent').val() + 'T00:00:00.000Z'
+            }
+
+            const response = (await api.products.available(productID, query)).data
+            console.log(response)
+
+            if(response.available){
+                $('#searchedProducts').append(`
+                <p>Il prodotto cercato è disponibile </p>
+                `)
+
+                const priceEstimation = (await api.products.priceEstimation(productID, query)).data
+                console.log(priceEstimation)
+
+                $('#searchedProducts').append(`
+                <p>Il prodotto cercato nelle date inserite costa: ${priceEstimation.finalPrice}</p>
+                <button class="btn btn-search"> Premi qui se vuoi confermare il rent </button>
+                `)
+            }
+            else{
+                $('#searchedProducts').append(`
+                <p>Il prodotto cercato non è disponibile in quelle date </p>
+                `)
+            }
+        })
+    </script>
+</footer>
 
 </html>
