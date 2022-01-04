@@ -32,7 +32,7 @@
 
     <!-- Richiesta Api dal backend -->
     <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
-    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script> 
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
 
     <!-- Funzioni di supporto -->
     <script src="js/function.js"></script>
@@ -46,69 +46,30 @@
 </head>
 
 <body>
-    <div id="content" class="row container-fluid">
-        <div id="title" class="d-flex justify-content-center">
-            <h1>Pagina degli impiegati</h1>
+    <div id="content" class="row">
+        <div class="d-flex justify-content-center">
+            <h1>Benvenuto alla grande pagina degli impiegati</h1>
         </div>
-        <hr>
-        <div class="d-flex justify-content-center col-sm-12">
-            <div id="contenuto" class=" w-50 h-50">
-                <p>Questa pagina contiene alcune funzioni basilari che possono essere effettuate senza essere
-                    autenticati.</p>
-                <p>Per utilizzare le funzioni complete del sito è necessario eseguire l'accesso</p>
-            </div>
+        <div class="container d-flex justify-content-center mb-5">
+                <h5>Per utilizzare le micidiali funzioni di questo sito è necessario loggarsi</h5>
         </div>
-        <hr>
-        <div class="d-flex justify-content-left col-sm-12">
-            <p>Pagina con un pippone per riflettere ogni giorno su i punti che devo sviluppare.
-                N°1 Cosa devo fare con la nauthNav.html ?
-                N°2
-            </p>
+        <div class="d-flex justify-content-center">
+            <form class="card col-sm-6 p-5" id="loginForm">
+                <div class="mb-4">
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                </div>
+                <div class="mb-4">
+                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
+                </div>
+                <div class="form-check mb-4">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                    </label>
+                </div>
+                <button id="loginsubmit" type="submit" class="btn btn-search">Submit</button>
+            </form>
         </div>
     </div>
-
-    <!-- login modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!--header-->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!--body-->
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3 mt-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pwd" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password"
-                                name="password">
-                        </div>
-                        <div class="form-check mb-3">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-                            </label>
-                        </div>
-                        <!-- TODO: pagina di registrazione -->
-                        <div class="form-check mb-3">
-                            <a href="#">Non sei ancora registrato ?</a>
-                        </div>
-                        <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <!--footer-->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
 
 <footer>
@@ -124,7 +85,7 @@
             // document.location.href="./html/authenticatedPage/authIndex.html"
         })
 
-        
+
 
     </script>
 </footer>

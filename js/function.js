@@ -20,7 +20,7 @@ function serializeFormJson(form) {
       return json;
     }, {});
 }
-
+//TODO: Funzione per il server che crash RIMUOVERE
 async function logIn(loginForm) {
   const data = serializeFormJson(loginForm);
 
