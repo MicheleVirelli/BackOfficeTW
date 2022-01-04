@@ -79,7 +79,7 @@ function nauthProductPage(id) {
 }
 
 function customerPage(id) {
-  localStorage.setItem("idCustomer", id);
+  localStorage.setItem("CustomerID", id);
   document.location.href = "customerPage.html";
 }
 

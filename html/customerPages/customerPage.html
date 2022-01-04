@@ -50,6 +50,7 @@
 
 </head>
 
+<!-- TODO: Rivedere la grafica e la formattazione delle date nella card dei rent -->
 <body>
     <div id="content" class="row d-flex justify-content-center">
         <div class="d-flex justify-content-center">
@@ -57,18 +58,15 @@
         </div>
 
         <div class="card col-sm-8 p-4">
-            <div class="row">
+            <div class="row d-flex justify-content-center">
                 <div class="row col-sm-6">
-                    <div class="container-fluid">
-                        <img id="profilepicture" class="img-fluid rounded" alt="Immagine profilo del cliente ">
-                    </div>
-                    <div class="container-fluid">
-                        <textarea id="description" class="form-control mt-3" disabled="disabled"></textarea>
-                    </div>
+                    <img id="profilepicture" class="img-fluid rounded" alt="Immagine profilo del cliente"
+                        style="object-fit: scale-down;">
+                    <textarea id="description" class="form-control mt-4" disabled="disabled"></textarea>
                 </div>
 
                 <div class="col-sm-6 d-flex justify-content-center">
-                    <form id="customerInfo">
+                    <form id="customerInfo" class="w-100">
                         <label for="username">Username</label><br>
                         <input id="username" class="form-control" disabled="disabled"><br>
                         <label for="firstname">Nome</label><br>
@@ -76,7 +74,7 @@
                         <label for="lastname">Cognome</label><br>
                         <input id="lastname" class="form-control" disabled="disabled"><br>
                         <label for="dateOfBirth">Data di nascita</label><br>
-                        <input id="dateOfBirth" class="form-control" disabled="disabled"><br>
+                        <input id="dateOfBirth" type="date" class="form-control" disabled="disabled"><br>
                         <label for="country">Paese</label><br>
                         <input id="country" class="form-control" disabled="disabled"><br>
                         <label for="city">Città</label><br>
@@ -90,7 +88,7 @@
 
             </div>
 
-            <div id="buttonPanel" class="d-flex justify-content-evenly mt-3">
+            <div id="buttonPanel" class="d-flex justify-content-around mt-3">
                 <button type="button" class="btn btn-search" id="modify">Modify</button>
                 <div id="wrapperdelete" data-toggle="tooltip"
                     title="Non è possibile eliminare un cliente che ha noleggi aperti o chiusi">
@@ -121,92 +119,11 @@
 </body>
 
 <footer>
-
     <script>
+        const idCustomer = localStorage.getItem('CustomerID')
         let customer
+        let rentals
         let state = true
-
-        $('document').ready(async () => {
-
-            const idCustomer = localStorage.getItem('idCustomer')
-            customer = (await api.customers.getSingle(idCustomer)).data
-
-            let query = {
-                paginatorLimit: 0,
-                populate: true
-            }
-
-            console.log(customer)
-
-            //Aggiungo le info come placeholder del form
-            $('#username').attr('value', `${customer.loginInfo.username}`)
-            $('#firstname').attr('value', `${customer.firstname}`)
-            $('#lastname').attr('value', `${customer.lastname}`)
-            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
-            $('#country').attr('value', `${customer.address.country}`)
-            $('#city').attr('value', `${customer.address.city}`)
-            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
-            $('#zipcode').attr('value', `${customer.address.zipcode}`)
-
-            //Aggiungo altre informazioni dell'utente
-            $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
-            $('#description').val(customer.description)
-
-            //Prendo le rent
-            let rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
-            console.log(rentals)
-
-
-            let pendingRentals = []
-            let openRentals = []
-            let closeRentals = []
-
-            rentals.forEach(rent => {
-                if (rent.state == 'pending')
-                    pendingRentals.push(rent)
-                if (rent.state == 'open')
-                    openRentals.push(rent)
-                if (rent.state == 'close')
-                    closeRentals.push(rent)
-            });
-
-            if (openRentals.length > 0 || closeRentals.length > 0) {
-                $('#delete').addClass('disabled')
-            }
-            //TODO: formattare le date in modo umano
-            pendingRentals.forEach(rent => {
-                $('#pendingRent').append(`
-                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
-                    <h4>Rent pending di ${rent.unit.name} </h4>
-                    <p>Il rent deve partire il ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
-                </div>
-                `)
-            });
-
-            openRentals.forEach(rent => {
-                $('#delete').attr('data-toggle', 'tooltip')
-                $('#delete').attr('title', 'horray')
-                $('#openRent').append(`
-                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
-                    <h4>Rent aperto di ${rent.unit.name}</h4>
-                    <p>Il rent è iniziato ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
-                    <p>E deve finire ${(new Date(rent.expectedEndDate)).toString().slice(0, 16)}</p>
-                </div>
-                `)
-            });
-
-            closeRentals.forEach(rent => {
-                $('#closeRent').append(`
-                <div class="card col-sm-3 mt-3" onclick="rentalPage('${rent._id}')">
-                    <h4>Rent chiuso di ${rent.unit.name}</h4>
-                    <p>Il rent è iniziato ${(new Date(rent.startDate)).toString().slice(0, 16)}</p>
-                    <p>La fine era prevista per ${(new Date(rent.expectedEndDate)).toString().slice(0, 16)}</p>
-                    <p>La consegne è effettivamente avvenuta ${(new Date(rent.endDate)).toString().slice(0, 16)}</p>
-                </div>
-                `)
-            });
-
-        })
 
         function getFormCustomer() {
             let newCustomer = {
@@ -228,6 +145,85 @@
             return newCustomer
         }
 
+        function addSubmit() {
+            $('#buttonPanel').append(`
+            <button id="submit" class="btn btn-warning>Submit</button>
+            `)
+        }
+
+        $('document').ready(async () => {
+            customer = (await api.customers.getSingle(idCustomer)).data
+            console.log(customer)
+
+            //Aggiungo le info come placeholder del form
+            $('#username').attr('value', `${customer.loginInfo.username}`)
+            $('#firstname').attr('value', `${customer.firstname}`)
+            $('#lastname').attr('value', `${customer.lastname}`)
+            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
+            $('#country').attr('value', `${customer.address.country}`)
+            $('#city').attr('value', `${customer.address.city}`)
+            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
+            $('#zipcode').attr('value', `${customer.address.zipcode}`)
+
+            //Aggiungo altre informazioni dell'utente
+            $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
+            $('#description').val(customer.description)
+
+            //Prendo le rent
+            let query = { populate: true }
+            rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
+            console.log(rentals)
+
+            //Le divido in base allo state 
+            let pendingRentals = []
+            let openRentals = []
+            let closeRentals = []
+
+            rentals.forEach(rent => {
+                if (rent.state == 'pending')
+                    pendingRentals.push(rent)
+                if (rent.state == 'open')
+                    openRentals.push(rent)
+                if (rent.state == 'close')
+                    closeRentals.push(rent)
+            });
+
+            //Se il cliente ha noleggi attivi o conclusi non può essere cancellato
+            if (openRentals.length > 0 || closeRentals.length > 0) { $('#delete').addClass('disabled') }
+
+            //Appendo i vari rent in base allo stato
+            pendingRentals.forEach(rent => {
+                $('#pendingRent').append(`
+                <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">    
+                    <h5 class="card-title">Noleggio in attesa di ${rent.unit.name}</h5>
+                    <p class="card-text">Il Noleggio dovrebbe partire il ${(rent.startDate).toString().slice(0,10)}</p>
+                </div>
+                `)
+            });
+
+            openRentals.forEach(rent => {
+                $('#openRent').append(`
+                <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">
+                    <h5 class="card-title">Rent aperto di ${rent.unit.name}</h5>
+                    <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 10)}</p>
+                    <p class="card-text">E dovrebbe finire ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                </div>
+                `)
+            });
+
+            closeRentals.forEach(rent => {
+                $('#closeRent').append(`
+                <div class="card col-sm-3 mt-4 me-4 p-3 mb-4" onclick="rentalPage('${rent._id}')">
+                    <h5 class="card-title">Rent chiuso di ${rent.unit.name}</h5>
+                    <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 16)}</p>
+                    <p class="card-text">Il termine del noleggio era previsto per ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                    <p class="card-text">La consegna è effettivamente avvenuta ${(rent.endDate).toString().slice(0, 10)}</p>
+                </div>
+                `)
+            });
+
+        })
+
         $('#modify').click(async () => {
             if (state) {
                 $('#username').removeAttr('disabled')
@@ -241,7 +237,6 @@
                 $('#description').removeAttr('disabled')
 
                 state = false
-                // addSubmit()
             }
             else {
                 $('#username').attr('disabled', 'disabled')
@@ -255,30 +250,17 @@
                 $('#description').attr('disabled', 'disabled')
 
                 state = true
-                // $('#submit').remove()
             }
-
         })
-
-        //Devo aggiungere un bottone per fare il submit
-        function addSubmit() {
-            $('#buttonPanel').append(`
-            <button id="submit" class="btn btn-warning>Submit</button>
-            `)
-        }
 
         $('#delete').on('click', async (event) => {
             event.preventDefault()
-
             const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
-            console.log(response)
         })
 
         $('#submit').on('click', async (event) => {
             event.preventDefault()
-
             const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
-            console.log(response)
         })
     </script>
 </footer>
