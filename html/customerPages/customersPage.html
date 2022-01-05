@@ -83,7 +83,7 @@
             paginateCustomers = paginator(elementForPage, customers)
 
             refreshClientGrid(paginateCustomers, 0)
-            refreshNavPage(paginateCustomers, 'paginateCustomers', 'refreshClientGrid')
+            refreshNavPage(paginateCustomers, 'paginateCustomers', 'refreshClientGrid', 'customerPage')
         })
 
         $('#submit').on('click', (event) => {
@@ -97,7 +97,7 @@
             searchCustomers = paginator(elementForPage, searchCustomers)
             
             refreshClientGrid(searchCustomers, 0)
-            refreshNavPage(searchCustomers, 'searchCustomers', 'refreshClientGrid')
+            refreshNavPage(searchCustomers, 'searchCustomers', 'refreshClientGrid', 'customerPage')
         })
 
     </script>
