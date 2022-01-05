@@ -47,53 +47,47 @@
 </head>
 
 <body>
-    <div id="content">
-        <!-- Campi della unit: nome -> quello del prodotto, prezzo, condizione [perfect, minor flaw, major flow, broken] -->
-        <!-- Campi del rental: customer, employee, state, prenotationDate, bill, startDate, expectedEndDate, actualEndDate, unit, id, priceEstimation -->
-        <!-- Campi della bill: customer, employee, basePrice, modifier, finalPrice, startRent, endRent, unit -->
-        <!-- Campi della priceEstimation:  ... -->
-        <!-- Creo le info base del prodotto -->
-        <div class="d-flex justify-content-center ">
+    <div id="content" class="row">
+
+        <div class="d-flex justify-content-center mb-4">
             <h1>Aggiungi un prodotto</h1>
         </div>
-        <hr>
 
-        <div class="card mb-4">
-            <form id="addProduct" class="row d-flex justify-content-center m-4 mt-5">
-                <div class="input-group mb-3 me-5 ms-5">
+        <div class="d-flex justify-content-center mb-5">
+            <form id="addProduct" class="card col-sm-6 p-5">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Nome del Prodotto:</span>
                     <input type="text" class="form-control" id="name" name="name">
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Categoria:</span>
                     <input type="text" class="form-control" id="category" name="category">
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Sottocategoria:</span>
                     <input type="text" class="form-control" id="subcategory" name="subcategory">
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Descrizione:</span>
                     <textarea type="text" class="form-control" id="description" name="description"
                         style="height:10em;"></textarea>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-4">
                     <span class="input-group-text">Immagine del prodotto:</span>
                     <input type="file" class="form-control" id="image" name="image">
                 </div>
-                <div class="mb-3 ">
+                <div class="mb-4">
                     <button class="btn btn-search" id="createProduct">Conferma</button>
-                    <button class="btn btn-search" id="FormCleanerTest">FormCleanerTest</button>
+                    <button class="btn btn-search" id="test">Test</button>
                 </div>
             </form>
         </div>
 
-        <div id="productCard" class="mb-4"></div>
-
+        <div id="productCard" class="d-flex justify-content-center mb-5"></div>
     </div>
-
 </body>
 
+<!-- TODO: Gestire eventuali problemi con la post -->
 <footer>
     <script>
         $('#createProduct').on('click', async (event) => {
@@ -114,14 +108,29 @@
             $('#description').val('')
 
             //Creo una card per mandare al prodotto se vogliono fare altre modifiche
+            $('#productCard').children('div').remove()
+
             $('#productCard').append(`
-            <div class="card mt-4" >
+            <div class="card mt-4" onclick="productPage('${response._id}')">
                 <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
                 <h2 class="d-flex justify-content-center">Clicca sulla card per continuare a modificare il prodotto </h2>
             </div>
             `)
 
         })
+
+        $('#test').on('click', (event) => {
+            event.preventDefault()
+
+            $('#productCard').children('div').remove()
+            $('#productCard').append(`
+            <div class="card p-5">
+                <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
+                <h2 class="d-flex justify-content-center">Clicca sulla card per continuare a modificare il prodotto </h2>
+            </div>
+            `)
+        })
+    
     </script>
 </footer>
 
