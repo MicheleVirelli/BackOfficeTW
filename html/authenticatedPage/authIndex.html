@@ -46,6 +46,7 @@
         $.get('../templates/authNav.html', (data) => {
             $('body').append(data)
         })
+        checkToken()
     </script>
 
     <script>
@@ -56,54 +57,21 @@
 
 <body>
     <div id="content">
-        <div>
-            <h1>L'autenticazione è avvenuta con successo</h1>
-            <h4>Adesso puoi usare tutte le funzioni del sito</h4>
+        <div class="d-flex justify-content-center">
+            <h1>Congratulazioni ti ricordi la tua password !</h1>
+        </div>
+        <div class="ms-4 mb-5">
+            <p>Anche perchè il remember me non va ancora...</p>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
+            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
+            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
+            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
+            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
         </div>
     </div>
-
-    <!--login modal-->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!--header-->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!--body-->
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3 mt-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pwd" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password"
-                                name="password">
-                        </div>
-                        <div class="form-check mb-3">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-                            </label>
-                        </div>
-                        <!-- TODO: pagina di registrazione -->
-                        <div class="form-check mb-3">
-                            <a href="#">Non sei ancora registrato ?</a>
-                        </div>
-                        <button id="loginsubmit" type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <!--footer-->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
 
 </html>
