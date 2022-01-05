@@ -40,10 +40,7 @@
     <script>
         $.get('../templates/authNav.html', (data) => {
             $('body').append(data)
-        })
-    </script>
-
-    <script>
+        }) 
         checkToken()
     </script>
 
@@ -52,13 +49,13 @@
 <body>
     <div id="content">
         <div class="d-flex justify-content-center">
-            <h1>Clienti</h1>
+            <h1>Gestione clienti</h1>
         </div>
 
         <div>
             <form class="d-flex mb-5 mt-3">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Cerca per Nome e Cognome</span>
+                    <span class="input-group-text">Cerca per Nome e Cognome</span>
                     <input type="text" class="form-control" id="value">
                     <button id="submit" class="btn btn-search" type="submit">Cerca</button>
                 </div>
@@ -68,13 +65,10 @@
         <div id="clientlist" class="row"></div>
 
         <div id="pagenav" class="pb-3"></div>
-
     </div>
-
 </body>
 
 <footer>
-
     <script>
         let customers
         let query
@@ -92,11 +86,10 @@
             refreshNavPage(paginateCustomers, 'paginateCustomers', 'refreshClientGrid')
         })
 
-        //Funzione per la ricerca
         $('#submit').on('click', (event) => {
             event.preventDefault()
-
-            if($('value').val() == undefined)
+            
+            if($('#value').val() == '')
                 searchCustomers = filterBy(customers, ['firstname'], $('#value').val())
             else
                 searchCustomers = filterBy(customers, ['firstname', 'lastname'], $('#value').val())
