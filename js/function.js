@@ -13,7 +13,7 @@ function logOut() {
   sessionStorage.removeItem("authToken");
   localStorage.removeItem("authToken");
 
-  document.location.href = "../../nauthHome.html";
+  document.location.href = "../../index.html";
 }
 
 async function checkToken() {
