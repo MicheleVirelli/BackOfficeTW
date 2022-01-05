@@ -1,3 +1,14 @@
+//TODO: Funzione che fa la stessa cosa di nauthHome.html
+async function logIn(loginForm) {
+  const data = serializeFormJson(loginForm);
+
+  const response = await api.employees.login(data);
+
+  if (response.status == 200)
+    config.setToken(response.headers.authorization, data.remember);
+  document.location.href = "./html/authenticatedPage/authIndex.html";
+}
+
 function logOut() {
   sessionStorage.removeItem("authToken");
   localStorage.removeItem("authToken");
@@ -20,17 +31,36 @@ function serializeFormJson(form) {
       return json;
     }, {});
 }
-//TODO: Funzione per il server che crash RIMUOVERE
-async function logIn(loginForm) {
-  const data = serializeFormJson(loginForm);
 
-  const response = await api.employees.login(data);
+function serializeFormsJson(form) {
+  let json
 
-  if (response.status == 200)
-    config.setToken(response.headers.authorization, data.remember);
-  document.location.href = "./html/authenticatedPage/authIndex.html";
+  form.querySelectorAll("input, select, textarea").forEach(element => {
+    json[element.id] = element.value
+  });
+
+  return json
 }
 
+//FUNZIONI per muoversi tra le page 
+function customerPage(id) {
+  localStorage.setItem("CustomerID", id);
+  document.location.href = "customerPage.html";
+}
+
+function rentalPage(id) {
+  localStorage.setItem("idRental", id);
+
+  document.location.href = "../rentPages/rentalPage.html";
+}
+
+function productPage(id) {
+  localStorage.removeItem('ProductID')
+  localStorage.setItem("ProductID", id);
+  document.location.href = "productPage.html";
+}
+
+//FUNZIONI per manipolare page
 function paginator(elemForPage, array) {
   let i = [];
   let c = 1;
@@ -51,7 +81,7 @@ function paginator(elemForPage, array) {
   return paginate;
 }
 
-function refreshNavPage(array, arrayName, tableName) {
+function refreshNavPage(array, arrayName, tableName, toPage) {
   console.log("Refreshing:" + tableName);
   $("#pagenav").children().remove();
 
@@ -65,34 +95,11 @@ function refreshNavPage(array, arrayName, tableName) {
   pageNum = 0;
   array.forEach((page) => {
     $("#navlist").append(`
-    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum})">${pageNum + 1
+    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum},'${toPage}')">${pageNum + 1
       }</a></li>
     `);
     pageNum++;
   });
-}
-
-function nauthProductPage(id) {
-  localStorage.removeItem("idProduct");
-  localStorage.setItem("idProduct", id);
-  document.location.href = "nauthProductPage.html";
-}
-
-function customerPage(id) {
-  localStorage.setItem("CustomerID", id);
-  document.location.href = "customerPage.html";
-}
-
-function rentalPage(id) {
-  localStorage.setItem("idRental", id);
-
-  document.location.href = "../rentPages/rentalPage.html";
-}
-
-function productPage(id) {
-  localStorage.removeItem('idProduct')
-  localStorage.setItem("idProduct", id);
-  document.location.href = "productPage.html";
 }
 
 function refreshNauthTable(paginateArray, value, pageFunction) {
@@ -126,6 +133,29 @@ function refreshNauthTable(paginateArray, value, pageFunction) {
   });
 }
 
+function refreshClientGrid(paginateArray, value) {
+  $("#clientlist").children().remove();
+
+  $("#clientlist").append(
+    paginateArray[value].forEach((customer) => {
+      $("#clientlist").append(`
+    <div class="col-sm-3">
+    <div class="card mb-5" onclick="customerPage('${customer._id}')">
+    <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
+    <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
+    <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(
+        0,
+        10
+      )}</div>
+    <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country
+        }</div>
+    </div>
+    </div>
+    `);
+    })
+  );
+}
+
 function filterBy(array, fields, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
@@ -141,7 +171,8 @@ function filterBy(array, fields, value) {
 
   return filtered;
 }
-  //TODO: Fa schifo mettere uno switch
+
+//TODO: Fa schifo mettere uno switch
 function filterByForRentals(array, field, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
@@ -183,35 +214,3 @@ function filterByForRentals(array, field, value) {
   return filtered;
 }
 
-function refreshClientGrid(paginateArray, value) {
-  $("#clientlist").children().remove();
-
-  $("#clientlist").append(
-    paginateArray[value].forEach((customer) => {
-      $("#clientlist").append(`
-    <div class="col-sm-3">
-    <div class="card mb-5" onclick="customerPage('${customer._id}')">
-    <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
-    <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-    <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(
-        0,
-        10
-      )}</div>
-    <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country
-        }</div>
-    </div>
-    </div>
-    `);
-    })
-  );
-}
-
-function serializeFormsJson(form) {
-  let json
-
-  form.querySelectorAll("input, select, textarea").forEach(element => {
-    json[element.id] = element.value
-  });
-
-  return json
-}

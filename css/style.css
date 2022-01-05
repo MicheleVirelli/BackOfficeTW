@@ -61,6 +61,11 @@ body {
   color:var(--text-color);  
 }
 
+.tr:hover{
+  background-color: var(--main-primary);
+  color: var(--text-color)
+}
+
 .modal-content{
   background-color: var(--main-secondary);
   color: var(--text-color)

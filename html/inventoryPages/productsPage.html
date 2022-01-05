@@ -92,7 +92,7 @@
             paginateProducts = paginator(elementForPage, products)
 
             refreshNauthTable(paginateProducts, 0, 'productPage')
-            refreshNavPage(paginateProducts, 'paginateProducts', 'refreshNauthTable')
+            refreshNavPage(paginateProducts, 'paginateProducts', 'refreshNauthTable', 'productPage')
         })
 
         //Funzione per la ricerca
@@ -102,7 +102,7 @@
             searchProducts = filterBy(products, [$('#field').val()], $('#value').val())
             searchProducts = paginator(elementForPage, searchProducts)
             refreshNauthTable(searchProducts, 0, 'productPage')
-            refreshNavPage(searchProducts, 'searchProducts', 'refreshNauthTable')
+            refreshNavPage(searchProducts, 'searchProducts', 'refreshNauthTable', 'productPage')
         })
 
     </script>
