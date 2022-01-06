@@ -75,3 +75,20 @@ body {
   background-color: var(--main-primary);
   color:var(--text-color);  
 }
+
+.input-card{
+  border-width: 0;
+}
+
+.input-card:disabled{
+  background-color: var(--main-primary);
+  border-width: 0;
+  color:var(--text-color);  
+  /* font-size: large;
+  font-weight: 600; */
+}
+
+.title{
+  font-size: large;
+  font-weight: 600;
+}

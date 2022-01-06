@@ -47,15 +47,52 @@
 </head>
 
 <!-- TODO: Gestire la modifica delle informazioni base, leggera modifica della card, tags, STILE, card dei prodotti alternativi cancellare il prodotto -->
+
 <body>
     <div id="content">
         <div class="d-flex justify-content-center mb-4">
             <h1>Pagina del prodotto</h1>
         </div>
 
-        <div id="basicinfo" class="row mb-4"></div>
+        <div id="basicinfo" class="mb-4">
+            <div class="card p-4">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
+                        <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova immagine</label><br>
+                        <input id="newproductimage" name="image" type="file" class="collapse">
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="col-sm-7 mb-2">
+                            <input id="name" disabled="disabled" class="form-control input-card title" name="name">
+                        </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="category">Categoria</label>
+                            <input id="category" disabled="disabled" class="form-control input-card title"
+                                name="category">
+                        </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="subcategory">Sottocategoria</label>
+                            <input id="subcategory" disabled="disabled" class="form-control input-card title"
+                                name="subcategory">
+                        </div>
+                        <div class="mb-2">
+                            <label for="description">Descrizione</label>
+                            <textarea id="description" disabled="disabled" class="form-control input-card title"
+                                name="description"></textarea>
+                        </div>
+                    </div>
 
-        <div id="taginfo" class="mb-4">Tags del prodotto:</div>
+                    <div id="buttonpanel" class="row">
+                        <div class="col-sm-1"></div>
+                        <button id="delete" class="btn btn-search col-sm-2">Cancella</button>
+                        <div class="col-sm-2"></div>
+                        <button id="modify" class="btn btn-search col-sm-2">Modifica</button>
+                        <div class="col-sm-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-end col-sm-12 mb-4 ">
             <button id="addunits" class="btn btn-search">Aggiungi unit al prodotto</button>
@@ -76,19 +113,78 @@
 
         <div id="rentinfo" class="row mb-4"></div>
 
-        </div>
+    </div>
     </div>
 </body>
 
 <footer>
     <script>
-
-        //TODO: fare le richieste e non mante
+        //TODO: fare le richieste e non mantenere in memeoria nella pagina
         const idProduct = localStorage.getItem("ProductID");
         let altproducts = []
         let units = []
         let product
-        let rentals 
+        let rentals
+
+        let bool = true
+
+        $('#modify').on('click', (event) => {
+            event.preventDefault()
+
+            if (bool) {
+                $('#name').removeAttr('disabled')
+                $('#category').removeAttr('disabled')
+                $('#subcategory').removeAttr('disabled')
+                $('#description').removeAttr('disabled')
+                $('#newproductimage').removeClass('collapse')
+                $('#labelnewproductimage').removeClass('collapse')
+
+                //Aggiungo il bottone per la patch
+                $('#buttonpanel').append(`
+                <button id="confirm" class="btn btn-search col-sm-2">Conferma</button>
+                `)
+
+                //Funzione per il bottone
+                $('#confirm').on('click', async (event) => {
+                    event.preventDefault()
+
+                    product.name = $('#name').val()
+                    product.category = $('#category').val()
+                    product.subcategory = $('#subcategory').val()
+                    product.description = $('#description').val()
+
+                    const response = await api.products.patchSingle(idProduct, product)
+                    console.log('Il prodotto cambiato è: ')
+                    console.log(response)
+
+                    document.location.href = "./productPage.html"
+                })
+            }
+            else {
+                $('#name').attr('disabled', 'disabled')
+                $('#category').attr('disabled', 'disabled')
+                $('#subcategory').attr('disabled', 'disabled')
+                $('#description').attr('disabled', 'disabled')
+                $('#newproductimage').addClass('collapse')
+                $('#labelnewproductimage').addClass('collapse')
+
+                //Rimuovo il bottone
+                $('#confirm').remove()
+                //Reimpostare il contenuto effettivo !!
+            }
+
+            bool = !bool
+        })
+
+        $('#delete').on('click', async (event) => {
+            event.preventDefault()
+            const response = await (api.products.deleteSingle(idProduct)).data
+            console.log(response)
+
+            localStorage.removeItem('ProductID')
+            sessionStorage.removeItem('ProductID')
+            document.location.href = "./productsPage.html"
+        })
 
         async function deleteAltProducts(index) {
             altproducts.splice(index, 1)
@@ -132,9 +228,15 @@
             altproducts.forEach(altprod => {
                 $('#altproductsinfo').append(`
                         <div class="card col-sm-3 me-5 mb-3 ">
-                            <img src="https://site202120.tw.cs.unibo.it/${altprod.image}">
+                            <div>
+                            <img src="https://site202120.tw.cs.unibo.it/${altprod.image}" class="img-thumbnail">
+                            </div>
+                            <div class="d-flex justify-content-center">
                             <p class="card-text">${altprod.name}</p>
+                            </div>
+                            <div class="d-flex justify-content-center">
                             <button class="btn btn-search" id="removealtproduct" onClick="deleteAltProducts(${i})">Rimuovi</button>
+                            </div>
                         </div>
                     `)
                 i++
@@ -167,26 +269,17 @@
             console.log('I rentals associati: ')
             console.log(rentals)
 
+            urlsite = "https://site202120.tw.cs.unibo.it/" + product.image
 
-            //TODO: Bottone di modifica delle informazioni 
-            //Informazioni di base sul prodotto:
-            $('#basicinfo').append(`
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4  pt-4">
-                        <img src="https://site202120.tw.cs.unibo.it/${product.image}" class="img-fluid rounded-start" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text">${product.category}, ${product.subcategory}</p>
-                            <p class="card-text">${product.description}</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `)
+            //Modifiche al prodotto
+            $('#productimage').attr('src', urlsite)
+            $('#name').val(product.name)
+            $('#category').val(product.category)
+            $('#subcategory').val(product.subcategory)
+            $('#description').val(product.description)
+            document.getElementById('description').style.height = "auto";
+            document.getElementById('description').style.height = document.getElementById('description').scrollHeight + "px";
+            $('#description').css('resize', 'none')
 
             //Informazioni sulle unit del prodoto:
             refreshUnits()
@@ -243,7 +336,7 @@
             //Informazioni sui rental del prodotto:
             rentals.forEach(rental => {
                 let value = 'Nessuno'
-                if(rental.state == 'open' || rental.state == 'close')
+                if (rental.state == 'open' || rental.state == 'close')
                     value = rental.employee.lastname + ' ' + rental.employee.firstname
                 $('#rentinfo').append(`
                 <div class="col-sm-3">
