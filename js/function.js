@@ -102,13 +102,13 @@ function refreshNavPage(array, arrayName, tableName, toPage) {
   });
 }
 
-function refreshNauthTable(paginateArray, value, pageFunction) {
+function refreshTable(paginateArray, value, pageFunction) {
   let boolColor = true;
 
   $("#productlist").children().remove();
 
   $("#productlist").append(`
-  <table id="nauthTable" class="table">
+  <table id="table" class="table">
     <tr  class="${boolColor ? "td" : "tr"}">
       <td>Nome Prodotto</td>
       <td>Categoria</td>
@@ -122,7 +122,7 @@ function refreshNauthTable(paginateArray, value, pageFunction) {
 
   paginateArray[value].forEach((product) => {
     boolColor = !boolColor;
-    $("#nauthTable").append(`
+    $("#table").append(`
       <tr class="clickable-row ${boolColor ? "td" : "tr"
       }" onclick="${pageFunction}('${product._id}')">
         <td>${product.name}</td>
