@@ -147,10 +147,6 @@
             if (rental.actualEndDate)
                 $('#actualenddate').val((rental.actualEndDate).toString().slice(0, 10))
 
-            //Gestisco le informazioni sul prezzo
-            //Se il rent è close la bill rimando alla pagina della fattura
-            //Altrimenti mostro la stima del prezzo
-            //In entrambi i casi se non è presente la richiedo e la salvo
             if (rental.priceEstimation == undefined) {
                 query = { from: rental.startDate, to: rental.expectedEndDate }
                 let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
