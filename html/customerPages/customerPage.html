@@ -124,7 +124,7 @@
         let customer
         let rentals
         let state = true
-
+        //TODO: Da sistemare partire sempre dall'oggetto restituito dal server
         function getFormCustomer() {
             let newCustomer = {
                 firstname: $('#firstname').val(),
@@ -226,7 +226,6 @@
 
         $('#modify').click(async () => {
             if (state) {
-                $('#username').removeAttr('disabled')
                 $('#firstname').removeAttr('disabled')
                 $('#lastname').removeAttr('disabled')
                 $('#dateOfBirth').removeAttr('disabled')
@@ -239,7 +238,6 @@
                 state = false
             }
             else {
-                $('#username').attr('disabled', 'disabled')
                 $('#firstname').attr('disabled', 'disabled')
                 $('#lastname').attr('disabled', 'disabled')
                 $('#dateOfBirth').attr('disabled', 'disabled')
