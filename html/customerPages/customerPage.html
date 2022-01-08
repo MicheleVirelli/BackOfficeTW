@@ -51,6 +51,7 @@
 </head>
 
 <!-- TODO: Rivedere la grafica e la formattazione delle date nella card dei rent -->
+
 <body>
     <div id="content" class="row d-flex justify-content-center">
         <div class="d-flex justify-content-center">
@@ -62,27 +63,27 @@
                 <div class="row col-sm-6">
                     <img id="profilepicture" class="img-fluid rounded" alt="Immagine profilo del cliente"
                         style="object-fit: scale-down;">
-                    <textarea id="description" class="form-control mt-4" disabled="disabled"></textarea>
+                    <textarea id="description" class="form-control input-card mt-4" disabled="disabled"></textarea>
                 </div>
 
                 <div class="col-sm-6 d-flex justify-content-center">
                     <form id="customerInfo" class="w-100">
                         <label for="username">Username</label><br>
-                        <input id="username" class="form-control" disabled="disabled"><br>
+                        <input id="username" class="form-control input-card title" disabled="disabled"><br>
                         <label for="firstname">Nome</label><br>
-                        <input id="firstname" class="form-control" disabled="disabled"><br>
+                        <input id="firstname" class="form-control input-card title" disabled="disabled"><br>
                         <label for="lastname">Cognome</label><br>
-                        <input id="lastname" class="form-control" disabled="disabled"><br>
+                        <input id="lastname" class="form-control input-card title" disabled="disabled"><br>
                         <label for="dateOfBirth">Data di nascita</label><br>
-                        <input id="dateOfBirth" type="date" class="form-control" disabled="disabled"><br>
+                        <input id="dateOfBirth" type="date" class="form-control input-card title" disabled="disabled"><br>
                         <label for="country">Paese</label><br>
-                        <input id="country" class="form-control" disabled="disabled"><br>
+                        <input id="country" class="form-control input-card title" disabled="disabled"><br>
                         <label for="city">Città</label><br>
-                        <input id="city" class="form-control" disabled="disabled"><br>
+                        <input id="city" class="form-control input-card title" disabled="disabled"><br>
                         <label for="streetAddress">Indirizzo</label><br>
-                        <input id="streetAddress" class="form-control" disabled="disabled"><br>
+                        <input id="streetAddress" class="form-control input-card title" disabled="disabled"><br>
                         <label for="zipcode">Codice postale</label><br>
-                        <input id="zipcode" class="form-control" disabled="disabled"><br>
+                        <input id="zipcode" class="form-control input-card title" disabled="disabled"><br>
                     </form>
                 </div>
 
@@ -192,36 +193,69 @@
             if (openRentals.length > 0 || closeRentals.length > 0) { $('#delete').addClass('disabled') }
 
             //Appendo i vari rent in base allo stato
-            pendingRentals.forEach(rent => {
-                $('#pendingRent').append(`
+            if (pendingRentals.length != 0) {
+                pendingRentals.forEach(rent => {
+                    $('#pendingRent').append(`
                 <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">    
                     <h5 class="card-title">Noleggio in attesa di ${rent.unit.name}</h5>
-                    <p class="card-text">Il Noleggio dovrebbe partire il ${(rent.startDate).toString().slice(0,10)}</p>
+                    <p class="card-text">Il Noleggio dovrebbe partire il ${(rent.startDate).toString().slice(0, 10)}</p>
                 </div>
                 `)
-            });
+                })
+            }
+            else {
+                $('#pendingRent').append(`
+                <div class="d-flex justify-content-center">
+                <div class="card col-sm-8 ps-4">
+                    <h1>Non ci sono noleggi in attesa</h1>
+                </div> 
+                </div>
+                `)
+            }
 
-            openRentals.forEach(rent => {
+
+            if (openRentals.length != 0) {
+                openRentals.forEach(rent => {
+                    $('#openRent').append(`
+                    <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">
+                        <h5 class="card-title">Rent aperto di ${rent.unit.name}</h5>
+                        <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 10)}</p>
+                        <p class="card-text">E dovrebbe finire ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                    </div>
+                    `)
+                })
+            }
+            else {
                 $('#openRent').append(`
-                <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">
-                    <h5 class="card-title">Rent aperto di ${rent.unit.name}</h5>
-                    <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 10)}</p>
-                    <p class="card-text">E dovrebbe finire ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                <div class="d-flex justify-content-center">
+                <div class="card col-sm-8 ps-4">
+                    <h1>Non ci sono noleggi in aperti</h1>
+                </div> 
                 </div>
                 `)
-            });
+            }
 
-            closeRentals.forEach(rent => {
+            if (closeRentals.length != 0) {
+                closeRentals.forEach(rent => {
+                    $('#closeRent').append(`
+                    <div class="card col-sm-3 mt-4 me-4 p-3 mb-4" onclick="rentalPage('${rent._id}')">
+                        <h5 class="card-title">Rent chiuso di ${rent.unit.name}</h5>
+                        <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 16)}</p>
+                        <p class="card-text">Il termine del noleggio era previsto per ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                        <p class="card-text">La consegna è effettivamente avvenuta ${(rent.endDate).toString().slice(0, 10)}</p>
+                    </div>
+                `)
+                })
+            }
+            else {
                 $('#closeRent').append(`
-                <div class="card col-sm-3 mt-4 me-4 p-3 mb-4" onclick="rentalPage('${rent._id}')">
-                    <h5 class="card-title">Rent chiuso di ${rent.unit.name}</h5>
-                    <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 16)}</p>
-                    <p class="card-text">Il termine del noleggio era previsto per ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
-                    <p class="card-text">La consegna è effettivamente avvenuta ${(rent.endDate).toString().slice(0, 10)}</p>
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="card col-sm-8 ps-4">
+                        <h1>Non ci sono noleggi conclusi</h1>
+                    </div> 
                 </div>
                 `)
-            });
-
+            }
         })
 
         $('#modify').click(async () => {
