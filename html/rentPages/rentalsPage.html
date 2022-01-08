@@ -90,7 +90,7 @@
             $('#rentlist').append(`
             <table class="table" id="rentable">
                 <thead>
-                    <tr class="${boolColor ? 'td' : 'tr'}">
+                    <tr class="row-header">
                     <td>Cliente</td>
                     <td>Impiegato</td>
                     <td>Prodotto</td>
@@ -135,7 +135,7 @@
                 startDate = (new Date(startDate)).toString().slice(0, 16)
 
                 $('#rentable').append(`
-                <tr class="clickable-row  ${boolColor ? "td" : "tr"}" onclick="rentalPage('${rental._id}')" >
+                <tr class="clickable-row  ${boolColor ? "row-one" : "row-two"}" onclick="rentalPage('${rental._id}')" >
                     <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
                     <td>${employee}</td>
                     <td>${rental.unit.name}</td>
