@@ -60,6 +60,12 @@ function productPage(id) {
   document.location.href = "productPage.html";
 }
 
+function billPage(id) {
+  localStorage.removeItem('BillID')
+  localStorage.setItem("BillID", id);
+  document.location.href = "../billPages/billPage.html";
+}
+
 //FUNZIONI per manipolare page
 function paginator(elemForPage, array) {
   let i = [];

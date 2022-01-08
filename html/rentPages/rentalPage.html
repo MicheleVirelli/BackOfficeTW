@@ -102,11 +102,11 @@
         </div>
 
         <div class="d-flex justify-content-center mb-4">
-            <h1>Informazioni sulla bill o sulla price estimation</h1>
+            <h1>Informazioni sul prezzo</h1>
         </div>
 
         <div class="d-flex justify-content-center">
-            <div  id="priceinfo" class="card mb-4 p-4 col-sm-8">
+            <div id="priceinfo" class="card mb-4 p-4 col-sm-8">
             </div>
         </div>
     </div>
@@ -115,7 +115,6 @@
 <footer>
     <script>
         let rental
-        let modifyState = true
 
         $(document).ready(async () => {
             let query = { populate: true }
@@ -128,6 +127,8 @@
             query = { limit: 0 }
             const employees = (await api.employees.get(query)).data.docs
 
+
+            //Inserisco le informazioni nel form
             employees.forEach(employee => {
                 $('#employee').append(`
                 <option id="${employee._id}" value="${employee._id}">${employee.lastname} ${employee.firstname}</option>
@@ -138,7 +139,8 @@
             $('#prenotationdate').val((rental.prenotationDate).toString().slice(0, 10))
             $('#customer').val(rental.customer.lastname + ' ' + rental.customer.firstname)
             $('#' + rental.state).attr('selected', 'selected')
-            $('#' + rental.employee._id).attr('selected', 'selected')
+            if (rental.employee)
+                $('#' + rental.employee._id).attr('selected', 'selected')
             $('#startdate').val((rental.startDate).toString().slice(0, 10))
             $('#expectedenddate').val((rental.expectedEndDate).toString().slice(0, 10))
 
@@ -146,47 +148,81 @@
                 $('#actualenddate').val((rental.actualEndDate).toString().slice(0, 10))
 
             //Gestisco le informazioni sul prezzo
-            if (rental.state == 'close') {
-                //TODO: Come cazzo è fatta una bill
+            //Se il rent è close la bill rimando alla pagina della fattura
+            //Altrimenti mostro la stima del prezzo
+            //In entrambi i casi se non è presente la richiedo e la salvo
+            if (rental.priceEstimation == undefined) {
+                query = { from: rental.startDate, to: rental.expectedEndDate }
+                let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
+                console.log('priceEstimation')
+                console.log(priceEstimation)
+
+                rental.priceEstimation = priceEstimation[0]
+
+                const response = (await api.rentals.patchSingle(rental._id, rental))
+                console.log('Risposta alla patch')
+                console.log(response)
+
+                document.location.href = "./rentalPage.html"
             }
-            else {
-                //Se la price Estimation non è presente allora ne richiedo una e la salvo nel rental
-                if (rental.priceEstimation == undefined) {
-                    query = { from: rental.startDate, to: rental.expectedEndDate }
-                    let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
-                    console.log('priceEstimation')
-                    console.log(priceEstimation)
 
-                    rental.priceEstimation = priceEstimation[0]
+            if (rental.state == 'close') {
+                if (rental.bill == undefined) {
+                    let data = {
+                        customer: rental.customer._id,
+                        employee: rental.employee._id,
+                        startRent: rental.startDate,
+                        endRent: rental.expectedEndDate,
+                        unit: rental.unit._id,
+                        modifier: rental.priceEstimation.modifiersList,
+                        basePrice: rental.priceEstimation.basePrice,
+                        finalPrice: rental.priceEstimation.finalPrice,
+                    }
+                    let query = {
+                        expectedEndDate: rental.expectedEndDate
+                    }
+                    console.log(data)
 
-                    const response = (await api.rentals.patchSingle(rental._id, rental))
-                    console.log('Risposta alla patch')
+                    const response = (await api.bills.post(data, query)).data
                     console.log(response)
 
-                    document.location.href=""
+                    rental.bill = response._id
+                    const patchRental = (await api.rentals.patchSingle(rentalID, rental)).data
+                    console.log(patchRental)
+
+                    document.location.href = "./rentalPage.html"
                 }
-                else {
-                    $('#priceinfo').append(`
+            }
+
+            $('#priceinfo').append(`
                     <p>Noleggio stimato di ${rental.priceEstimation.daysCount} giorni.</p>
                     <p>Prezzo senza sconti ${rental.priceEstimation.basePrice} €</p>
                     <ul id="modifierslist">
                     </ul>
-                    `)
+                `)
 
-                    rental.priceEstimation.modifiersList.forEach(modifier => {
-                        $('#modifierslist').append(`
+            rental.priceEstimation.modifiersList.forEach(modifier => {
+                $('#modifierslist').append(`
                         <li>${modifier.longExplanation}</li>
                         `)
-                    })
+            })
 
-                    $('#priceinfo').append(`
+            $('#priceinfo').append(`
                     <p>Prezzo finale: ${rental.priceEstimation.finalPrice} €</p>
                     `)
-                }
+
+            if(rental.bill != undefined){
+                $('#priceinfo').append(`
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-search" onclick="billPage('${rental.bill}')">Vai alla fattura</button>
+                </div>
+                `)
             }
-        })
         
+        })
+
         //Bottone Modifica
+        let modifyState = true
         $('#modify').on('click', (event) => {
             event.preventDefault()
 
@@ -221,13 +257,13 @@
                         rental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
                     else
                         rental.actualEndDate = undefined
-                        
+
                     query = { from: rental.startDate, to: rental.expectedEndDate }
                     let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
                     rental.priceEstimation = priceEstimation[0]
 
                     //Se il rent è chiuso devo creare la bill unirla all rental e fare la patch
-                    
+
 
                     const response = await api.rentals.patchSingle(rental._id, rental)
                     console.log(response)
@@ -260,7 +296,7 @@
 
             document.location.href = "./rentalsPage.html"
         })
-        
+
 
     </script>
 </footer>
