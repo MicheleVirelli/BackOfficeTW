@@ -92,3 +92,23 @@ body {
   font-size: large;
   font-weight: 600;
 }
+
+.row-one{
+  background-color: var(--main-primary);
+  color: var(--text-color);
+}
+
+.row-two{
+  background-color: var(--main-secondary);
+  color: var(--text-color);
+}
+
+.row-one:hover, .row-two:hover {
+  background-color: var(--main-lastcolor);
+  color: #000;
+}
+
+.row-header {
+  background-color: var(--main-primary);
+  color: var(--text-color);
+}

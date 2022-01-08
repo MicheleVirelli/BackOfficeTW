@@ -109,7 +109,7 @@ function refreshTable(paginateArray, value, pageFunction) {
 
   $("#productlist").append(`
   <table id="table" class="table">
-    <tr  class="${boolColor ? "td" : "tr"}">
+    <tr class="row-header">
       <td>Nome Prodotto</td>
       <td>Categoria</td>
       <td>Sottocategoria</td>
@@ -123,8 +123,7 @@ function refreshTable(paginateArray, value, pageFunction) {
   paginateArray[value].forEach((product) => {
     boolColor = !boolColor;
     $("#table").append(`
-      <tr class="clickable-row ${boolColor ? "td" : "tr"
-      }" onclick="${pageFunction}('${product._id}')">
+      <tr class="clickable-row ${boolColor ? "row-one" : "row-two"}" onclick="${pageFunction}('${product._id}')">
         <td>${product.name}</td>
         <td>${product.category}</td>
         <td>${product.subcategory}</td>
