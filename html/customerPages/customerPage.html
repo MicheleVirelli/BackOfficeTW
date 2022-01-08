@@ -171,7 +171,7 @@
             $('#description').val(customer.description)
 
             //Prendo le rent
-            let query = { populate: true }
+            let query = { limit: 0, populate: true }
             rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
             console.log(rentals)
 
@@ -196,9 +196,11 @@
             if (pendingRentals.length != 0) {
                 pendingRentals.forEach(rent => {
                     $('#pendingRent').append(`
-                <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">    
+                <div class="col-sm-3">
+                <div class="card mt-4 p-3" onclick="rentalPage('${rent._id}')">    
                     <h5 class="card-title">Noleggio in attesa di ${rent.unit.name}</h5>
                     <p class="card-text">Il Noleggio dovrebbe partire il ${(rent.startDate).toString().slice(0, 10)}</p>
+                </div>
                 </div>
                 `)
                 })
@@ -217,10 +219,12 @@
             if (openRentals.length != 0) {
                 openRentals.forEach(rent => {
                     $('#openRent').append(`
-                    <div class="card col-sm-3 mt-4 me-4 p-3" onclick="rentalPage('${rent._id}')">
+                    <div class="col-sm-3">
+                    <div class="card mt-4 p-3" onclick="rentalPage('${rent._id}')">
                         <h5 class="card-title">Rent aperto di ${rent.unit.name}</h5>
                         <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 10)}</p>
                         <p class="card-text">E dovrebbe finire ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
+                    </div>
                     </div>
                     `)
                 })
@@ -238,11 +242,13 @@
             if (closeRentals.length != 0) {
                 closeRentals.forEach(rent => {
                     $('#closeRent').append(`
-                    <div class="card col-sm-3 mt-4 me-4 p-3 mb-4" onclick="rentalPage('${rent._id}')">
+                    <div class="col-sm-3"> 
+                    <div class="card mt-4 p-3 mb-4" onclick="rentalPage('${rent._id}')">
                         <h5 class="card-title">Rent chiuso di ${rent.unit.name}</h5>
                         <p class="card-text">Il Noleggio è iniziato ${(rent.startDate).toString().slice(0, 16)}</p>
                         <p class="card-text">Il termine del noleggio era previsto per ${(rent.expectedEndDate).toString().slice(0, 10)}</p>
                         <p class="card-text">La consegna è effettivamente avvenuta ${(rent.endDate).toString().slice(0, 10)}</p>
+                    </div>
                     </div>
                 `)
                 })
