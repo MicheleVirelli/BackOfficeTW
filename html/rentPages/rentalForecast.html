@@ -52,84 +52,153 @@
             <h1>Creazione di noleggi</h1>
         </div>
 
-        <div class="card mb-4 p-4">
-            <form>
+        <div class="d-flex justify-content-center">
+            <form id="rentform" class="card col-sm-8 mb-4 p-4">
                 <div class="input-group mb-2">
                     <span class="input-group-text">Nome prodotto: </span>
                     <select id="productname" class="form-select">
                     </select>
                 </div>
                 <div class="input-group mb-2">
+                    <span class="input-group-text">Cliente interessato: </span>
+                    <select id="customer" class="form-select">
+                    </select>
+                </div>
+                <div class="input-group mb-2">
                     <span class="input-group-text">Inizio del noleggio: </span>
-                    <input type="date" id="startRent" class="form-control">
+                    <input type="date" id="startDate" class="form-control">
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Fine del noleggio: </span>
                     <input type="date" id="expectedEndRent" class="form-control">
                 </div>
                 <div id="buttonpanel">
-                    <button id="submit" class="btn btn-search col-sm-3 me-4 ">Verifica Disponibilità</button>
+                    <button id="submit" class="btn btn-search col-sm-3 me-4">Verifica Disponibilità</button>
                 </div>
             </form>
         </div>
-
-        <div id="searchedProducts" class="card"></div>
-    </div>  
+    </div>
 </body>
 
 <footer>
-    <!-- 
-        Qui cerco il prodotto inserito: indico disponibilità, 
-        prezzo, la unit interessata, la price estimation, 
-        poi rimando alla pagina specifica per la modifica degli altri campi
-
-        Creare un rent lo mette automaticamente open ed associato al employee che l'ha creato ????
-        (Di base NO)
-    -->
     <script>
-        $(document).ready(async() => {
-            //Carico tutti i prodotti per il select
+        let priceEstimation
 
+        $('#startDate').on('change', (event) => {
+            $('#expectedEndRent').attr('min', $('#startDate').val())
+        })
+
+        //TODO: Sistemare accrocchi
+        async function pendingRent(index) {
+            let date = new Date()
+            let month
+            let day
+            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
+
+            if (date.getDate() < 10)
+                day = ('0' + (date.getDate()).toString())
+            else
+                day = date.getDate()
+
+            let newRental = {
+                customer: $('#customer').val(),
+                state: 'pending',
+                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                priceEstimation: priceEstimation[index],
+                startDate: $('#startDate').val() + 'T00:00:00.000Z',
+                expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
+                unit: priceEstimation[index].unitID
+            }
+
+            const response = (await api.rentals.post(newRental)).data
+            console.log(response)
+
+            rentalPage(response._id)
+        }
+
+        $(document).ready(async () => {
             let query = { limit: 0 }
             const products = (await api.products.get(query)).data.docs
-            console.log(products)
+            const customers = (await api.customers.get(query)).data.docs
 
             products.forEach(product => {
                 $('#productname').append(`
                 <option value="${product._id}">${product.name}</option>
                 `)
             });
-            
+
+            customers.forEach(customer => {
+                $('#customer').append(`
+                <option value="${customer._id}">${customer.firstname} ${customer.lastname}</option>
+                `)
+            });
+
         })
 
-        $('#submit').on('click', async(event) => {
+        $('#submit').on('click', async (event) => {
             event.preventDefault()
-            let productID = $('#productname').val()
-            let query = {
-                from: $('#startRent').val() + 'T00:00:00.000Z',
-                to: $('#expectedEndRent').val() + 'T00:00:00.000Z'
+
+            $('#searchedProduct').remove()
+
+            //Controllo che entrambe le date siano state inserite
+            if ($('#startDate').val() == undefined || $('#expectedEndRent').val() == undefined){
+                //TODO: Inserire messaggio di errore
             }
+            else {
+                let productID = $('#productname').val()
+                let query = {
+                    from: $('#startDate').val() + 'T00:00:00.000Z',
+                    to: $('#expectedEndRent').val() + 'T00:00:00.000Z'
+                }
 
-            const response = (await api.products.available(productID, query)).data
-            console.log(response)
+                const response = (await api.products.available(productID, query)).data
+                console.log(response)
 
-            if(response.available){
-                $('#searchedProducts').append(`
-                <p>Il prodotto cercato è disponibile </p>
+                if (response.available) {
+                    $('#content').append(`
+                <div class="d-flex justify-content-center">
+                <div id="searchedProduct" class="card col-sm-8 p-4">
+                    <div class="d-flex justify-content-center">
+                        <h3>Il prodotto cercato è disponibile </h3>
+                    </div>
+                    <div>
+                        <p>(${response.availableCount}) unità presenti per quelle date</p>
+                    </div>
+                    <div>
+                        <ul id="unitlist"></ul>
+                    </div>
+                </div>
+                </div>
                 `)
 
-                const priceEstimation = (await api.products.priceEstimation(productID, query)).data
-                console.log(priceEstimation)
+                    priceEstimation = (await api.products.priceEstimation(productID, query)).data
+                    console.log(priceEstimation)
 
-                $('#searchedProducts').append(`
-                <p>Il prodotto cercato nelle date inserite costa: ${priceEstimation.finalPrice}</p>
-                <button class="btn btn-search"> Premi qui se vuoi confermare il rent </button>
+                    let i = 0
+                    priceEstimation.forEach(priceEstimation => {
+                        $('#unitlist').append(`
+                    <li class="mb-4"> La unit ${priceEstimation.unitID} nelle date inserite ha un prezzo di ${priceEstimation.finalPrice} €
+                        <div class="row d-flex justify-content-around mt-4">
+                            <button id="openrent" class="btn btn-search col-sm-3" onclick="openRent('${i}')">Crea rent aperto a tuo nome</button>
+                            <button id="pendingrent" class="btn btn-search col-sm-3" onclick="pendingRent('${i}')">Crea rent in attesa</button>
+                        </div>    
+                    </li>
+                    `)
+                        i++
+                    })
+
+                }
+                else {
+                    $('#content').append(`
+                <div class="d-flex justify-content-center">
+                    <div id="searchedProduct" class="card p-4 col-sm-8">
+                        <div class="d-flex justify-content-center ">
+                            <h1>Il prodotto cercato non è disponibile in quelle date </h1>
+                        </div>
+                    </div>
+                </div>
                 `)
-            }
-            else{
-                $('#searchedProducts').append(`
-                <p>Il prodotto cercato non è disponibile in quelle date </p>
-                `)
+                }
             }
         })
     </script>

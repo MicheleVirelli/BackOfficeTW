@@ -48,73 +48,68 @@
 
 <body>
     <div id="content">
-        <div class="mb-4 d-flex justify-content-center">
+        <div class="d-flex justify-content-center mb-4">
             <h1>Informazioni sul noleggio</h1>
         </div>
 
-        <div class="card mb-4 p-4">
-            <form class="form">
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Nome prodotto: </span><br>
-                    <input type="text" disabled="disabled" id="unitname" class="form-control">
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Data del noleggio: </span><br>
-                    <input type="date" disabled="disabled" id="prenotationdate" class="form-control">
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Stato del noleggio: </span><br>
-                    <select id="state" class="form-select"  disabled="disabled">
-                        <option id="pending" value="pending">In attesa</option>
-                        <option id="open" value="open">Aperto</option>
-                        <option id="close" value="close">Chiuso</option>
-                    </select>
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Cliente: </span><br>
-                    <input type="text" disabled="disabled" id="customer" class="form-control">
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Impiegato: </span><br>
-                    <select id="employee" class="form-select"  disabled="disabled">
-                        <option id="undefined" value="undefined">Nessuno</option>
-                    </select>
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Data di inizio</span><br>
-                    <input type="date" disabled="disabled" id="startdate" class="form-control">
-                </div>
-                <div class="input-group mb-2">
-                    <span class="input-group-text">Data fine programmata:</span><br>
-                    <input type="date" disabled="disabled" id="expectedenddate" class="form-control">
-                </div>
-                <div class="input-group mb-4">
-                    <span class="input-group-text">Data fine effettiva</span><br>
-                    <input type="date" disabled="disabled" id="actualenddate" class="form-control">
-                </div>
-                <div id="buttonpanel" class="row d-flex justify-content-center">
-                    <button id="modify" class="btn btn-search col-sm-3 me-4 ">Modifica</button>
-                    <button id="delete" class="btn btn-search col-sm-3 me-4">Elimina</button>
-                </div>
-            </form>
+        <div class="d-flex justify-content-center">
+            <div class="card mb-4 p-4 col-sm-8">
+                <form class="form">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Nome prodotto: </span><br>
+                        <input type="text" disabled="disabled" id="unitname" class="form-control">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Data del noleggio: </span><br>
+                        <input type="date" disabled="disabled" id="prenotationdate" class="form-control">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Stato del noleggio: </span><br>
+                        <select id="state" class="form-select" disabled="disabled">
+                            <option id="pending" value="pending">In attesa</option>
+                            <option id="open" value="open">Aperto</option>
+                            <option id="close" value="close">Chiuso</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Cliente: </span><br>
+                        <input type="text" disabled="disabled" id="customer" class="form-control">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Impiegato: </span><br>
+                        <select id="employee" class="form-select" disabled="disabled">
+                            <option id="undefined" value="undefined">Nessuno</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Data di inizio</span><br>
+                        <input type="date" disabled="disabled" id="startdate" class="form-control">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Data fine programmata:</span><br>
+                        <input type="date" disabled="disabled" id="expectedenddate" class="form-control">
+                    </div>
+                    <div class="input-group mb-4">
+                        <span class="input-group-text">Data fine effettiva</span><br>
+                        <input type="date" disabled="disabled" id="actualenddate" class="form-control">
+                    </div>
+                    <div id="buttonpanel" class="row d-flex justify-content-center">
+                        <button id="modify" class="btn btn-search col-sm-3 me-4 ">Modifica</button>
+                        <button id="delete" class="btn btn-search col-sm-3 me-4">Elimina</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Nella pagina del prodotto voglio:
-            Modificare i campi del rental (non tutti)
-            Voglio poterlo cancellare !!
-            Devo poter fare una patch del rent all'occasione => Richiedere e gestire una nuova price estimation
-
-            Se il rent è open/pending => priceEstimation 
-            Altrimenti => bill
-
-            ---------------------------------------------------
-        -->
-    
-        <div id="priceinfo" class="card mb-3">
+        <div class="d-flex justify-content-center mb-4">
             <h1>Informazioni sulla bill o sulla price estimation</h1>
-        </div>  
-    </div>
+        </div>
 
+        <div class="d-flex justify-content-center">
+            <div  id="priceinfo" class="card mb-4 p-4 col-sm-8">
+            </div>
+        </div>
+    </div>
 </body>
 
 <footer>
@@ -122,19 +117,16 @@
         let rental
         let modifyState = true
 
-        //Inserisco i campi del rent
         $(document).ready(async () => {
             let query = { populate: true }
-            const idRental = localStorage.getItem('idRental')
+            const rentalID = localStorage.getItem('rentalID')
 
-            rental = (await api.rentals.getSingle(idRental, query)).data
+            rental = (await api.rentals.getSingle(rentalID, query)).data
             console.log('Il noleggio populate: ')
             console.log(rental)
 
             query = { limit: 0 }
             const employees = (await api.employees.get(query)).data.docs
-            console.log('Impiegati: ')
-            console.log(employees)
 
             employees.forEach(employee => {
                 $('#employee').append(`
@@ -154,15 +146,15 @@
                 $('#actualenddate').val((rental.actualEndDate).toString().slice(0, 10))
 
             //Gestisco le informazioni sul prezzo
-            if(rental.state == 'close'){
+            if (rental.state == 'close') {
                 //TODO: Come cazzo è fatta una bill
             }
             else {
                 //Se la price Estimation non è presente allora ne richiedo una e la salvo nel rental
-                if(rental.priceEstimation == undefined){
+                if (rental.priceEstimation == undefined) {
                     query = { from: rental.startDate, to: rental.expectedEndDate }
                     let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
-                    console.log('priceEstimation') 
+                    console.log('priceEstimation')
                     console.log(priceEstimation)
 
                     rental.priceEstimation = priceEstimation[0]
@@ -171,9 +163,9 @@
                     console.log('Risposta alla patch')
                     console.log(response)
 
-                    //TODO: Cosa devo fare dopo 
-                    }
-                else{
+                    document.location.href=""
+                }
+                else {
                     $('#priceinfo').append(`
                     <p>Noleggio stimato di ${rental.priceEstimation.daysCount} giorni.</p>
                     <p>Prezzo senza sconti ${rental.priceEstimation.basePrice} €</p>
@@ -193,6 +185,7 @@
                 }
             }
         })
+        
         //Bottone Modifica
         $('#modify').on('click', (event) => {
             event.preventDefault()
@@ -207,35 +200,39 @@
 
                 //Creo il bottone di submit
                 $('#buttonpanel').append(`
-                    <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
+                <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
                 `)
 
                 //Scrivo la funzione del bottone di submit
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
 
-                    //Prendo i dati dal form e creo un nuovo rental da quello di partenza
-                    let newRental = rental
-                    newRental.customer = rental.customer._id
-                    newRental.employee = rental.employee._id
-                    newRental.unit = rental.unit._id
+                    //Modifico i campi del rental che ho richiesto e poi lo invio
+                    rental.customer = rental.customer._id
+                    rental.employee = rental.employee._id
+                    rental.unit = rental.unit._id
 
+                    rental.state = $('#state').val()
+
+                    rental.startDate = $('#startdate').val() + 'T00:00:00.000Z'
+                    rental.expectedEndDate = $('#expectedenddate').val() + 'T00:00:00.000Z'
+
+                    if ($('#actualenddate').val().includes('-'))
+                        rental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
+                    else
+                        rental.actualEndDate = undefined
+                        
+                    query = { from: rental.startDate, to: rental.expectedEndDate }
+                    let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
+                    rental.priceEstimation = priceEstimation[0]
+
+                    //Se il rent è chiuso devo creare la bill unirla all rental e fare la patch
                     
-                    newRental.state = $('#state').val()
 
-                    newRental.startDate = $('#startdate').val() + 'T00:00:00.000Z'
-                    newRental.expectedEndDate = $('#expectedenddate').val() + 'T00:00:00.000Z'
-                    console.log($('#actualenddate').val())
-                        if($('#actualenddate').val().includes('-'))
-                            newRental.actualEndDate = $('#actualenddate').val() + 'T00:00:00.000Z'
-                        else 
-                            newRental.actualEndDate = undefined
-                            //TODO: Verificare ^
-                
-                    const response = await api.rentals.patchSingle(rental._id, newRental)
+                    const response = await api.rentals.patchSingle(rental._id, rental)
                     console.log(response)
 
-                    document.location.href="./rentalPage.html"
+                    document.location.href = "./rentalPage.html"
                 })
 
                 modifyState = false
@@ -253,16 +250,18 @@
                 modifyState = true
             }
         })
-    
+
         //Bottone Delete
-        $('#delete').on('click', async(event) => {
+        $('#delete').on('click', async (event) => {
             event.preventDefault()
 
             const response = (await api.rentals.deleteSingle(rental._id)).data
             console.log(response)
 
-            document.location.href="./rentalsPage.html"
+            document.location.href = "./rentalsPage.html"
         })
+        
+
     </script>
 </footer>
 

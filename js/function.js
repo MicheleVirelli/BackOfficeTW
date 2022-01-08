@@ -49,7 +49,7 @@ function customerPage(id) {
 }
 
 function rentalPage(id) {
-  localStorage.setItem("idRental", id);
+  localStorage.setItem("rentalID", id);
 
   document.location.href = "../rentPages/rentalPage.html";
 }
