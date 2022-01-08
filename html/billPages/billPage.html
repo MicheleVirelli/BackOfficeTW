@@ -52,13 +52,76 @@
 
 <body>
     <div id="content">
-        <h1>Pagina della fattura</h1>
+        <div class="d-flex justify-content-center">
+            <h1>Pagina della fattura</h1>
+        </div>
+
+        <div class="row d-flex justify-content-center mt-5">
+            <div id="billinfo" class="card col-sm-8 rounded-3 p-4"></div>
+        </div>
     </div>
 </body>
 
 <footer>
     <script>
+        async function getBill(id) {
+            const bill = (await api.bills.getSingle(id)).data
+            return bill
+        }
 
+
+        let BillID = localStorage.getItem('BillID')
+
+        $(document).ready(async () => {
+            bill = await getBill(BillID)
+            console.log(bill)
+            customer = (await api.customers.getSingle(bill.customer)).data
+            employee = (await api.employees.getSingle(bill.employee)).data
+
+            $('#billinfo').append(`
+            <div class="row d-flex justify-content-center">
+                <div class="col-sm-8">
+                <p>Noleggio effettuato dal ${((bill.startRent).toString()).slice(0, 10)} al ${((bill.endRent).toString()).slice(0, 10)}</p>
+                </div>
+                <div class="col-sm-8">
+                <p>Servizio richiesto da ${customer.lastname} ${customer.firstname}</p>
+                </div>
+                <div class="col-sm-8">
+                <p>Impiegato che ha gestito il noleggio: ${employee.lastname} ${employee.firstname}</p>
+                </div>
+                <div class="col-sm-8">
+                <p>Prezzo base: ${priceFormat(bill.basePrice)} €</p>
+                </div>
+                <div class="col-sm-8">
+                    <p>Modifiche al prezzo di base: </p>
+                    <ul id="modifierlist">
+                    </ul>
+                </div>
+            </div>
+            `)
+
+
+            bill.modifier.forEach(modifier => {
+                $('#modifierlist').append(`
+                <li>${modifier.longExplanation}</li>
+                `)
+            })
+
+            $('#billinfo').append(`
+            <div class="row d-flex justify-content-center">
+                <div class="col-sm-8">
+                    <p>Prezzo finale: ${priceFormat(bill.finalPrice)} €</p>
+                </div>
+            </div>
+            `)
+
+
+
+
+            //Modificatori da aggiungere con un forEach
+
+
+        })
     </script>
 </footer>
 

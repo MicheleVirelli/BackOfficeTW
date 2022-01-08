@@ -19,7 +19,7 @@ function logOut() {
 async function checkToken() {
   const logged = await config.loggedIn()
   if (logged == false)
-    document.location.href = "../../nauthHome.html"
+    document.location.href = "../../index.html"
 }
 
 function serializeFormJson(form) {
@@ -217,5 +217,10 @@ function filterByForRentals(array, field, value) {
   }
 
   return filtered;
+}
+
+function priceFormat(number) {
+  const formatter = new Intl.NumberFormat('en-US')
+  return formatter.format(number)
 }
 
