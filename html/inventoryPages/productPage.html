@@ -111,9 +111,12 @@
 
         <div id="altproductsinfo" class="row mb-4"></div>
 
-        <div id="rentinfo" class="row mb-4"></div>
+        <div id="rentinfo" class="row mb-4">
+            <div class="d-flex justify-content-center mb-4">
+                <h3>Noleggi associati</h3>
+            </div>
+        </div>
 
-    </div>
     </div>
 </body>
 
@@ -227,7 +230,7 @@
             let i = 0
             altproducts.forEach(altprod => {
                 $('#altproductsinfo').append(`
-                        <div class="card col-sm-3 me-5 mb-3 ">
+                        <div class="card col-sm-3 me-5 mb-3">
                             <div>
                             <img src="https://site202120.tw.cs.unibo.it/${altprod.image}" class="img-thumbnail">
                             </div>
@@ -340,7 +343,7 @@
                     value = rental.employee.lastname + ' ' + rental.employee.firstname
                 $('#rentinfo').append(`
                 <div class="col-sm-3">
-                <div class="card m-4 " onclick="rentalPage('${rental._id}')">
+                <div class="card m-2 pe-4 ps-4 pt-4" onclick="rentalPage('${rental._id}')">
                     <h5>Noleggio codice: ${rental._id}</h5>
                     <p>Stato del noleggio: ${rental.state}</p>
                     <p>Noleggiato da ${rental.customer.lastname}, ${rental.customer.firstname}</p>
