@@ -124,12 +124,18 @@
     <script>
         //TODO: fare le richieste e non mantenere in memeoria nella pagina
         const ProductID = localStorage.getItem("ProductID");
+        let product 
+
         let altproducts = []
         let units = []
-        let product
         let rentals
 
         let bool = true
+
+        async function getProduct(id, query) {
+            let product = (await api.products.getSingle(id, query)).data
+            return product
+        }
 
         $('#modify').on('click', (event) => {
             event.preventDefault()
@@ -249,8 +255,9 @@
         $(document).ready(async function () {
             let query = { populate: true }
 
+            // product = await getProduct(ProductID, query)
+            // console.log(product)
             product = (await api.products.getSingle(ProductID, query)).data
-            console.log('Il prodotto: ')
             console.log(product)
 
             units = (await api.products.getUnits(ProductID)).data
