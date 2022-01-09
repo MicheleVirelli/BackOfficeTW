@@ -68,6 +68,10 @@
                     <input type="text" class="form-control" id="subcategory" name="subcategory">
                 </div>
                 <div class="input-group mb-4">
+                    <span class="input-group-text">Prezzo:</span>
+                    <input type="text" class="form-control" id="price" name="price">
+                </div>
+                <div class="input-group mb-4">
                     <span class="input-group-text">Descrizione:</span>
                     <textarea type="text" class="form-control" id="description" name="description"
                         style="height:10em;"></textarea>
@@ -133,8 +137,10 @@
                 $('#name').val('')
                 $('#category').val('')
                 $('#subcategory').val('')
+                $('#price').val('')
                 $('#image').val('')
                 $('#description').val('')
+
 
                 $('#productCard').children('div').remove()
                 $('#productCard').append(`

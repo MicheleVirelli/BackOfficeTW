@@ -82,6 +82,10 @@
                                 name="description"></textarea>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-center mb-2">
+                        <label for="price">Prezzo: </label>
+                        <input id="price" disabled="disabled" class="form-control input-card title"name="price">
+                    </div>
 
                     <div id="buttonpanel" class="row">
                         <div class="col-sm-1"></div>
@@ -144,6 +148,7 @@
                 $('#name').removeAttr('disabled')
                 $('#category').removeAttr('disabled')
                 $('#subcategory').removeAttr('disabled')
+                $('#price').removeAttr('disabled')
                 $('#description').removeAttr('disabled')
                 $('#newproductimage').removeClass('collapse')
                 $('#labelnewproductimage').removeClass('collapse')
@@ -161,6 +166,7 @@
                     product.category = $('#category').val()
                     product.subcategory = $('#subcategory').val()
                     product.description = $('#description').val()
+                    product.price = $('#price').val()
 
                     const response = await api.products.patchSingle(ProductID, product)
                     console.log('Il prodotto cambiato è: ')
@@ -173,6 +179,7 @@
                 $('#name').attr('disabled', 'disabled')
                 $('#category').attr('disabled', 'disabled')
                 $('#subcategory').attr('disabled', 'disabled')
+                $('#price').attr('disabled', 'disabled')
                 $('#description').attr('disabled', 'disabled')
                 $('#newproductimage').addClass('collapse')
                 $('#labelnewproductimage').addClass('collapse')
@@ -217,14 +224,18 @@
                     <div class="col-sm-1"></div>
                     <div class="col-sm-2 d-flex align-items-center">Unit n° ${i}</div>
                     <div class="col-sm-3 d-flex align-items-center">Condizione: ${unit.condition}</div>
-                    <div class="col-sm-3 d-flex align-items-center">Prezzo: ${unit.price}</div>
+                    <button class="col-sm-2 btn btn-search id="modifyunit">Modifica</button>
                     <button class="col-sm-2 btn btn-search id="deleteunit">Cancella</button>
                     <div class="col-sm-1"></div>
                 </div>
                 `)
                 //TODO: Units non ha delete su api
-                $('#deleteunit').on('click', async () => {
-
+                $('#deleteunit').on('click', async (event) => {
+                    event.preventDefault()
+                })
+            
+                $('#modifyunit').on('click', async (event) => {
+                    event.preventDefault()
                 })
             })
         }
@@ -286,6 +297,7 @@
             $('#name').val(product.name)
             $('#category').val(product.category)
             $('#subcategory').val(product.subcategory)
+            $('#price').val(product.price)
             $('#description').val(product.description)
             document.getElementById('description').style.height = "auto";
             document.getElementById('description').style.height = document.getElementById('description').scrollHeight + "px";
