@@ -56,37 +56,39 @@
 
         <div id="basicinfo" class="mb-4">
             <div class="card p-4">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
-                        <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova
-                            immagine</label><br>
-                        <input id="newproductimage" name="image" type="file" class="collapse">
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="col-sm-7 mb-2">
-                            <input id="name" disabled="disabled" class="form-control input-card title" name="name">
+
+                    <form id="formModify" class="row">
+                        <div class="col-sm-4">
+                            <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
+                            <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova
+                                immagine</label><br>
+                            <input id="newproductimage" name="image" type="file" class="collapse">
                         </div>
-                        <div class="col-sm-7 mb-2">
-                            <label for="category">Categoria</label>
-                            <input id="category" disabled="disabled" class="form-control input-card title"
-                                name="category">
+                        <div class="col-sm-8">
+                            <div class="col-sm-7 mb-2">
+                                <input id="name" disabled="disabled" class="form-control input-card title" name="name">
+                            </div>
+                            <div class="col-sm-7 mb-2">
+                                <label for="category">Categoria</label>
+                                <input id="category" disabled="disabled" class="form-control input-card title"
+                                    name="category">
+                            </div>
+                            <div class="col-sm-7 mb-2">
+                                <label for="subcategory">Sottocategoria</label>
+                                <input id="subcategory" disabled="disabled" class="form-control input-card title"
+                                    name="subcategory">
+                            </div>
+                            <div class="mb-2">
+                                <label for="description">Descrizione</label>
+                                <textarea id="description" disabled="disabled" class="form-control input-card title"
+                                    name="description"></textarea>
+                            </div>
+                            <div class="col-sm-7 mb-2">
+                                <label for="price">Prezzo: </label>
+                                <input id="price" disabled="disabled" class="form-control input-card title" name="price">
+                            </div>
                         </div>
-                        <div class="col-sm-7 mb-2">
-                            <label for="subcategory">Sottocategoria</label>
-                            <input id="subcategory" disabled="disabled" class="form-control input-card title"
-                                name="subcategory">
-                        </div>
-                        <div class="mb-2">
-                            <label for="description">Descrizione</label>
-                            <textarea id="description" disabled="disabled" class="form-control input-card title"
-                                name="description"></textarea>
-                        </div>
-                        <div class="col-sm-7 mb-2">
-                            <label for="price">Prezzo: </label>
-                            <input id="price" disabled="disabled" class="form-control input-card title" name="price">
-                        </div>
-                    </div>
+                    </form>
 
 
                     <div id="buttonpanel" class="row">
@@ -96,7 +98,6 @@
                         <button id="modify" class="btn btn-search col-sm-2">Modifica</button>
                         <div class="col-sm-2"></div>
                     </div>
-                </div>
             </div>
         </div>
 
@@ -163,18 +164,17 @@
                 //Funzione per il bottone
                 $('#confirm').on('click', async (event) => {
                     event.preventDefault()
-
-                    product.name = $('#name').val()
-                    product.category = $('#category').val()
-                    product.subcategory = $('#subcategory').val()
-                    product.description = $('#description').val()
-                    product.price = $('#price').val()
-
-                    const response = await api.products.patchSingle(ProductID, product)
+                    const form = document.getElementById('formModify');
+                    const formData = new FormData(form);
+                    for (var value of formData.values()) {
+                        console.log(value);
+                    }
+                    
+                    const response = await api.products.patchSingle(ProductID, formData)
                     console.log('Il prodotto cambiato è: ')
                     console.log(response)
 
-                    document.location.href = "./productPage.html"
+                    //document.location.href = "./productPage.html"
                 })
             }
             else {
