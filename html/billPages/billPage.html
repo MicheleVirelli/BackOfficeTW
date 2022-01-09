@@ -90,7 +90,7 @@
                 <p>Impiegato che ha gestito il noleggio: ${employee.lastname} ${employee.firstname}</p>
                 </div>
                 <div class="col-sm-8">
-                <p>Prezzo base: ${priceFormat(bill.basePrice)} €</p>
+                <p>Prezzo base: ${priceFormat(bill.priceRecap.basePrice)} €</p>
                 </div>
                 <div class="col-sm-8">
                     <p>Modifiche al prezzo di base: </p>
@@ -101,7 +101,7 @@
             `)
 
 
-            bill.modifier.forEach(modifier => {
+            bill.priceRecap.modifiersList.forEach(modifier => {
                 $('#modifierlist').append(`
                 <li>${modifier.longExplanation}</li>
                 `)
@@ -110,7 +110,7 @@
             $('#billinfo').append(`
             <div class="row d-flex justify-content-center">
                 <div class="col-sm-8">
-                    <p>Prezzo finale: ${priceFormat(bill.finalPrice)} €</p>
+                    <p>Prezzo finale: ${priceFormat(bill.priceRecap.finalPrice)} €</p>
                 </div>
             </div>
             `)
