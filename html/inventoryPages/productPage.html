@@ -166,11 +166,11 @@
                     event.preventDefault()
                     const form = document.getElementById('formModify');
                     const formData = new FormData(form);
-                    let image = $('#image').prop('files')[0];
-                    console.log("Il file dell immagine")
-                    console.log(image)
 
-                    formData.append('image', image)
+
+                    let image = $('#image').prop('files')[0];
+                    if(image)
+                        formData.append('image', image)
                     
                     for (var value of formData.values()) {
                         console.log(value);
