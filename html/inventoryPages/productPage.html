@@ -59,7 +59,8 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
-                        <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova immagine</label><br>
+                        <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova
+                            immagine</label><br>
                         <input id="newproductimage" name="image" type="file" class="collapse">
                     </div>
                     <div class="col-sm-8">
@@ -81,11 +82,12 @@
                             <textarea id="description" disabled="disabled" class="form-control input-card title"
                                 name="description"></textarea>
                         </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="price">Prezzo: </label>
+                            <input id="price" disabled="disabled" class="form-control input-card title" name="price">
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-center mb-2">
-                        <label for="price">Prezzo: </label>
-                        <input id="price" disabled="disabled" class="form-control input-card title"name="price">
-                    </div>
+
 
                     <div id="buttonpanel" class="row">
                         <div class="col-sm-1"></div>
@@ -128,7 +130,7 @@
     <script>
         //TODO: fare le richieste e non mantenere in memeoria nella pagina
         const ProductID = localStorage.getItem("ProductID");
-        let product 
+        let product
 
         let altproducts = []
         let units = []
@@ -233,7 +235,7 @@
                 $('#deleteunit').on('click', async (event) => {
                     event.preventDefault()
                 })
-            
+
                 $('#modifyunit').on('click', async (event) => {
                     event.preventDefault()
                 })
