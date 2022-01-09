@@ -120,7 +120,7 @@
 <footer>
     <script>
         //TODO: fare le richieste e non mantenere in memeoria nella pagina
-        const idProduct = localStorage.getItem("ProductID");
+        const ProductID = localStorage.getItem("ProductID");
         let altproducts = []
         let units = []
         let product
@@ -153,7 +153,7 @@
                     product.subcategory = $('#subcategory').val()
                     product.description = $('#description').val()
 
-                    const response = await api.products.patchSingle(idProduct, product)
+                    const response = await api.products.patchSingle(ProductID, product)
                     console.log('Il prodotto cambiato è: ')
                     console.log(response)
 
@@ -178,7 +178,7 @@
 
         $('#delete').on('click', async (event) => {
             event.preventDefault()
-            const response = await (api.products.deleteSingle(idProduct)).data
+            const response = await api.products.deleteSingle(ProductID)
             console.log(response)
 
             localStorage.removeItem('ProductID')
@@ -191,7 +191,7 @@
 
             product.altproducts = altproducts
 
-            const response = (await api.products.patchSingle(idProduct, product))
+            const response = (await api.products.patchSingle(ProductID, product))
             console.log(response)
 
             refreshAltProducts()
@@ -246,11 +246,11 @@
         $(document).ready(async function () {
             let query = { populate: true }
 
-            product = (await api.products.getSingle(idProduct, query)).data
+            product = (await api.products.getSingle(ProductID, query)).data
             console.log('Il prodotto: ')
             console.log(product)
 
-            units = (await api.products.getUnits(idProduct)).data
+            units = (await api.products.getUnits(ProductID)).data
             console.log('Le units associate: ')
             console.log(units)
 
@@ -264,7 +264,7 @@
                 })
             })
 
-            query = { product: idProduct, limit: 0, populate: true }
+            query = { product: ProductID, limit: 0, populate: true }
             rentals = (await api.rentals.get(query)).data.docs
             console.log('I rentals associati: ')
             console.log(rentals)
