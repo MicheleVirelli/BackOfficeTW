@@ -119,6 +119,7 @@ function refreshTable(paginateArray, value, pageFunction) {
       <td>Nome Prodotto</td>
       <td>Categoria</td>
       <td>Sottocategoria</td>
+      <td>Prezzo</td>
     </tr>
   </table>
   `);
@@ -133,7 +134,8 @@ function refreshTable(paginateArray, value, pageFunction) {
         <td>${product.name}</td>
         <td>${product.category}</td>
         <td>${product.subcategory}</td>
-      </tr>
+        <td>${priceFormat(product.price)} €</td>
+        </tr>
     `);
   });
 }
