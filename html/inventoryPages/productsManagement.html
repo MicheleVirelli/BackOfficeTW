@@ -78,7 +78,6 @@
                 </div>
                 <div class="mb-4">
                     <button class="btn btn-search" id="createProduct">Conferma</button>
-                    <button class="btn btn-search" id="test">Test</button>
                 </div>
             </form>
         </div>
@@ -87,50 +86,47 @@
     </div>
 </body>
 
-<!-- TODO: Gestire eventuali problemi con la post -->
 <footer>
     <script>
+        let ProductID
+
         $('#createProduct').on('click', async (event) => {
             event.preventDefault()
 
-            //Prendo i dati del form e posto l'oggetto (altprod = [])
             let product = new FormData(addProduct)
             console.log(product)
 
-            const response = (await api.products.post(product)).data
+            const response = await api.products.post(product)
             console.log(response)
 
-            //Pulisco il form
-            $('#name').val('')
-            $('#category').val('')
-            $('#subcategory').val('')
-            $('#image').val('')
-            $('#description').val('')
 
-            //Creo una card per mandare al prodotto se vogliono fare altre modifiche
-            $('#productCard').children('div').remove()
+            if (response.statusText == 'Created') {
+                ProductID = response._id
 
-            $('#productCard').append(`
-            <div class="card mt-4" onclick="productPage('${response._id}')">
-                <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
-                <h2 class="d-flex justify-content-center">Clicca sulla card per continuare a modificare il prodotto </h2>
-            </div>
-            `)
+                $('#name').val('')
+                $('#category').val('')
+                $('#subcategory').val('')
+                $('#image').val('')
+                $('#description').val('')
 
+                $('#productCard').children('div').remove()
+                $('#productCard').append(`
+                <div class="card mt-4 col-sm-6" onclick="productPage('${ProductID}')">
+                    <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
+                    <button class="btn btn-search" onclick="productPage('${ProductID}')">Continua a modificare</button>
+                </div>
+                `)
+            }
+            else{
+                $('#productCard').children('div').remove()
+                $('#productCard').append(`
+                <div class="card mt-4 col-sm-6" onclick="productPage('${ProductID}')">
+                    <h3 class="d-flex justify-content-center">Qualcosa è andato storto: Prodotto non aggiunto</h3>
+                    <p class="d-flex justify-content-center">Verifica che la connessione sia presente e stabile e riprova, altrimenti notifica il problema ai tecnici</p>
+                </div>
+                `)
+            }
         })
-
-        $('#test').on('click', (event) => {
-            event.preventDefault()
-
-            $('#productCard').children('div').remove()
-            $('#productCard').append(`
-            <div class="card p-5">
-                <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
-                <h2 class="d-flex justify-content-center">Clicca sulla card per continuare a modificare il prodotto </h2>
-            </div>
-            `)
-        })
-    
     </script>
 </footer>
 
