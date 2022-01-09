@@ -68,8 +68,6 @@
 
                 <div class="col-sm-6 d-flex justify-content-center">
                     <form id="customerInfo" class="w-100">
-                        <label for="username">Username</label><br>
-                        <input id="username" class="form-control input-card title" disabled="disabled"><br>
                         <label for="firstname">Nome</label><br>
                         <input id="firstname" class="form-control input-card title" disabled="disabled"><br>
                         <label for="lastname">Cognome</label><br>
@@ -99,7 +97,7 @@
             </div>
         </div>
 
-        <!-- Informazioni sui noleggi -->
+        <!-- Informazioni sui noleggi
         <div id="rentInfo" class="mt-5">
             <div class="d-flex justify-content-center">
                 <h1>Noleggi in attesa di conferma</h1>
@@ -115,17 +113,46 @@
                 <h1>Noleggi conclusi</h1>
             </div>
             <div id="closeRent" class="row"></div>
-        </div>
+        </div> 
+        -->
     </div>
 </body>
 
 <footer>
     <script>
-        const idCustomer = localStorage.getItem('CustomerID')
+        const CustomerID = localStorage.getItem('CustomerID')
         let customer
         let rentals
         let state = true
-        //TODO: Da sistemare partire sempre dall'oggetto restituito dal server
+        
+        //1) Possibilità di pachare tutto dalla descrizione all'immagine,
+        //2) Catchare gli eventuali errori dovuti a modifiche scorrette
+        //3) Regolare la possibilità di fare delete
+
+        function fillCustomerForm(customer) {
+            $('#firstname').attr('value', `${customer.firstname}`)
+            $('#lastname').attr('value', `${customer.lastname}`)
+            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
+            $('#country').attr('value', `${customer.address.country}`)
+            $('#city').attr('value', `${customer.address.city}`)
+            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
+            $('#zipcode').attr('value', `${customer.address.zipcode}`)
+
+            $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
+
+            $('#description').val(customer.description)
+            // document.getElementById('description').style.height = "auto";
+            // document.getElementById('description').style.height = document.getElementById('description').scrollHeight + "px";
+            //console.log(document.getElementById('description').scrollHeight)
+            //Devo dare una dimensione alla descrizione
+        }
+
+        async function getCustomer(id, query = {}) {
+            let customer = (await api.customers.getSingle(id, query)).data
+            return customer
+        }
+
+
         function getFormCustomer() {
             let newCustomer = {
                 firstname: $('#firstname').val(),
@@ -152,27 +179,15 @@
             `)
         }
 
-        $('document').ready(async () => {
-            customer = (await api.customers.getSingle(idCustomer)).data
-            console.log(customer)
+        $(document).ready(async () => {
 
-            //Aggiungo le info come placeholder del form
-            $('#username').attr('value', `${customer.loginInfo.username}`)
-            $('#firstname').attr('value', `${customer.firstname}`)
-            $('#lastname').attr('value', `${customer.lastname}`)
-            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
-            $('#country').attr('value', `${customer.address.country}`)
-            $('#city').attr('value', `${customer.address.city}`)
-            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
-            $('#zipcode').attr('value', `${customer.address.zipcode}`)
+            customer = await getCustomer(CustomerID)
 
-            //Aggiungo altre informazioni dell'utente
-            $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
-            $('#description').val(customer.description)
+            fillCustomerForm(customer)
 
             //Prendo le rent
             let query = { limit: 0, populate: true }
-            rentals = (await api.customers.getRentals(idCustomer, query)).data.docs
+            rentals = (await api.customers.getRentals(CustomerID, query)).data.docs
             console.log(rentals)
 
             //Le divido in base allo state 
@@ -299,6 +314,8 @@
         $('#submit').on('click', async (event) => {
             event.preventDefault()
             const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
+
+            document.location.href="./customerPage.html"    
         })
     </script>
 </footer>
