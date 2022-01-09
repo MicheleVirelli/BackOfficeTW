@@ -74,7 +74,7 @@
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Immagine del prodotto:</span>
-                    <input type="file" class="form-control" id="image" name="image">
+                    <input type="file" class="form-control" id="image" name="image" accept=".png, .jpg, .jpeg">
                 </div>
                 <div class="mb-4">
                     <button class="btn btn-search" id="createProduct">Conferma</button>
@@ -90,18 +90,45 @@
     <script>
         let ProductID
 
+        function verifyImage(files) {
+            let selectedFile = files.slice(12, files.length)
+            let idxDot = selectedFile.lastIndexOf(".") + 1;
+            let extFile = selectedFile.substr(idxDot, selectedFile.length).toLowerCase();
+
+            if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function verifyForm(form) {
+            let bool = true
+            form.querySelectorAll("input, textarea").forEach(element => {
+                if (element.value == '')
+                    bool = false
+            })
+            return bool
+        }
+
         $('#createProduct').on('click', async (event) => {
             event.preventDefault()
 
-            let product = new FormData(addProduct)
-            console.log(product)
-
-            const response = await api.products.post(product)
-            console.log(response)
+            try {
+                if (!verifyImage($('#image').val()))
+                    throw error = { name: 'Tipo di file errato', explanation: 'Solo i file jpg/jpeg, png, sono permessi! Inserici un file valido e riprova' }
 
 
-            if (response.statusText == 'Created') {
-                ProductID = response._id
+                if (!verifyForm(addProduct))
+                    throw error = { name: 'Campi incompleti', explanation: 'Per aggiungere un prodotto è necessario che tutti i campi siano completi' }
+
+                let product = new FormData(addProduct)
+                console.log(product)
+
+                const response = await api.products.post(product)
+                console.log(response)
+
+                ProductID = response.data._id
 
                 $('#name').val('')
                 $('#category').val('')
@@ -111,20 +138,30 @@
 
                 $('#productCard').children('div').remove()
                 $('#productCard').append(`
-                <div class="card mt-4 col-sm-6" onclick="productPage('${ProductID}')">
-                    <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
-                    <button class="btn btn-search" onclick="productPage('${ProductID}')">Continua a modificare</button>
-                </div>
-                `)
+                    <div class="card mt-4 col-sm-6 p-4" onclick="productPage('${ProductID}')">
+                        <h1 class="d-flex justify-content-center">Il prodotto è stato creato con successo! </h1>
+                        <button class="btn btn-search" onclick="productPage('${ProductID}')">Continua a modificare</button>
+                    </div>
+                    `)
+
             }
-            else{
+            catch (error) {
+                if (error.message != undefined) {
+                    let errorText = error.message
+                    errorText = error.message.substr(error.message.lastIndexOf('code') + 5, error.message.lenght)
+                    if (errorText == '409')
+                        error = { name: 'Prodotto con lo stesso nome', explanation: "Esiste già un prodotto con lo stesso nome e non è possibile crearne un'altro" }
+                    else
+                        error = { name: 'Errore Sconosciuto', explanation: 'Verifica che la connessione sia presente e stabile e riprova, altrimenti notifica il problema ai tecnici' }
+
+                }
                 $('#productCard').children('div').remove()
                 $('#productCard').append(`
-                <div class="card mt-4 col-sm-6" onclick="productPage('${ProductID}')">
-                    <h3 class="d-flex justify-content-center">Qualcosa è andato storto: Prodotto non aggiunto</h3>
-                    <p class="d-flex justify-content-center">Verifica che la connessione sia presente e stabile e riprova, altrimenti notifica il problema ai tecnici</p>
-                </div>
-                `)
+                    <div class="card mt-4 col-sm-6 p-4" onclick="productPage('${ProductID}')">
+                        <h3 class="d-flex justify-content-center">Qualcosa è andato storto: ${error.name}</h3>
+                        <p class="d-flex justify-content-center">${error.explanation}</p>
+                    </div>
+                    `)
             }
         })
     </script>
