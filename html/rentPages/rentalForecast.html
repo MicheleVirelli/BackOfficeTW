@@ -88,6 +88,12 @@
             $('#expectedEndRent').attr('min', $('#startDate').val())
         })
 
+        //TODO: Implementare
+        async function openRent(id) {
+            let employee = await config.user()
+            console.log(employee)
+        }
+
         //TODO: Sistemare accrocchi
         async function pendingRent(index) {
             let date = new Date()
