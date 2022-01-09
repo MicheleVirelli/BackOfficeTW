@@ -57,47 +57,47 @@
         <div id="basicinfo" class="mb-4">
             <div class="card p-4">
 
-                    <form id="formModify" class="row">
-                        <div class="col-sm-4">
-                            <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
-                            <label id="labelnewproductimage" class="collapse" for="newproductimage">Scegli la nuova
-                                immagine</label><br>
-                            <input id="newproductimage" name="image" type="file" class="collapse">
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="col-sm-7 mb-2">
-                                <input id="name" disabled="disabled" class="form-control input-card title" name="name">
-                            </div>
-                            <div class="col-sm-7 mb-2">
-                                <label for="category">Categoria</label>
-                                <input id="category" disabled="disabled" class="form-control input-card title"
-                                    name="category">
-                            </div>
-                            <div class="col-sm-7 mb-2">
-                                <label for="subcategory">Sottocategoria</label>
-                                <input id="subcategory" disabled="disabled" class="form-control input-card title"
-                                    name="subcategory">
-                            </div>
-                            <div class="mb-2">
-                                <label for="description">Descrizione</label>
-                                <textarea id="description" disabled="disabled" class="form-control input-card title"
-                                    name="description"></textarea>
-                            </div>
-                            <div class="col-sm-7 mb-2">
-                                <label for="price">Prezzo: </label>
-                                <input id="price" disabled="disabled" class="form-control input-card title" name="price">
-                            </div>
-                        </div>
-                    </form>
-
-
-                    <div id="buttonpanel" class="row">
-                        <div class="col-sm-1"></div>
-                        <button id="delete" class="btn btn-search col-sm-2">Cancella</button>
-                        <div class="col-sm-2"></div>
-                        <button id="modify" class="btn btn-search col-sm-2">Modifica</button>
-                        <div class="col-sm-2"></div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img id="productimage" class="img-fluid rounded-start mb-2" alt="...">
+                        <label id="labelnewproductimage" class="collapse" for="image">Scegli la nuova
+                            immagine</label><br>
+                        <input id="image" name="image" type="file" class="collapse">
                     </div>
+                    <form id="formModify" class="col-sm-8">
+                        <div class="col-sm-7 mb-2">
+                            <input id="name" disabled="disabled" class="form-control input-card title" name="name">
+                        </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="category">Categoria</label>
+                            <input id="category" disabled="disabled" class="form-control input-card title"
+                                name="category">
+                        </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="subcategory">Sottocategoria</label>
+                            <input id="subcategory" disabled="disabled" class="form-control input-card title"
+                                name="subcategory">
+                        </div>
+                        <div class="mb-2">
+                            <label for="description">Descrizione</label>
+                            <textarea id="description" disabled="disabled" class="form-control input-card title"
+                                name="description"></textarea>
+                        </div>
+                        <div class="col-sm-7 mb-2">
+                            <label for="price">Prezzo: </label>
+                            <input id="price" disabled="disabled" class="form-control input-card title" name="price">
+                        </div>
+
+                    </form>
+                </div>
+
+                <div id="buttonpanel" class="row">
+                    <div class="col-sm-1"></div>
+                    <button id="delete" class="btn btn-search col-sm-2">Cancella</button>
+                    <div class="col-sm-2"></div>
+                    <button id="modify" class="btn btn-search col-sm-2">Modifica</button>
+                    <div class="col-sm-2"></div>
+                </div>
             </div>
         </div>
 
@@ -153,7 +153,7 @@
                 $('#subcategory').removeAttr('disabled')
                 $('#price').removeAttr('disabled')
                 $('#description').removeAttr('disabled')
-                $('#newproductimage').removeClass('collapse')
+                $('#image').removeClass('collapse')
                 $('#labelnewproductimage').removeClass('collapse')
 
                 //Aggiungo il bottone per la patch
@@ -166,10 +166,16 @@
                     event.preventDefault()
                     const form = document.getElementById('formModify');
                     const formData = new FormData(form);
+                    let image = $('#image').prop('files')[0];
+                    console.log("Il file dell immagine")
+                    console.log(image)
+
+                    formData.append('image', image)
+                    
                     for (var value of formData.values()) {
                         console.log(value);
                     }
-                    
+
                     const response = await api.products.patchSingle(ProductID, formData)
                     console.log('Il prodotto cambiato è: ')
                     console.log(response)
@@ -183,7 +189,7 @@
                 $('#subcategory').attr('disabled', 'disabled')
                 $('#price').attr('disabled', 'disabled')
                 $('#description').attr('disabled', 'disabled')
-                $('#newproductimage').addClass('collapse')
+                $('#image').addClass('collapse')
                 $('#labelnewproductimage').addClass('collapse')
 
                 //Rimuovo il bottone
