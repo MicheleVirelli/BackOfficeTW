@@ -185,7 +185,7 @@ function filterByForRentals(array, field, value) {
   value = value.trim().toLowerCase();
   console.log(field)
 
-  if (field == 'unit') {
+  if (field == 'product') {
     array.forEach((element) => {
       if (element != undefined) {
         if (element.unit.name.trim().toLowerCase().includes(value))
@@ -205,6 +205,14 @@ function filterByForRentals(array, field, value) {
     array.forEach((element) => {
       if (element != undefined && element.employee != undefined) {
         if (element.employee.lastname.trim().toLowerCase().includes(value) || element.employee.firstname.trim().toLowerCase().includes(value))
+          filtered.push(element);
+      }
+    });
+  }
+  else if(field == 'unit') {
+    array.forEach((element) => {
+      if (element != undefined) {
+        if (element.unit._id.trim().toLowerCase().includes(value))
           filtered.push(element);
       }
     });

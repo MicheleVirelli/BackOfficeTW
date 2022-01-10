@@ -59,8 +59,9 @@
                         <option value="customer">Scegli come cercare</option>
                         <option value="customer">Nome Cliente</option>
                         <option value="employee">Nome Impiegato</option>
-                        <option value="unit">Nome prodotto</option>
+                        <option value="product">Nome prodotto</option>
                         <option value="state">Stato del Noleggio</option>
+                        <option value="unit">Codice dell'unità</option>
                     </select>
                 </span>
                 <input type="text" class="form-control" id="value">
@@ -97,6 +98,7 @@
                     <td>Stato</td>
                     <td>Data Inizio</td>
                     <td>Data Fine</td>
+                    <td>Codice Unità</td>
                     </tr>
                 </thead>
             </table>
@@ -142,6 +144,7 @@
                     <td>${rental.state}</td>
                     <td>${startDate}</td>
                     <td>${endDate}</td>
+                    <td>${rental.unit._id}</td>
                 </tr>
                 `)
             });
