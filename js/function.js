@@ -244,4 +244,26 @@ function conditionToCondizione(condition){
         return 
         break;
     }
-} 
+}
+
+async function postBill(rental, surchargePrice) {
+  let data = {
+      customer: rental.customer,
+      employee: rental.employee,
+      startRent: rental.startDate,
+      endRent: rental.expectedEndDate,
+      unit: rental.unit
+  }
+
+  let query = {
+      repairDamageSurcharge: surchargePrice,
+      expectedEndDate: rental.expectedEndDate
+  }
+  console.log(data)
+  console.log(query)
+
+  const bill = (await api.bills.post(data, query)).data
+  console.log(bill)
+
+  rental.bill = bill._id
+}

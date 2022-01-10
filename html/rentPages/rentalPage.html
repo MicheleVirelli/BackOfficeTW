@@ -213,29 +213,6 @@
 
         }
 
-        //Crea una bill e l'aggiunge al prodotto sulla pagina ma non è una patch
-        async function postBill(rental) {
-            let data = {
-                customer: rental.customer,
-                employee: rental.employee,
-                startRent: rental.startDate,
-                endRent: rental.expectedEndDate,
-                unit: rental.unit
-            }
-
-            let query = {
-                repairDamageSurcharge: surchargePrice,
-                expectedEndDate: rental.expectedEndDate
-            }
-            console.log(data)
-            console.log(query)
-
-            const bill = (await api.bills.post(data, query)).data
-            console.log(bill)
-
-            rental.bill = bill._id
-        }
-
         //Crea un nuovo rental con i dati di isRental e il form
         async function getFormRental() {
             let newRental = {
@@ -314,7 +291,7 @@
 
                     if (controlRentalLogic(newRental)) {
                         if (newRental.state == 'close')
-                            await postBill(newRental)
+                            await postBill(newRental, surchargePrice)
                         else
                             newRental.bill = undefined
                         

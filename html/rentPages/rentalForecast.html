@@ -79,7 +79,7 @@
         </div>
     </div>
 </body>
-
+<!-- TODO: Rimuovere alert con qualcosa di accessibile -->
 <footer>
     <script>
         let priceEstimation
@@ -87,15 +87,73 @@
         $('#startDate').on('change', (event) => {
             $('#expectedEndRent').attr('min', $('#startDate').val())
         })
-
-        //TODO: Implementare
-        async function openRent(id) {
+        
+        //TODO: Sistemare accrocchi
+        async function createCloseRent(index) {
             let employee = await config.user()
-            console.log(employee)
+
+            let date = new Date()
+            let month
+            let day
+            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
+
+            if (date.getDate() < 10)
+                day = ('0' + (date.getDate()).toString())
+            else
+                day = date.getDate()
+
+            let newRental = {
+                customer: $('#customer').val(),
+                employee: employee._id,
+                state: 'close',
+                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                priceEstimation: priceEstimation[index],
+                startDate: $('#startDate').val() + 'T00:00:00.000Z',
+                expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
+                actualEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
+                unit: priceEstimation[index].unitID
+            }
+            
+            await postBill(newRental, 0)
+            console.log(newRental)
+
+            const response = (await api.rentals.post(newRental)).data
+            console.log(response)
+
+            rentalPage(response._id)
         }
 
-        //TODO: Sistemare accrocchi
-        async function pendingRent(index) {
+        async function createOpenRent(index) {
+            let employee = await config.user()
+
+            let date = new Date()
+            let month
+            let day
+            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
+
+            if (date.getDate() < 10)
+                day = ('0' + (date.getDate()).toString())
+            else
+                day = date.getDate()
+
+            let newRental = {
+                customer: $('#customer').val(),
+                employee: employee._id,
+                state: 'open',
+                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                priceEstimation: priceEstimation[index],
+                startDate: $('#startDate').val() + 'T00:00:00.000Z',
+                expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
+                unit: priceEstimation[index].unitID
+            }
+
+            const response = (await api.rentals.post(newRental)).data
+            console.log(response)
+
+            rentalPage(response._id)
+        }
+        
+        async function createPendingRent(index) {
             let date = new Date()
             let month
             let day
@@ -147,63 +205,63 @@
             $('#searchedProduct').remove()
 
             //Controllo che entrambe le date siano state inserite
-            if ($('#startDate').val() == undefined || $('#expectedEndRent').val() == undefined){
-                //TODO: Inserire messaggio di errore
+            if ($('#startDate').val() == '' || $('#expectedEndRent').val() == ''){
+                window.alert('Le date inserite sono scorrette o mancanti')
             }
             else {
-                let productID = $('#productname').val()
+                let ProductID = $('#productname').val()
                 let query = {
                     from: $('#startDate').val() + 'T00:00:00.000Z',
                     to: $('#expectedEndRent').val() + 'T00:00:00.000Z'
                 }
 
-                const response = (await api.products.available(productID, query)).data
-                console.log(response)
+                priceEstimation = (await api.products.priceEstimation(ProductID, query)).data
+                console.log(priceEstimation)
 
-                if (response.available) {
+                if (priceEstimation.length > 0) {
                     $('#content').append(`
-                <div class="d-flex justify-content-center">
-                <div id="searchedProduct" class="card col-sm-8 p-4">
                     <div class="d-flex justify-content-center">
-                        <h3>Il prodotto cercato è disponibile </h3>
+                        <div id="searchedProduct" class="card col-sm-8 p-4 mb-4">
+                            <div class="d-flex justify-content-center">
+                                <h3>Il prodotto cercato è disponibile </h3>
+                            </div>
+                            <div>
+                                <p>(${priceEstimation.length}) unità presenti per quelle date</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p>(${response.availableCount}) unità presenti per quelle date</p>
+                    <div id="unitscard" class="d-flex justify-content-center row">
                     </div>
-                    <div>
-                        <ul id="unitlist"></ul>
-                    </div>
-                </div>
-                </div>
-                `)
-
-                    priceEstimation = (await api.products.priceEstimation(productID, query)).data
-                    console.log(priceEstimation)
-
+                    `)
                     let i = 0
                     priceEstimation.forEach(priceEstimation => {
-                        $('#unitlist').append(`
-                    <li class="mb-4"> La unit ${priceEstimation.unitID} nelle date inserite ha un prezzo di ${priceEstimation.finalPrice} €
-                        <div class="row d-flex justify-content-around mt-4">
-                            <button id="openrent" class="btn btn-search col-sm-3" onclick="openRent('${i}')">Crea rent aperto a tuo nome</button>
-                            <button id="pendingrent" class="btn btn-search col-sm-3" onclick="pendingRent('${i}')">Crea rent in attesa</button>
-                        </div>    
-                    </li>
-                    `)
+                        $('#unitscard').append(`
+                        <div class="card col-sm-8 p-4 mb-4">
+                            <div class="row">
+                                <p class="title col-sm-12">Unità codice: ${priceEstimation.unitID}</p>
+                                <p class="title col-sm-12">Prezzo finale nelle date selezionate ${priceFormat(priceEstimation.finalPrice)} €</p>
+                            </div>
+                            <div class="d-flex justify-content-around">
+                                <button class="col-sm-2 btn btn-search" onclick="createCloseRent('${i}')">Crea un noleggio chiuso</button>
+                                <button class="col-sm-2 btn btn-search" onclick="createOpenRent('${i}')">Crea un noleggio aperto</button>
+                                <button class="col-sm-2 btn btn-search" onclick="createPendingRent('${i}')">Crea un noleggio in attesa</button>
+                            </div>
+                        </div>
+                        `)
                         i++
                     })
 
                 }
                 else {
                     $('#content').append(`
-                <div class="d-flex justify-content-center">
-                    <div id="searchedProduct" class="card p-4 col-sm-8">
-                        <div class="d-flex justify-content-center ">
-                            <h1>Il prodotto cercato non è disponibile in quelle date </h1>
+                    <div class="d-flex justify-content-center">
+                        <div id="searchedProduct" class="card p-4 col-sm-8">
+                            <div class="d-flex justify-content-center ">
+                                <h1>Il prodotto cercato non è disponibile in quelle date </h1>
+                            </div>
                         </div>
                     </div>
-                </div>
-                `)
+                    `)
                 }
             }
         })
