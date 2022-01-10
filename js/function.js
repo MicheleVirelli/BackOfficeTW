@@ -226,3 +226,22 @@ function priceFormat(number) {
   return formatter.format(number)
 }
 
+function conditionToCondizione(condition){
+    switch (condition) {
+      case 'broken':
+        return 'Scassato'
+      break;
+      case 'major flaw':
+        return 'abbastanza danneggiato'
+      break;
+      case 'minor flaw':
+        return 'lievemente danneggiatto'
+      break;
+      case 'perfect':
+        return 'perfetto'
+      break;
+      default:
+        return 
+        break;
+    }
+} 
