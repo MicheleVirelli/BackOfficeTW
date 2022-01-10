@@ -85,7 +85,6 @@
                         <input id="zipcode" class="form-control input-card title" disabled="disabled"><br>
                     </form>
                 </div>
-
             </div>
 
             <div id="buttonPanel" class="d-flex justify-content-around mt-3">
@@ -94,7 +93,6 @@
                     title="Non è possibile eliminare un cliente che ha noleggi aperti o chiusi">
                     <button type="button" class="btn btn-search" id="delete">Delete</button>
                 </div>
-                <button type="button" class="btn btn-search" id="submit">Submit</button>
             </div>
         </div>
 
@@ -129,14 +127,15 @@
         //2) Catchare gli eventuali errori dovuti a modifiche scorrette
         //3) Regolare la possibilità di fare delete
 
+
         function fillCustomerForm(customer) {
-            $('#firstname').attr('value', `${customer.firstname}`)
-            $('#lastname').attr('value', `${customer.lastname}`)
-            $('#dateOfBirth').attr('value', `${(customer.dateOfBirth).toString().slice(0, 10)}`)
-            $('#country').attr('value', `${customer.address.country}`)
-            $('#city').attr('value', `${customer.address.city}`)
-            $('#streetAddress').attr('value', `${customer.address.streetAddress}`)
-            $('#zipcode').attr('value', `${customer.address.zipcode}`)
+            $('#firstname').val(customer.firstname)
+            $('#lastname').val(customer.lastname)
+            $('#dateOfBirth').val((customer.dateOfBirth).toString().slice(0, 10))
+            $('#country').val(customer.address.country)
+            $('#city').val(customer.address.city)
+            $('#streetAddress').val(customer.address.streetAddress)
+            $('#zipcode').val(customer.address.zipcode)
 
             $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
 
@@ -168,15 +167,11 @@
             return newCustomer
         }
 
-
         $(document).ready(async () => {
 
             customer = await getCustomer(CustomerID)
 
             fillCustomerForm(customer)
-
-            /*Parte con i rent tutta da rifare
-        
             let query = { limit: 0, populate: true }
             rentals = (await api.customers.getRentals(CustomerID, query)).data.docs
             console.log(rentals)
@@ -197,6 +192,8 @@
 
             //Se il cliente ha noleggi attivi o conclusi non può essere cancellato
             if (openRentals.length > 0 || closeRentals.length > 0) { $('#delete').addClass('disabled') }
+
+            /*Parte con i rent tutta da rifare
 
             //Appendo i vari rent in base allo stato
             if (pendingRentals.length != 0) {
@@ -284,15 +281,17 @@
                 $('#description').removeAttr('disabled')
 
                 $('#buttonPanel').append(`
-                <button id="submit" class="btn btn-warning>Submit</button>
+                <button id="submit" class="btn btn-search">Submit</button>
                 `)
 
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
                     const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
-                })
+                    customer = response
 
-                fillCustomerForm(customer)
+                    console.log(state)
+                    $('#modify').click()
+                })
             }
             else {
                 $('#firstname').attr('disabled', 'disabled')
@@ -303,6 +302,7 @@
                 $('#streetAddress').attr('disabled', 'disabled')
                 $('#zipcode').attr('disabled', 'disabled')
                 $('#description').attr('disabled', 'disabled')
+                $('#submit').remove()
 
                 fillCustomerForm(customer)
             }
@@ -314,7 +314,6 @@
             const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
             console.log(response)
         })
-
 
     </script>
 </footer>

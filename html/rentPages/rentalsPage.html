@@ -113,7 +113,6 @@
                 let employee
                 let endDate
                 let startDate = rental.startDate
-
                 switch (rental.state) {
                     case 'pending':
                         employee = 'Nessuno'
@@ -135,7 +134,7 @@
 
                 endDate = (new Date(endDate)).toString().slice(0, 16)
                 startDate = (new Date(startDate)).toString().slice(0, 16)
-
+                
                 $('#rentable').append(`
                 <tr class="clickable-row  ${boolColor ? "row-one" : "row-two"}" onclick="rentalPage('${rental._id}')" >
                     <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
