@@ -217,13 +217,13 @@
         async function getFormRental() {
             let newRental = {
                 customer: isRental.customer._id,
-                employee: undefined,
+                employee: null,
                 state: $('#state').val(),
                 startDate: $('#startdate').val() + 'T00:00:00.000Z',
                 expectedEndDate: $('#expectedenddate').val() + 'T00:00:00.000Z',
-                actualEndDate: undefined,
-                priceEstimation: undefined,
-                unit: undefined,
+                actualEndDate: null,
+                priceEstimation: null,
+                unit: null  ,
             }
 
             if ($('#employee').val() != 'undefined')
@@ -277,6 +277,7 @@
 
 
                 //Creo il bottone di submit
+                $('#submit').remove()
                 $('#buttonpanel').append(`
                 <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
                 `)
@@ -298,14 +299,21 @@
                         const response = await api.rentals.patchSingle(isRental._id, newRental)
                         console.log(response)
 
-                        fillRentalForm(response.data)
+                        let query = { populate: true}
+                        newRental = await getRental(response.data._id, query)
+                        console.log(newRental)
+
+                        isRental = newRental
+                        
+                        $('#lastdiv').children().remove()
+                        $('#modify').click()
                     }
                     else {
                         window.alert('Il Noleggio nel form non è corretto')
                     }
+                    
                 })
 
-                modifyState = false
             }
             else {
                 $('#state').attr('disabled', 'disabled')
@@ -313,13 +321,14 @@
                 $('#startdate').attr('disabled', 'disabled')
                 $('#expectedenddate').attr('disabled', 'disabled')
                 $('#actualenddate').attr('disabled', 'disabled')
-                $('#submit').remove()
+                
 
                 fillRentalForm(isRental)
-                
-                modifyState = true
-
             }
+            
+            modifyState = !modifyState
+            console.log('Il mio stato attuale')
+            console.log(modifyState)
         })
 
         $('#delete').on('click', async (event) => {

@@ -73,7 +73,8 @@
                         <label for="lastname">Cognome</label><br>
                         <input id="lastname" class="form-control input-card title" disabled="disabled"><br>
                         <label for="dateOfBirth">Data di nascita</label><br>
-                        <input id="dateOfBirth" type="date" class="form-control input-card title" required disabled="disabled"><br>
+                        <input id="dateOfBirth" type="date" class="form-control input-card title" required
+                            disabled="disabled"><br>
                         <label for="country">Paese</label><br>
                         <input id="country" class="form-control input-card title" disabled="disabled"><br>
                         <label for="city">Città</label><br>
@@ -123,8 +124,7 @@
         const CustomerID = localStorage.getItem('CustomerID')
         let customer
         let rentals
-        let state = true
-        
+
         //1) Possibilità di pachare tutto dalla descrizione all'immagine,
         //2) Catchare gli eventuali errori dovuti a modifiche scorrette
         //3) Regolare la possibilità di fare delete
@@ -141,17 +141,12 @@
             $('#profilepicture').attr('src', `https://site202120.tw.cs.unibo.it/${customer.profilePicture}`)
 
             $('#description').val(customer.description)
-            // document.getElementById('description').style.height = "auto";
-            // document.getElementById('description').style.height = document.getElementById('description').scrollHeight + "px";
-            //console.log(document.getElementById('description').scrollHeight)
-            //Devo dare una dimensione alla descrizione
         }
 
         async function getCustomer(id, query = {}) {
             let customer = (await api.customers.getSingle(id, query)).data
             return customer
         }
-
 
         function getFormCustomer() {
             let newCustomer = {
@@ -173,11 +168,6 @@
             return newCustomer
         }
 
-        function addSubmit() {
-            $('#buttonPanel').append(`
-            <button id="submit" class="btn btn-warning>Submit</button>
-            `)
-        }
 
         $(document).ready(async () => {
 
@@ -185,7 +175,8 @@
 
             fillCustomerForm(customer)
 
-            //Prendo le rent
+            /*Parte con i rent tutta da rifare
+        
             let query = { limit: 0, populate: true }
             rentals = (await api.customers.getRentals(CustomerID, query)).data.docs
             console.log(rentals)
@@ -277,8 +268,10 @@
                 </div>
                 `)
             }
+            */
         })
 
+        let state = true
         $('#modify').click(async () => {
             if (state) {
                 $('#firstname').removeAttr('disabled')
@@ -290,7 +283,16 @@
                 $('#zipcode').removeAttr('disabled')
                 $('#description').removeAttr('disabled')
 
-                state = false
+                $('#buttonPanel').append(`
+                <button id="submit" class="btn btn-warning>Submit</button>
+                `)
+
+                $('#submit').on('click', async (event) => {
+                    event.preventDefault()
+                    const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
+                })
+
+                fillCustomerForm(customer)
             }
             else {
                 $('#firstname').attr('disabled', 'disabled')
@@ -302,21 +304,18 @@
                 $('#zipcode').attr('disabled', 'disabled')
                 $('#description').attr('disabled', 'disabled')
 
-                state = true
+                fillCustomerForm(customer)
             }
+            state = !state
         })
 
         $('#delete').on('click', async (event) => {
             event.preventDefault()
             const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
+            console.log(response)
         })
 
-        $('#submit').on('click', async (event) => {
-            event.preventDefault()
-            const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
 
-            document.location.href="./customerPage.html"    
-        })
     </script>
 </footer>
 
