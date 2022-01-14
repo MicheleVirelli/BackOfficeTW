@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="it">
 
-<head>  
+<head>
     <title>ThePrivilege employee stuff</title>
 
     <!-- Required meta tags -->
@@ -39,47 +39,19 @@
     <script src="../../js/function.js"></script>
 
     <script>
-        $.get('../templates/authNav.html', (data) => {
-            $('body').append(data)
+        $(document).ready(async () => {
+            $.get('../templates/authNav.html', (data) => {
+                $('body').append(data)
+            })
+            checkToken()
         })
-        checkToken()
-    </script>
-
-    <script>
-        checkToken()
     </script>
 
 </head>
 
 <body>
     <div id="content">
-        <div class="d-flex justify-content-center">
-            <h1>Congratulazioni ti ricordi la tua password !</h1>
-        </div>
-        <div class="ms-4 mb-5">
-            <p>Anche perchè il remember me non va ancora...</p>
-        </div>
-
-        <div class="row d-flex justify-content-center">
-            <h1 class="col-12">NON SO CHE FARE CON QUESTA PAGINA</h1>
-            <p>
-                <hr>
-                Concettualemente: <br>
-                Se voglio cercare prodotti, rent e clienti è abbastanza lineare. <br>
-                Vado sulla pagina con il loro nome e faccio cerca, poi ci sono i filtri ...ez.<br>
-                <hr>
-                Se voglio creare un prodotto o un rent vado sulla loro pagina e lo creo MA <br>
-                Solo in una minima parte superficiale, se lo vuoi approfondire devi andare nella sua page specifica!<br>
-                <hr>
-                Un impiegato si sveglia la mattina e ...<br>
-                1) Decide di accedere e vedere se ci sono rent aperti ...<br>
-                2) Deve controllare dei prodotti <br>
-                3) Deve aggiungere info all'inventario <br>
-                4) Deve vedere le fatture <br>
-                5) Deve risolvere un problema con un rent e lo deve modificare <br>
-                6)
-            </p>
-        </div>
+        
     </div>
 </body>
 
