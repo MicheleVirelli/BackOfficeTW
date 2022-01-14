@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        $.get('../templates/authNav.html', (data) => {
+            $('body').append(data)
+        })
+
+        checkToken()
+    </script>
+</head>
+
+<body>
+    <div id="content">
+        <div class="d-flex justify-content-center">
+            <h1>Pagina delle offerte</h1>
+        </div>
+        <button id="post" class="btn btn-search">Posta un offerta</button>
+        <span class="input-group-text">Id da cancellare</span>
+        <input id="OfferID" type="text" class="form-control">
+        <button id="delete" class="btn btn-search">Cancella l'offerta</button>
+
+    </div>
+</body>
+
+<footer>
+    <script>
+        //Devo vedere le offerte attive
+        //Posibilità di rimuoverle ma non di cancellarle
+        //Possibilità di aggiurgerle
+        $(document).ready(async () => {
+            const offerts = (await api.offers.get()).data
+            console.log(offerts)
+        })
+
+        $('#post').on('click', async (event) => {
+            event.preventDefault()
+            
+        
+            let LoveBoat2021 = {
+                start: '2022-02-14T00:00:00.000Z',
+                end:    '2022-02-21T00:00:00.000Z',
+                modifier: 0.75,
+                name: 'LoveBoat2021',
+                //la usa come longExplanation
+                description: 'Sconto di san valentino ',
+                shortDescription: 'Sconto del 25% su tutti gli yatch da condividere con la tua amata',
+                categoryFiller: 'Yatch',
+            }
+
+            const postOffer = await api.offers.post(LoveBoat2021)
+            console.log(postOffer)
+        })
+
+        $('#delete').on('click', async (event) => {
+            event.preventDefault()
+
+            const response = await api.offers.deleteSingle($('#OfferID').val())
+            console.log(response)
+        })
+    
+    </script>
+</footer>
+</html>
