@@ -39,20 +39,24 @@
 
     <script>
         //Import dell'header
-        $.get('html/templates/nauthNav.html', (data) => {
-            $('body').append(data)
+        $(document).ready(async () => {
+            $.get('html/templates/nauthNav.html', (data) => {
+                $('body').append(data)
+            })
+
+            $('#loginsubmit').on('click', async (event) => {
+                event.preventDefault()
+
+                const data = serializeFormJson(loginForm);
+                const response = await api.employees.login(data);
+
+                if (response.status == 200)
+                    config.setToken(response.headers.authorization, data.remember)
+                document.location.href = "./html/authenticatedPage/authIndex.html"
+            })
+
         })
 
-        $('#loginsubmit').on('click', async (event) => {
-            event.preventDefault()
-
-            const data = serializeFormJson(loginForm);
-            const response = await api.employees.login(data);
-
-            if (response.status == 200)
-                config.setToken(response.headers.authorization, data.remember)
-            document.location.href = "./html/authenticatedPage/authIndex.html"
-        })
     </script>
 </head>
 
@@ -67,14 +71,17 @@
         <div class="d-flex justify-content-center">
             <form class="card col-sm-6 p-5" id="loginForm">
                 <div class="mb-4">
-                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" aria-label="Email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email"
+                        aria-label="Email">
                 </div>
                 <div class="mb-4">
-                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" aria-label="Password">
+                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password"
+                        aria-label="Password">
                 </div>
                 <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="remember" aria-label="Remember me ">Remember me
-                </div>  
+                    <input class="form-check-input" type="checkbox" name="remember" aria-label="Remember me ">Remember
+                    me
+                </div>
                 <button id="loginsubmit" type="submit" class="btn btn-search">Submit</button>
             </form>
         </div>
