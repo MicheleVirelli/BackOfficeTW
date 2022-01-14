@@ -147,16 +147,13 @@ function refreshClientGrid(paginateArray, value) {
     paginateArray[value].forEach((customer) => {
       $("#clientlist").append(`
     <div class="col-sm-3">
-    <div class="card mb-5" onclick="customerPage('${customer._id}')">
-    <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}">
-    <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-    <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(
-        0,
-        10
-      )}</div>
-    <div class="card-text">Indirizzo: ${customer.address.city}, ${customer.address.country
-        }</div>
-    </div>
+      <div class="card mb-5 p-3">
+        <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}" alt="Immagine di profilo del utente">
+        <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
+        <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0,10)}</div>
+        <div class="card-text mb-2">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
+        <div class="card-btn"><button class="btn btn-search" onclick="customerPage('${customer._id}')">Pagina del utente</button></div>
+      </div>
     </div>
     `);
     })
