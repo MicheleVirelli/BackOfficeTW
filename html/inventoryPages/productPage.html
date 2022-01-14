@@ -117,13 +117,6 @@
         </form>
 
         <div id="altproductsinfo" class="row mb-4"></div>
-
-        <div id="rentinfo" class="row mb-4">
-            <div class="d-flex justify-content-center mb-4">
-                <h3>Noleggi associati</h3>
-            </div>
-        </div>
-
     </div>
 </body>
 
@@ -132,18 +125,14 @@
         //TODO: fare le richieste e non mantenere in memeoria nella pagina
         const ProductID = localStorage.getItem("ProductID");
         let product
-
-        let altproducts = []
-        let units = []
-        let rentals
-
-        let bool = true
+        let products
 
         async function getProduct(id, query) {
             let product = (await api.products.getSingle(id, query)).data
             return product
         }
 
+        let bool = true
         $('#modify').on('click', (event) => {
             event.preventDefault()
 
@@ -169,9 +158,9 @@
 
 
                     let image = $('#image').prop('files')[0];
-                    if(image)
+                    if (image)
                         formData.append('image', image)
-                    
+
                     for (var value of formData.values()) {
                         console.log(value);
                     }
@@ -218,12 +207,11 @@
             const response = (await api.products.patchSingle(ProductID, product))
             console.log(response)
 
-            refreshAltProducts()
+            fillAltProductsCard()
         }
-
-        function refreshUnits() {
-            console.log('refresh delle units')
-
+        
+        //TODO: Nessun bottone funziona !!!
+        function fillUnitsCard(units) {
             let i = 0
             units.forEach(unit => {
                 i++
@@ -231,13 +219,13 @@
                 <div id="${unit._id}" class="row mb-2 card p-1" style="flex-direction:row;">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-2 d-flex align-items-center">Unit n° ${i}</div>
-                    <div class="col-sm-3 d-flex align-items-center">Condizione: ${unit.condition}</div>
+                    <div class="col-sm-3 d-flex align-items-center">Condizione: ${conditionToCondizione(unit.condition)}</div>
                     <button class="col-sm-2 btn btn-search id="modifyunit">Modifica</button>
                     <button class="col-sm-2 btn btn-search id="deleteunit">Cancella</button>
                     <div class="col-sm-1"></div>
                 </div>
                 `)
-                //TODO: Units non ha delete su api
+                
                 $('#deleteunit').on('click', async (event) => {
                     event.preventDefault()
                 })
@@ -248,10 +236,18 @@
             })
         }
 
-        async function refreshAltProducts() {
-            console.log('refresh degli alternative products ')
-            $('#altproductsinfo').children('div').remove()
+        async function fillAltProductsCard() {
+            //Ogni volta controllo i prodotti alternativi e li filtro dalla lista con tutti i prodotti
+            let altproducts = []
 
+            product.altproducts.forEach(altprod => {
+                products.forEach(prod => {
+                    if (prod._id == altprod)
+                        altproducts.push(prod)
+                })
+            })
+            
+            $('#altproductsinfo').children('div').remove()
             let i = 0
             altproducts.forEach(altprod => {
                 $('#altproductsinfo').append(`
@@ -271,33 +267,7 @@
             })
         }
 
-        $(document).ready(async function () {
-            let query = { populate: true }
-
-            // product = await getProduct(ProductID, query)
-            // console.log(product)
-            product = (await api.products.getSingle(ProductID, query)).data
-            console.log(product)
-
-            units = (await api.products.getUnits(ProductID)).data
-            console.log('Le units associate: ')
-            console.log(units)
-
-            query = { limit: 0 }
-            const products = (await api.products.get(query)).data.docs
-
-            product.altproducts.forEach(altprod => {
-                products.forEach(prod => {
-                    if (prod._id == altprod)
-                        altproducts.push(prod)
-                })
-            })
-
-            query = { product: ProductID, limit: 0, populate: true }
-            rentals = (await api.rentals.get(query)).data.docs
-            console.log('I rentals associati: ')
-            console.log(rentals)
-
+        function fillProductForm(product) {
             urlsite = "https://site202120.tw.cs.unibo.it/" + product.image
 
             //Modifiche al prodotto
@@ -310,36 +280,55 @@
             document.getElementById('description').style.height = "auto";
             document.getElementById('description').style.height = document.getElementById('description').scrollHeight + "px";
             $('#description').css('resize', 'none')
+        }
 
-            //Informazioni sulle unit del prodoto:
-            refreshUnits()
+        $(document).ready(async function () {
+            let query = { populate: true }
+
+            product = await getProduct(ProductID, query)
+            console.log(product)
+
+            let units = (await api.products.getUnits(ProductID)).data
+            console.log('Le units associate: ')
+            console.log(units)
+
+            query = { limit: 0 }
+            products = (await api.products.get(query)).data.docs
+
+            //Inserisco i prodotti possibili nel select
+            products.forEach(prod => {
+                if(prod._id != ProductID)
+                    $('#alternative').append(`
+                    <option value="${prod._id}">${prod.name}</option>
+                    `)
+            })
+
+            fillProductForm(product)
+            fillUnitsCard(units)
+            fillAltProductsCard()
 
             $('#addunits').on('click', async (event) => {
                 event.preventDefault()
 
                 //Append in cima con campi dove posso inserire il testo
+                $('#newUnit').remove()
+
                 $('#unitinfo').prepend(`
                 <div id="newUnit" class="row mb-2 card p-2" style="flex-direction:row;">
-                    <div class="col-sm-3">
-                        <input type="text" class="form-control" id="value" disabled="disabled" placeholder="${product.name}">
-                    </div>
                     <div class="col-sm-2">
+                        <span class="input-group-text">Condizione della nuova unit: </span>
                         <select class="form-select" id="condition">
-                            <option value="broken">Rovinato</option>
-                            <option value="major flaw">Leggermente rovinato</option>
-                            <option value="minor flaw">Quasi perfetto</option>
-                            <option value="perfect">Perfetto </option>
+                            <option value="broken">${conditionToCondizione('broken')}</option>
+                            <option value="major flaw">${conditionToCondizione('major flaw')}</option>
+                            <option value="minor flaw">${conditionToCondizione('minor flaw')}</option>
+                            <option value="perfect">${conditionToCondizione('perfect')}</option>
                         </select>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="text" class="form-control" id="price" placeholder="Prezzo: ">
                     </div>
                     <button id="confirmunit" class="col-sm-2 btn btn-search">Conferma</button>
                     <button id="deleteunitcard" class="col-sm-2 btn btn-search">Cancella</button>
                 </div>
                 `)
 
-                //rimuovo la card e poi modifico
                 $('#deleteunitcard').on('click', () => {
                     $('#newUnit').remove()
                 })
@@ -347,44 +336,18 @@
                 $('#confirmunit').on('click', async () => {
                     let newUnit = {
                         name: product.name,
+                        product: product._id,
                         condition: $('#condition').val(),
                         price: $('#price').val(),
                         rentals: []
                     }
 
-                    units.push(newUnit)
-
                     const response = (await api.units.post(newUnit, product._id)).data
                     console.log(response)
 
                     $('#unitinfo').children('div').remove()
-
-                    refreshUnits()
+                    fillUnitsCard((await api.products.getUnits(ProductID)).data)
                 })
-            })
-
-            //Informazioni sui rental del prodotto:
-            rentals.forEach(rental => {
-                let value = 'Nessuno'
-                if (rental.state == 'open' || rental.state == 'close')
-                    value = rental.employee.lastname + ' ' + rental.employee.firstname
-                $('#rentinfo').append(`
-                <div class="col-sm-3">
-                <div class="card m-2 pe-4 ps-4 pt-4" onclick="rentalPage('${rental._id}')">
-                    <h5>Noleggio codice: ${rental._id}</h5>
-                    <p>Stato del noleggio: ${rental.state}</p>
-                    <p>Noleggiato da ${rental.customer.lastname}, ${rental.customer.firstname}</p>
-                    <p>Impiegato associato: ${value}</p>
-                </div>
-                </div>
-                `)
-            })
-
-            //Inserisco i prodotti possibili nel select
-            products.forEach(prod => {
-                $('#alternative').append(`
-                <option value="${prod._id}">${prod.name}</option>
-                `)
             })
 
             //Bottone per aggiungere i prodotti alternativi
@@ -392,17 +355,14 @@
                 event.preventDefault()
 
                 product.altproducts.push($('#alternative').val())
-                altproducts.push($('#alternative').val())
-
                 console.log(altproducts)
 
                 const response = (await api.products.patchSingle(product._id, product)).data
                 console.log(response)
 
-                refreshAltProducts()
+                fillAltProductsCard()
             })
 
-            refreshAltProducts()
         })
     </script>
 </footer>
