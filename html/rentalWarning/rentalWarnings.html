@@ -47,12 +47,56 @@
         })
     </script>
 
+
+
 </head>
 
 <body>
     <div id="content">
+        <!-- Devo prendere tutti i rental che domani non sono sicuri avere il prodotto -->
+        <!-- Quindi visualizzo una tabella che con: il codice del rental, la causa della presenza sulla lista  -->
+        <!-- La possibilita di filtrare l'aggiungo successivamente ??  -->
+
+        <div class="d-flex justify-content-center">
+            <h1>Noleggi a rischio</h1>
+        </div>
+
         
+        <div class="d-flex justify-content-center">
+            <h2>Al momento non funzionante</h2>
+        </div>
+        
+
+        <div class="d-flex justify-content-center">
+            <table id="rentalwarnings">
+                <caption>Tabella dei noleggi a rischio</caption>
+                <tr class="table row-header">
+                  <td></td>
+                  <th scope="col">Codice noleggio</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Impiegato</th>
+                  <th scope="col">Prodotto</th>
+                </tr>
+              </table>
+        </div>
+
     </div>
 </body>
+
+<footer>
+    <script>
+        $(document).ready(async () => {
+            let query = {limit: 0 , populate: true}
+            const rentals = (await api.rentals.get(query)).data.docs
+            console.log(rentals)
+
+
+            let date = '2022-01-05T00:00:00.000Z'
+            query = {limit: 0 , populate: true, prenotationDateBefore: date}
+            const reantalsByDate = (await api.rentals.get(query)).data.docs
+            console.log(reantalsByDate)
+        })
+    </script>
+</footer>
 
 </html>
