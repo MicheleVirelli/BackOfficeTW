@@ -58,15 +58,15 @@
 
         <form class="d-flex">
             <div class="input-group mb-3">
-                <span class="input-group-default" id="basic-addon1">
-                    <select class="form-select" id="field">
+                <span class="input-group-default" id="selectfield">
+                    <select class="form-select" id="field"  aria-label="Seleziona il campo che vuoi cercare">
                         <option value="name">Scegli in che campo cercare</option>
                         <option value="name">Nome</option>
                         <option value="category">Categoria</option>
                         <option value="subcategory">Sottocateoria</option>
                     </select>
                 </span>
-                <input type="text" class="form-control" id="value">
+                <input type="text" class="form-control" id="value" aria-label="Inseirisci la stringa da cercare">
                 <button id="submit" class="btn btn-search" type="submit">Cerca</button>
             </div>
         </form>
