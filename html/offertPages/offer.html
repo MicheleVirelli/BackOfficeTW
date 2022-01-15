@@ -45,56 +45,122 @@
         checkToken()
     </script>
 </head>
-
+<!-- Risolvere il pr    oblema di individuare piu categorie -->
 <body>
     <div id="content">
         <div class="d-flex justify-content-center">
             <h1>Pagina delle offerte</h1>
         </div>
-        <button id="post" class="btn btn-search">Posta un offerta</button>
-        <span class="input-group-text">Id da cancellare</span>
-        <input id="OfferID" type="text" class="form-control">
-        <button id="delete" class="btn btn-search">Cancella l'offerta</button>
+
+        <div class="d-flex justify-content-center mb-5">
+            <form id="addOffert" class="card col-sm-6 p-5" aria-label="Campi per l'aggiunta di una nuova offerta ">
+                <div class="input-group mb-4">
+                    <span id="st" class="input-group-text">Data inizio dell'offerta</span>
+                    <input type="date" class="form-control" id="start" name="start" aria-describedby="st">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="en" class="input-group-text">Data termine dell'offerta</span>
+                    <input type="date" class="form-control" id="end" name="end" aria-describedby="en">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="mo" class="input-group-text">Prezzo:</span>
+                    <input type="text" class="form-control" id="modifier" name="modifier" aria-describedby="mo">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="ca" class="input-group-text">Categorie interessate:</span>
+                    <input type="text" class="form-control" id="category" name="category" aria-describedby="ca" placeholder="Laciare in bianco per indicare tutti">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="na" class="input-group-text">Nome dell'offerta:</span>
+                    <input type="text" class="form-control" id="name" name="name" aria-describedby="na">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="sh" class="input-group-text">Descrizione breve:</span>
+                    <input type="text" class="form-control" id="shortDescription" name="shortDescription" aria-describedby="sh">
+                </div>
+                <div class="input-group mb-4">
+                    <span id="de" class="input-group-text">Descrizione:</span>
+                    <textarea type="text" class="form-control" id="description" name="description"
+                        style="height:10em;" aria-describedby="de"></textarea>
+                </div>
+                <div class="mb-4">
+                    <button class="btn btn-search" id="activateOffert">Attiva l'offerta</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="d-flex justify-content-center mb-4">
+            <h2>Offerte attualmente attive</h2>
+        </div>
+
+        <div id="offertinfo" class="row mb-4"></div>
 
     </div>
 </body>
 
 <footer>
     <script>
-        //Devo vedere le offerte attive
-        //Posibilità di rimuoverle ma non di cancellarle
-        //Possibilità di aggiurgerle
-        $(document).ready(async () => {
+        async function deleteOffert(id){
+            const response = await api.offers.deleteSingle(id)
+            console.log(response)
+            await showOfferts()
+        }
+
+        async function showOfferts() {
             const offerts = (await api.offers.get()).data
             console.log(offerts)
-        })
 
-        $('#post').on('click', async (event) => {
+            $('#offertinfo').children().remove()
+            offerts.forEach(offert => {
+                $('#offertinfo').append(`
+                <div class="p-3 col-sm-4">
+                    <div class="card p-4">
+                        <div class="title d-flex justify-content-center">
+                            <p>${offert.name}</p>
+                        </div>
+                        <div class="card-body">
+                            <p>Data inizio offerta ${dateToData(offert.start)}</p>
+                            <p>Data fine offerta ${dateToData(offert.end)}</p>
+                            <p>${offert.categoryFilter}</p>
+                            <p>${offert.shortDescription}</p>
+                            <p>Prezzo modificato: ${offert.modifier}</p>
+                        </div>
+                        <div>
+                            <button onclick="deleteOffert('${offert._id}')" class="btn btn-search" aria-label="Bottone per cancellare l'offerta">Cancella l'offerta</button>
+                        </div>
+                    </div>
+                </div>
+                `)
+            })
+        }
+
+        $(document).ready(async () => {
+            await showOfferts()
+        })
+      
+        $('#activateOffert').on('click', async (event) => {
             event.preventDefault()
-            
-        
-            let LoveBoat2021 = {
-                start: '2022-02-14T00:00:00.000Z',
-                end:    '2022-02-21T00:00:00.000Z',
-                modifier: 0.75,
-                name: 'LoveBoat2021',
-                //la usa come longExplanation
-                description: 'Sconto di san valentino ',
-                shortDescription: 'Sconto del 25% su tutti gli yatch da condividere con la tua amata',
-                categoryFiller: 'Yatch',
+
+            let value = '[]'
+            if($('#category').val() != "")
+                value = $('#category').val().split(" ")
+
+            let newOffert={
+                start: $('#start').val(),
+                end:  $('#end').val(),
+                modifier: $('#modifier').val(),
+                categoryFiller: value,
+                name: $('#name').val(),
+                description: $('#description').val(),
+                shortDescription: $('#shortDescription').val(),
             }
 
-            const postOffer = await api.offers.post(LoveBoat2021)
-            console.log(postOffer)
-        })
-
-        $('#delete').on('click', async (event) => {
-            event.preventDefault()
-
-            const response = await api.offers.deleteSingle($('#OfferID').val())
+            const response = await api.offers.post(newOffert)
             console.log(response)
+
+            await showOfferts()
+
         })
-    
     </script>
 </footer>
 </html>

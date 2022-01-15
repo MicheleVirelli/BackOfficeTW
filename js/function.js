@@ -272,3 +272,12 @@ async function postBill(rental, surchargePrice) {
 
   rental.bill = bill._id
 }
+
+function dateToData(date) {
+  let year = date.slice(0,4)
+  let day = date.slice(8,10)
+  const montName = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre', ]
+  date = new Date(date)
+
+  return day + ' ' + montName[date.getMonth()] + ' ' + year 
+}
