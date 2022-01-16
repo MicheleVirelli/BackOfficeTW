@@ -45,7 +45,8 @@
         checkToken()
     </script>
 </head>
-<!-- Risolvere il pr    oblema di individuare piu categorie -->
+
+<!-- Risolvere il problema di individuare piu categorie -->
 <body>
     <div id="content">
         <div class="d-flex justify-content-center">
@@ -64,7 +65,8 @@
                 </div>
                 <div class="input-group mb-4">
                     <span id="mo" class="input-group-text">Prezzo:</span>
-                    <input type="text" class="form-control" id="modifier" name="modifier" aria-describedby="mo">
+                    <input type="text" class="form-control" id="modifier" name="modifier" aria-describedby="mo" placeholder="Percentuale di sconto">
+                    <span id="mo" class="input-group-text">%</span>
                 </div>
                 <div class="input-group mb-4">
                     <span id="ca" class="input-group-text">Categorie interessate:</span>
@@ -97,7 +99,8 @@
 
     </div>
 </body>
-
+<!-- Array.from(new Set( (await api.product.get()).data.map(p => p.category))) -->
+<!-- Array.from(new Set(product.map(p => p.category))) -->
 <footer>
     <script>
         async function deleteOffert(id){
@@ -121,9 +124,9 @@
                         <div class="card-body">
                             <p>Data inizio offerta ${dateToData(offert.start)}</p>
                             <p>Data fine offerta ${dateToData(offert.end)}</p>
-                            <p>${offert.categoryFilter}</p>
+                            <p>${offert.categoryFilter != '[]' ? 'Categorie interessate:' + (offert.categoryFilter).join(", ") : ''}</p>
                             <p>${offert.shortDescription}</p>
-                            <p>Prezzo modificato: ${offert.modifier}</p>
+                            <p>Prezzo modificato: ${(1 - (offert.modifier))/0.01} %</p>
                         </div>
                         <div>
                             <button onclick="deleteOffert('${offert._id}')" class="btn btn-search" aria-label="Bottone per cancellare l'offerta">Cancella l'offerta</button>
@@ -132,6 +135,25 @@
                 </div>
                 `)
             })
+        }
+
+        function cleanForm() {
+            $('#start').val("")
+            $('#end').val("")
+            $('#modifier').val("")
+            $('#category').val("")
+            $('#name').val("")
+            $('#shortDescription').val("")
+            $('#description').val("")
+        }
+
+        function offertLogic(newOffert) {
+            for (let key in newOffert){
+                if(key != 'categoryFilter')
+                    if(newOffert[key] == undefined || newOffert[key] == "")
+                        return false 
+            }
+            return true
         }
 
         $(document).ready(async () => {
@@ -148,17 +170,23 @@
             let newOffert={
                 start: $('#start').val(),
                 end:  $('#end').val(),
-                modifier: $('#modifier').val(),
-                categoryFiller: value,
+                modifier: 1 - (($('#modifier').val())*0.01),
+                categoryFilter: value,
                 name: $('#name').val(),
                 description: $('#description').val(),
                 shortDescription: $('#shortDescription').val(),
             }
 
+
+            if(!offertLogic(newOffert))
+                window.alert('Bisogna necessariamente riempire tutti i campi!')
+
             const response = await api.offers.post(newOffert)
-            console.log(response)
+            console.log(response.data)
 
             await showOfferts()
+
+            cleanForm()
 
         })
     </script>

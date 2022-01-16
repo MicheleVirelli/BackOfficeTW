@@ -135,7 +135,7 @@ function refreshTable(paginateArray, value, pageFunction) {
         <td>${product.category}</td>
         <td>${product.subcategory}</td>
         <td>${priceFormat(product.price)} €</td>
-        </tr>
+      </tr>
     `);
   });
 }
