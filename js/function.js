@@ -48,6 +48,11 @@ function customerPage(id) {
   document.location.href = "customerPage.html";
 }
 
+function employeePage(id) {
+  localStorage.setItem("EmployeeID", id);
+  document.location.href = "employeePage.html";
+}
+
 function rentalPage(id) {
   localStorage.setItem("rentalID", id);
 
@@ -87,8 +92,8 @@ function paginator(elemForPage, array) {
   return paginate;
 }
 
-function refreshNavPage(array, arrayName, tableName, toPage) {
-  console.log("Refreshing:" + tableName);
+function refreshNavPage(array, arrayName, tableName, toPage, whatDisplay) {
+  console.log("Refreshing: " + tableName + "with " + whatDisplay);
   $("#pagenav").children().remove();
 
   $("#pagenav").append(`
@@ -101,7 +106,7 @@ function refreshNavPage(array, arrayName, tableName, toPage) {
   pageNum = 0;
   array.forEach((page) => {
     $("#navlist").append(`
-    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum},'${toPage}')">${pageNum + 1
+    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum},'${whatDisplay}')">${pageNum + 1
       }</a></li>
     `);
     pageNum++;
@@ -140,24 +145,53 @@ function refreshTable(paginateArray, value, pageFunction) {
   });
 }
 
-function refreshClientGrid(paginateArray, value) {
-  $("#clientlist").children().remove();
+//Renderlo intercambiabile tra customer ed employee
+function refreshClientGrid(paginateArray, value, card) {
+  $("#list").children().remove();
 
-  $("#clientlist").append(
-    paginateArray[value].forEach((customer) => {
-      $("#clientlist").append(`
-    <div class="col-sm-3">
-      <div class="card mb-5 p-3">
-        <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}" alt="Immagine di profilo del utente">
-        <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
-        <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0,10)}</div>
-        <div class="card-text mb-2">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
-        <div class="card-btn"><button class="btn btn-search" onclick="customerPage('${customer._id}')">Pagina del utente</button></div>
-      </div>
-    </div>
-    `);
-    })
-  );
+  if(card == undefined)
+    card = 'customer'
+
+  switch (card) {
+    case 'customer':
+      $("#list").append(
+        paginateArray[value].forEach((customer) => {
+          $("#list").append(`
+        <div class="col-sm-3">
+          <div class="card mb-5 p-3">
+            <img src="https://site202120.tw.cs.unibo.it/${customer.profilePicture}" alt="Immagine di profilo del utente">
+            <div class="card-title">${customer.lastname}, ${customer.firstname}</div> 
+            <div class="card-text">Data di nascita: ${customer.dateOfBirth.slice(0, 10)}</div>
+            <div class="card-text mb-2">Indirizzo: ${customer.address.city}, ${customer.address.country}</div>
+            <div class="card-btn"><button class="btn btn-search" onclick="customerPage('${customer._id}')">Pagina del utente</button></div>
+          </div>
+        </div>
+        `);
+        })
+      );
+      break;
+
+    case 'employee':
+      $("#list").append(
+        paginateArray[value].forEach((employee) => {
+          $("#list").append(`
+        <div class="col-sm-3">
+          <div class="card mb-5 p-3">
+            <img src="https://site202120.tw.cs.unibo.it/${employee.profilePicture}" alt="Immagine di profilo dell impiegato">
+            <div class="card-title">${employee.lastname}, ${employee.firstname}</div>
+            <div class="card-text">${employee.authorization}</div>
+            <div class="card-btn"><button class="btn btn-search" onclick="employeePage('${employee._id}')">Pagina dell'impiegato</button></div>
+          </div>
+        </div>
+        `);
+        })
+      );
+      break;
+
+    default:
+      break;
+  }
+
 }
 
 function filterBy(array, fields, value) {
@@ -206,7 +240,7 @@ function filterByForRentals(array, field, value) {
       }
     });
   }
-  else if(field == 'unit') {
+  else if (field == 'unit') {
     array.forEach((element) => {
       if (element != undefined) {
         if (element.unit._id.trim().toLowerCase().includes(value))
@@ -231,38 +265,38 @@ function priceFormat(number) {
   return formatter.format(number)
 }
 
-function conditionToCondizione(condition){
-    switch (condition) {
-      case 'broken':
-        return 'Scassato'
+function conditionToCondizione(condition) {
+  switch (condition) {
+    case 'broken':
+      return 'Scassato'
       break;
-      case 'major flaw':
-        return 'abbastanza danneggiato'
+    case 'major flaw':
+      return 'abbastanza danneggiato'
       break;
-      case 'minor flaw':
-        return 'lievemente danneggiatto'
+    case 'minor flaw':
+      return 'lievemente danneggiatto'
       break;
-      case 'perfect':
-        return 'perfetto'
+    case 'perfect':
+      return 'perfetto'
       break;
-      default:
-        return 
-        break;
-    }
+    default:
+      return
+      break;
+  }
 }
 
 async function postBill(rental, surchargePrice) {
   let data = {
-      customer: rental.customer,
-      employee: rental.employee,
-      startRent: rental.startDate,
-      endRent: rental.expectedEndDate,
-      unit: rental.unit
+    customer: rental.customer,
+    employee: rental.employee,
+    startRent: rental.startDate,
+    endRent: rental.expectedEndDate,
+    unit: rental.unit
   }
 
   let query = {
-      repairDamageSurcharge: surchargePrice,
-      expectedEndDate: rental.expectedEndDate
+    repairDamageSurcharge: surchargePrice,
+    expectedEndDate: rental.expectedEndDate
   }
   console.log(data)
   console.log(query)
@@ -274,10 +308,10 @@ async function postBill(rental, surchargePrice) {
 }
 
 function dateToData(date) {
-  let year = date.slice(0,4)
-  let day = date.slice(8,10)
-  const montName = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre', ]
+  let year = date.slice(0, 4)
+  let day = date.slice(8, 10)
+  const montName = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre',]
   date = new Date(date)
 
-  return day + ' ' + montName[date.getMonth()] + ' ' + year 
+  return day + ' ' + montName[date.getMonth()] + ' ' + year
 }
