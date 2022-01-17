@@ -127,10 +127,21 @@
         let product
         let products
 
+
+
         async function getProduct(id, query) {
             let product = (await api.products.getSingle(id, query)).data
             return product
         }
+        // TODO: Evitare il refresh
+        async function deleteUnit(id) {
+            const response = await api.units.deleteSingle(id)
+            console.log(response)
+
+            document.location.href = "./productPage.html"
+        }
+
+
 
         let bool = true
         $('#modify').on('click', (event) => {
@@ -209,30 +220,45 @@
 
             fillAltProductsCard()
         }
-        
+
         //TODO: Nessun bottone funziona !!!
         function fillUnitsCard(units) {
             let i = 0
             units.forEach(unit => {
                 i++
                 $('#unitinfo').append(`
-                <div id="${unit._id}" class="row mb-2 card p-1" style="flex-direction:row;">
+                <div  class="row mb-2 card p-1" style="flex-direction:row;">
                     <div class="col-sm-1"></div>
-                    <div class="col-sm-2 d-flex align-items-center">Unit n° ${i}</div>
-                    <div class="col-sm-3 d-flex align-items-center">Condizione: ${conditionToCondizione(unit.condition)}</div>
-                    <button class="col-sm-2 btn btn-search id="modifyunit">Modifica</button>
-                    <button class="col-sm-2 btn btn-search id="deleteunit">Cancella</button>
+                    <div class="col-sm-3 d-flex align-items-center">Unità codice: ${unit._id}</div>
+                    <div class="col-sm-3 d-flex align-items-center">
+                        <input id="${unit._id}" class="form-control input-card" disabled="disabled" type="text" value="Condizione: ${conditionToCondizione(unit.condition)}">
+                    </div>
+                    <button class="col-sm-2 btn btn-search" onclick="modifyUnit('${unit._id}')">Modifica</button>
+                    <button class="col-sm-2 btn btn-search" onclick="deleteUnit('${unit._id}')">Cancella</button>
                     <div class="col-sm-1"></div>
                 </div>
                 `)
-                
-                $('#deleteunit').on('click', async (event) => {
-                    event.preventDefault()
-                })
 
-                $('#modifyunit').on('click', async (event) => {
-                    event.preventDefault()
-                })
+                let state = true
+                async function modifyUnit(id) {
+                    console.log('Entrato')
+                    if (state) {
+                        $('#' + id).removeAttr('disabled')
+                    }
+                    else {
+                        $('#' + id).attr('disable', 'disabled')
+                    }
+                    state = !state
+                }
+
+                // $('#modifyunit').on('click', async (event) => {
+                //     event.preventDefault()
+
+                //     //Devo rendere la card modificabile ...
+                //     //Poterla modificare aggiunere il bottone d
+
+
+                // })
             })
         }
 
@@ -246,7 +272,7 @@
                         altproducts.push(prod)
                 })
             })
-            
+
             $('#altproductsinfo').children('div').remove()
             let i = 0
             altproducts.forEach(altprod => {
@@ -297,7 +323,7 @@
 
             //Inserisco i prodotti possibili nel select
             products.forEach(prod => {
-                if(prod._id != ProductID)
+                if (prod._id != ProductID)
                     $('#alternative').append(`
                     <option value="${prod._id}">${prod.name}</option>
                     `)
@@ -315,7 +341,7 @@
 
                 $('#unitinfo').prepend(`
                 <div id="newUnit" class="row mb-2 card p-2" style="flex-direction:row;">
-                    <div class="col-sm-2">
+                    <div class="col-sm-6">
                         <span class="input-group-text">Condizione della nuova unit: </span>
                         <select class="form-select" id="condition">
                             <option value="broken">${conditionToCondizione('broken')}</option>
@@ -324,8 +350,8 @@
                             <option value="perfect">${conditionToCondizione('perfect')}</option>
                         </select>
                     </div>
-                    <button id="confirmunit" class="col-sm-2 btn btn-search">Conferma</button>
-                    <button id="deleteunitcard" class="col-sm-2 btn btn-search">Cancella</button>
+                    <button id="confirmunit" class="col-sm-3 btn btn-search">Conferma</button>
+                    <button id="deleteunitcard" class="col-sm-3 btn btn-search">Cancella</button>
                 </div>
                 `)
 

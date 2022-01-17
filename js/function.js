@@ -273,6 +273,7 @@ function filterByForRentals(array, field, value) {
 }
 
 function priceFormat(number) {
+  //TODO: alternativa en-US oppure it
   const formatter = new Intl.NumberFormat('en-US')
   return formatter.format(number)
 }

@@ -210,6 +210,8 @@
             event.preventDefault()
             const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
             console.log(response)
+
+            document.location.href="./customersPage.html"
         })
 
     </script>

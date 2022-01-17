@@ -84,7 +84,7 @@
 <footer>
     <script>
 
-        function getActualDate(tomorrow) {
+        function getActualDate(tomorrow = false) {
 
             let date = new Date()
                 if(tomorrow)
@@ -102,25 +102,42 @@
             return (year + '-' + month + '-' + day + 'T00:00:00.000Z')
         }
 
+        function keepBrokenUnits(rentals) {
+            return rentals.filter(rental => rental.unit.condition == 'broken')
+        }
+
+        async function keepUnpresentUnits(rentals) {
+            //Per ogni noleggio controllo la prE di oggi e se la unit non e` presente allora la mantengo
+            let query = {from: getActualDate(), to: getActualDate() }
+            rentals.filter(async rental => {
+                (((await api.products.priceEstimation(rental.unit.product._id, query)).data).filter(prE => prE.unitID == rental.unit._id)).length == 0
+            })
+            return rentals
+        }
+
         $(document).ready(async () => {
             let query = { limit: 0, populate: true }
-            const rentals = (await api.rentals.get(query)).data.docs
-            console.log(rentals)
-
-            let today = getActualDate(false)
+            let rentals = (await api.rentals.get(query)).data.docs
+            rentals = rentals.filter(rental => rental.state != 'close')
+    
             let tomorrow = getActualDate(true)
-            console.log("Data di oggi " + today)
-            console.log("Data di domani " + tomorrow)
+            rentals = rentals.filter(rental => rental.startDate == tomorrow)
+            console.log("Tutti i noleggi non chiusi, che hanno la startDate uguale a domani")
+            console.log(rentals)
+            
+            let rentalsWBrokenUnits = keepBrokenUnits(rentals)
+            let rentalsWUnpresentUnits = await keepUnpresentUnits(rentals)
+            console.log("I precedenti noleggi con le unit rotte")
+            console.log(rentalsWBrokenUnits)
+            console.log("I precedenti noleggi con le unit non disponibili")
+            console.log(rentalsWUnpresentUnits)
 
-            query = { limit: 0, startDateBefore: tomorrow, startDateAfter: today }
-            const reantalsByDate = (await api.rentals.get(query)).data.docs
-
-            console.log(reantalsByDate.length)
-            console.log("Date dei rent tra oggi e domani")
-            reantalsByDate.forEach(rental => {
-                console.log(rental.startDate)
-            })
-        })
+            //Unisco queste due categoire
+            let warningRental = rentalsWBrokenUnits.concat(rentalsWUnpresentUnits)
+            console.log("Tutti i rental a rischio")
+            console.log(warningRental)
+        })  
+        
     </script>
 </footer>
 

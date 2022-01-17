@@ -177,8 +177,8 @@
             }
 
 
-            if(!offertLogic(newOffert))
-                window.alert('Bisogna necessariamente riempire tutti i campi!')
+            if(!offertLogic(newOffert)){
+                window.alert('Bisogna necessariamente riempire tutti i campi!')}
 
             const response = await api.offers.post(newOffert)
             console.log(response.data)
