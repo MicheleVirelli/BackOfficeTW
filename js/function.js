@@ -22,6 +22,18 @@ async function checkToken() {
     document.location.href = "../../index.html"
 }
 
+async function checkAuthorization() {
+  let auth = (await config.user()).authorization
+  if(auth == 'admin')
+    $.get('../templates/authNav.html', (data) => {
+      $('body').append(data)
+    })
+  else
+  $.get('../templates/authEmployeeNav.html', (data) => {
+    $('body').append(data)
+  })
+}
+
 function serializeFormJson(form) {
   return Array.from(form.querySelectorAll("input, select, textarea"))
     .filter((element) => element.name)

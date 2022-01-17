@@ -40,10 +40,8 @@
 
     <script>
         $(document).ready(async () => {
-            $.get('../templates/authNav.html', (data) => {
-                $('body').append(data)
-            })
             checkToken()
+            checkAuthorization()
         })
     </script>
 

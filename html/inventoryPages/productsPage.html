@@ -39,13 +39,10 @@
     <script src="../../js/function.js"></script>
 
     <script>
-        $.get('../templates/authNav.html', (data) => {
-            $('body').append(data)
+        $(document).ready(async () => {
+            checkToken()
+            checkAuthorization()
         })
-    </script>
-
-    <script>
-        checkToken()
     </script>
 
 </head>

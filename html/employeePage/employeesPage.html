@@ -38,10 +38,10 @@
     <script src="../../js/function.js"></script>
 
     <script>
-        $.get('../templates/authNav.html', (data) => {
-            $('body').append(data)
-        }) 
-        checkToken()
+        $(document).ready(async () => {
+            checkToken()
+            checkAuthorization()
+        })
     </script>
 
 </head>
