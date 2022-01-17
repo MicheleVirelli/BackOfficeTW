@@ -71,6 +71,11 @@ function rentalPage(id) {
   document.location.href = "../rentPages/rentalPage.html";
 }
 
+function rentalManagementPage(id) {
+  localStorage.setItem("RentalID", id);
+  document.location.href = "./rentalManagement.html";
+}
+
 function productPage(id) {
   localStorage.removeItem('ProductID')
   localStorage.setItem("ProductID", id);
@@ -117,10 +122,13 @@ function refreshNavPage(array, arrayName, tableName, toPage, whatDisplay) {
 
   pageNum = 0;
   array.forEach((page) => {
-    $("#navlist").append(`
-    <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum},'${whatDisplay}')">${pageNum + 1
-      }</a></li>
-    `);
+    if(page.length == 0)
+      $("#navlist").append(``)
+    else
+      $("#navlist").append(`
+      <li class="page-item"><a class="page-link" href="#" onclick="${tableName}(${arrayName},${pageNum},'${whatDisplay}')">${pageNum + 1
+        }</a></li>
+      `);
     pageNum++;
   });
 }

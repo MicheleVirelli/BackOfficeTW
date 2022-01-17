@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <title>ThePrivilege employee stuff</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Stylesheet -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Richiesta Api dal backend -->
+    <script src="https://site202120.tw.cs.unibo.it/assets/config.js"></script>
+    <script src="https://site202120.tw.cs.unibo.it/assets/api.js"></script>
+
+    <!-- Funzioni di supporto -->
+    <script src="../../js/function.js"></script>
+
+    <script>
+        $(document).ready(async () => {
+            checkToken()
+            checkAuthorization()
+        })
+    </script>
+
+
+
+</head>
+
+<body>
+    <div id="content">
+
+    </div>
+</body>
+
+<footer>
+    <script>
+        let RentalID = localStorage.getItem('RentalID')
+        $(document).ready(async () => {
+            let query = { populate: true }
+
+            const response = await api.rentals.getSingle(RentalID, query)
+            console.log(response)
+        })
+    </script>
+</footer>
+
+</html>

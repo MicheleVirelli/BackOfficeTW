@@ -127,7 +127,17 @@
         let product
         let products
 
+        async function patchUnit(id, index) {
+            let unit = {
+                condition: $('#' + id).val(),
 
+            }
+            console.log(unit)
+            const response = await api.units.patchSingle(id, unit)
+            console.log(response)
+
+            fillUnitsCard((await api.products.getUnits(ProductID)).data)
+        }
 
         async function getProduct(id, query) {
             let product = (await api.products.getSingle(id, query)).data
@@ -141,7 +151,24 @@
             document.location.href = "./productPage.html"
         }
 
+        let state = true
+        async function modifyUnit(id, index) {
+            console.log('Entrato')
+            if (state) {
+                $('#' + id).removeAttr('disabled')
+                $('#'+ index).append(`
+                    <div id="buttoncontainer" class="col-sm-2 p-2">
+                        <button class="btn btn-search" onclick="patchUnit('${id}', '${index}')">Conferma</button>
+                    </div>
+                `)
+            }
+            else {
+                $('#' + id).attr('disabled', 'disabled')
+                $('#buttoncontainer').remove()
+            }
 
+            state = !state
+        }
 
         let bool = true
         $('#modify').on('click', (event) => {
@@ -221,44 +248,31 @@
             fillAltProductsCard()
         }
 
-        //TODO: Nessun bottone funziona !!!
         function fillUnitsCard(units) {
+            $('#unitinfo').children().remove()
+
             let i = 0
             units.forEach(unit => {
                 i++
                 $('#unitinfo').append(`
-                <div  class="row mb-2 card p-1" style="flex-direction:row;">
-                    <div class="col-sm-1"></div>
+                <div id="${i}" class="row mb-2 card p-1" style="flex-direction:row;">
                     <div class="col-sm-3 d-flex align-items-center">Unità codice: ${unit._id}</div>
                     <div class="col-sm-3 d-flex align-items-center">
-                        <input id="${unit._id}" class="form-control input-card" disabled="disabled" type="text" value="Condizione: ${conditionToCondizione(unit.condition)}">
+                        <select id="${unit._id}" class="form-control input-card" disabled="disabled">
+                            <option ${unit.condition == 'broken' ? 'selected="selected' : ''}  value="broken">     ${conditionToCondizione('broken')}      </option>
+                            <option ${unit.condition == 'major flaw' ? 'selected="selected' : ''}  value="major flaw"> ${conditionToCondizione('major flaw')}  </option>
+                            <option ${unit.condition == 'minor flaw' ? 'selected="selected' : ''}  value="minor flaw"> ${conditionToCondizione('minor flaw')}  </option>
+                            <option ${unit.condition == 'perfect' ? 'selected="selected' : ''}  value="perfect">    ${conditionToCondizione('perfect')}     </option>
+                        </select>
                     </div>
-                    <button class="col-sm-2 btn btn-search" onclick="modifyUnit('${unit._id}')">Modifica</button>
-                    <button class="col-sm-2 btn btn-search" onclick="deleteUnit('${unit._id}')">Cancella</button>
-                    <div class="col-sm-1"></div>
+                    <div class="col-sm-2 p-2">
+                        <button class="btn btn-search" onclick="modifyUnit('${unit._id}', '${i}')">Modifica</button>
+                    </div>
+                    <div class="col-sm-2 p-2">
+                        <button class="btn btn-search" onclick="deleteUnit('${unit._id}')">Cancella</button>
+                    </div>
                 </div>
                 `)
-
-                let state = true
-                async function modifyUnit(id) {
-                    console.log('Entrato')
-                    if (state) {
-                        $('#' + id).removeAttr('disabled')
-                    }
-                    else {
-                        $('#' + id).attr('disable', 'disabled')
-                    }
-                    state = !state
-                }
-
-                // $('#modifyunit').on('click', async (event) => {
-                //     event.preventDefault()
-
-                //     //Devo rendere la card modificabile ...
-                //     //Poterla modificare aggiunere il bottone d
-
-
-                // })
             })
         }
 
