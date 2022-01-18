@@ -337,7 +337,8 @@ function dateToData(date) {
   return day + ' ' + montName[date.getMonth()] + ' ' + year
 }
 
-async function worstConditionAcceptable(unit1, unit2 ) {
+//Le unit non devono essere undefined
+async function worstConditionAcceptable(unit1, unit2) {
   unit1 = (await api.units.getSingle(unit1)).data
   unit2 = (await api.units.getSingle(unit2)).data
 
@@ -366,3 +367,5 @@ async function worstConditionAcceptable(unit1, unit2 ) {
   }
 
 }
+
+const urlsite = "https://site202120.tw.cs.unibo.it/"
