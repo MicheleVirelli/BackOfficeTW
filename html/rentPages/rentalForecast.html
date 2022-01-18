@@ -55,21 +55,21 @@
             <form id="rentform" class="card col-sm-8 mb-4 p-4">
                 <div class="input-group mb-2">
                     <span class="input-group-text">Nome prodotto: </span>
-                    <select id="productname" class="form-select">
+                    <select id="productname" class="form-select" aria-label="Nome del prodotto">
                     </select>
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Cliente interessato: </span>
-                    <select id="customer" class="form-select">
+                    <select id="customer" class="form-select" aria-label="Cliente interessato">
                     </select>
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Inizio del noleggio: </span>
-                    <input type="date" id="startDate" class="form-control">
+                    <input type="date" id="startDate" class="form-control" aria-label="Inizio del noleggio">
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Fine del noleggio: </span>
-                    <input type="date" id="expectedEndRent" class="form-control">
+                    <input type="date" id="expectedEndRent" class="form-control" aria-label="Fine del noleggio">
                 </div>
                 <div id="buttonpanel">
                     <button id="submit" class="btn btn-search col-sm-3 me-4">Verifica Disponibilità</button>
@@ -222,7 +222,7 @@
                     <div class="d-flex justify-content-center">
                         <div id="searchedProduct" class="card col-sm-8 p-4 mb-4">
                             <div class="d-flex justify-content-center">
-                                <h3>Il prodotto cercato è disponibile </h3>
+                                <h2>Il prodotto cercato è disponibile </h2>
                             </div>
                             <div>
                                 <p>(${priceEstimation.length}) unità presenti per quelle date</p>
@@ -256,7 +256,7 @@
                     <div class="d-flex justify-content-center">
                         <div id="searchedProduct" class="card p-4 col-sm-8">
                             <div class="d-flex justify-content-center ">
-                                <h1>Il prodotto cercato non è disponibile in quelle date </h1>
+                                <h2>Il prodotto cercato non è disponibile in quelle date </h2>
                             </div>
                         </div>
                     </div>

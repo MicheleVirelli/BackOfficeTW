@@ -57,28 +57,28 @@
             <form id="addProduct" class="card col-sm-6 p-5">
                 <div class="input-group mb-4">
                     <span class="input-group-text">Nome del Prodotto:</span>
-                    <input type="text" class="form-control" id="name" name="name">
+                    <input type="text" class="form-control" id="name" name="name" aria-label="Nome del prodotto">
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Categoria:</span>
-                    <input type="text" class="form-control" id="category" name="category">
+                    <input type="text" class="form-control" id="category" name="category" aria-label="Categoria"> 
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Sottocategoria:</span>
-                    <input type="text" class="form-control" id="subcategory" name="subcategory">
+                    <input type="text" class="form-control" id="subcategory" name="subcategory" aria-label="Sottocategoria">
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Prezzo:</span>
-                    <input type="text" class="form-control" id="price" name="price">
+                    <input type="text" class="form-control" id="price" name="price" aria-label="Prezzo">
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Descrizione:</span>
                     <textarea type="text" class="form-control" id="description" name="description"
-                        style="height:10em;"></textarea>
+                        style="height:10em;" aria-label="Descrizione"></textarea>
                 </div>
                 <div class="input-group mb-4">
                     <span class="input-group-text">Immagine del prodotto:</span>
-                    <input type="file" class="form-control" id="image" name="image" accept=".png, .jpg, .jpeg">
+                    <input type="file" class="form-control" id="image" name="image" accept=".png, .jpg, .jpeg" aria-label="Immagine del prodotto">
                 </div>
                 <div class="mb-4">
                     <button class="btn btn-search" id="createProduct">Conferma</button>
