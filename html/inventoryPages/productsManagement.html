@@ -127,10 +127,7 @@
                     throw error = { name: 'Campi incompleti', explanation: 'Per aggiungere un prodotto è necessario che tutti i campi siano completi' }
 
                 let product = new FormData(addProduct)
-                console.log(product)
-
                 const response = await api.products.post(product)
-                console.log(response)
 
                 ProductID = response.data._id
 

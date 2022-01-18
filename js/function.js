@@ -234,7 +234,6 @@ function filterBy(array, fields, value) {
 function filterByForRentals(array, field, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
-  console.log(field)
 
   if (field == 'product') {
     array.forEach((element) => {
@@ -319,11 +318,8 @@ async function postBill(rental, surchargePrice) {
     repairDamageSurcharge: surchargePrice,
     expectedEndDate: rental.expectedEndDate
   }
-  console.log(data)
-  console.log(query)
 
   const bill = (await api.bills.post(data, query)).data
-  console.log(bill)
 
   rental.bill = bill._id
 }

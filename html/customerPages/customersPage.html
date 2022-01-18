@@ -79,7 +79,6 @@
         $(document).ready(async () => {
             query = { limit: 0 }
             customers = (await api.customers.get(query)).data.docs
-            console.log(customers   )
             paginateCustomers = paginator(elementForPage, customers)
 
             refreshClientGrid(paginateCustomers, 0)

@@ -114,10 +114,8 @@
             }
             
             await postBill(newRental, 0)
-            console.log(newRental)
 
             const response = (await api.rentals.post(newRental)).data
-            console.log(response)
 
             rentalPage(response._id)
         }
@@ -147,7 +145,6 @@
             }
 
             const response = (await api.rentals.post(newRental)).data
-            console.log(response)
 
             rentalPage(response._id)
         }
@@ -174,7 +171,6 @@
             }
 
             const response = (await api.rentals.post(newRental)).data
-            console.log(response)
 
             rentalPage(response._id)
         }
@@ -215,7 +211,6 @@
                 }
 
                 priceEstimation = (await api.products.priceEstimation(ProductID, query)).data
-                console.log(priceEstimation)
 
                 if (priceEstimation.length > 0) {
                     $('#content').append(`

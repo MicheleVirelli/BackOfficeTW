@@ -91,14 +91,12 @@
 
         //TODO: un rental continua ad essere notificato anche se il rent precedente  chiuso 
         async function keepUnpresentUnits(rentals) {
-            //Per ogni noleggio controllo la prE di oggi e se la unit non e` presente allora la mantengo
             let query = { from: getActualDate(), to: getActualDate() }
             rentals = rentals.filter(async rental => {
                 (((await api.products.priceEstimation(rental.unit.product._id, query)).data).filter(prE => prE.unitID == rental.unit._id)).length == 0
             })
 
-            rentals = rentals.filter(rental => rental.unit.condition != 'broken')
-            //Potrebbero finirci casulamente dentro funzioni con unit rotte che lasco ad un altra funzione 
+            rentals = rentals.filter(rental => rental.unit.condition != 'broken') 
 
             return rentals
         }
@@ -110,35 +108,17 @@
 
             let tomorrow = getActualDate(true)
             rentals = rentals.filter(rental => rental.startDate == tomorrow)
-            console.log("Tutti i noleggi non chiusi, che hanno la startDate uguale a domani")
-            console.log(rentals)
 
             let rentalsWBrokenUnits = keepBrokenUnits(rentals)
             let rentalsWUnpresentUnits = await keepUnpresentUnits(rentals)
-            console.log("I precedenti noleggi con le unit rotte")
-            console.log(rentalsWBrokenUnits)
-            console.log("I precedenti noleggi con le unit non disponibili")
-            console.log(rentalsWUnpresentUnits)
 
-            //Unisco queste due categorie
             let warningRental = rentalsWBrokenUnits.concat(rentalsWUnpresentUnits)
-            //Un ulteriore controllo sul campo della replacementUnit mi permette di rimuovere quelle gia risolte
-            //warningRental = warningRental.filter(rental => rental.replacementUnit == undefined)
-
-            console.log("Tutti i rental a rischio")
-            console.log(warningRental)
-
-            //Ora che so che tutto va bene creo una tabella, senza ricerca con le info ...
-            //Gestisco la paginazione lato client dei rental
             paginate = paginator(elementForPage, warningRental)
 
-            //Gestisco il numero di pagine della navPage
             refreshTableW(paginate, 0, 'rentalManagementPage')
             refreshNavPage(paginate, 'paginate', 'refreshTableW')
         })
 
-
-        //Se non ci sono elementi allora notificare ..
         function refreshTableW(paginateArray, value, pageFunction) {
             let boolColor = true;
 
@@ -154,9 +134,6 @@
             </tr>
             </table>
             `);
-
-            console.log("Refresh with " + value);
-            console.log(paginateArray);
 
             paginateArray[value].forEach(rental => {
                 boolColor = !boolColor;

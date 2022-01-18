@@ -213,7 +213,6 @@
             product.altproducts = altproducts
 
             const response = (await api.products.patchSingle(ProductID, product))
-            console.log(response)
 
             fillAltProductsCard()
         }
@@ -313,8 +312,11 @@
             event.preventDefault()
 
             product.altproducts.push($('#alternative').val())
-            const response = (await api.products.patchSingle(product._id, product)).data
-            console.log(response)
+
+            const formData = new FormData()
+            formData.append('altproducts', product.altproducts)
+
+            const response = (await api.products.patchSingle(product._id, formData)).data
 
             fillAltProductsCard()
         })
@@ -356,7 +358,6 @@
                 }
 
                 const response = (await api.units.post(newUnit, product._id)).data
-                console.log(response)
 
                 $('#unitinfo').children('div').remove()
                 fillUnitsCard((await api.products.getUnits(ProductID)).data)

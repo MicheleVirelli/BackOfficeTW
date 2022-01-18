@@ -113,14 +113,11 @@
                     username: $('#username').val(),
                 }
             }
-
-            console.log(newEmployee)
             return newEmployee
         }
 
         $(document).ready(async () => {
             employee = await getEmployee(EmployeeID)
-            console.log(employee)
 
             fillEmployeeForm(employee)
 
@@ -134,7 +131,6 @@
 
             let data = getFormEmployee()
             const response = await api.employees.deleteSingle(EmployeeID, data)
-            console.log(response)
 
             localStorage.removeItem('EmployeeID')
             document.location.href="./employeesPage.html"

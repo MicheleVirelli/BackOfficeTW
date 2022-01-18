@@ -70,12 +70,10 @@
             return bill
         }
 
-
         let BillID = localStorage.getItem('BillID')
 
         $(document).ready(async () => {
             bill = await getBill(BillID)
-            console.log(bill)
             customer = (await api.customers.getSingle(bill.customer)).data
             employee = (await api.employees.getSingle(bill.employee)).data
 
@@ -104,7 +102,6 @@
             </div>
             `)
 
-
             bill.priceRecap.modifiersList.forEach(modifier => {
                 $('#modifierlist').append(`
                 <li>${modifier.longExplanation}</li>
@@ -118,13 +115,6 @@
                 </div>
             </div>
             `)
-
-
-
-
-            //Modificatori da aggiungere con un forEach
-
-
         })
     </script>
 </footer>

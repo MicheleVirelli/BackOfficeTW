@@ -45,7 +45,6 @@
     </script>
 </head>
 
-<!-- Risolvere il problema di individuare piu categorie -->
 <body>
     <div id="content">
         <div class="d-flex justify-content-center">
@@ -98,19 +97,18 @@
 
     </div>
 </body>
+
 <!-- Array.from(new Set( (await api.product.get()).data.map(p => p.category))) -->
 <!-- Array.from(new Set(product.map(p => p.category))) -->
 <footer>
     <script>
         async function deleteOffert(id){
             const response = await api.offers.deleteSingle(id)
-            console.log(response)
             await showOfferts()
         }
 
         async function showOfferts() {
             const offerts = (await api.offers.get()).data
-            console.log(offerts)
 
             $('#offertinfo').children().remove()
             offerts.forEach(offert => {
@@ -181,7 +179,6 @@
                 window.alert('Bisogna necessariamente riempire tutti i campi!')}
 
             const response = await api.offers.post(newOffert)
-            console.log(response.data)
 
             await showOfferts()
 

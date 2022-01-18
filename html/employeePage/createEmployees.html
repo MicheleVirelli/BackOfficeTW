@@ -107,10 +107,8 @@
                     email: $('#email').val(),
                 }
             } 
-            console.log(newEmployee)
 
             const response = await api.employees.post(newEmployee)
-            console.log(response)
 
             if(statusText = 'Created')
                 $('#postinfo').append(`

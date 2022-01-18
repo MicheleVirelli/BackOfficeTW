@@ -47,8 +47,6 @@
 
 </head>
 
-<!-- TODO: Rivedere la grafica e la formattazione delle date nella card dei rent -->
-
 <body>
     <div id="content" class="row d-flex justify-content-center">
         <div class="d-flex justify-content-center">
@@ -134,7 +132,6 @@
                 description: $('#description').val() || "",
                 _id: customer._id
             }
-            console.log(newCustomer)
             return newCustomer
         }
 
@@ -145,9 +142,7 @@
             fillCustomerForm(customer)
             let query = { limit: 0, populate: true }
             rentals = (await api.customers.getRentals(CustomerID, query)).data.docs
-            console.log(rentals)
 
-            //Le divido in base allo state 
             let pendingRentals = []
             let openRentals = []
             let closeRentals = []
@@ -161,13 +156,11 @@
                     closeRentals.push(rent)
             });
 
-            //Se il cliente ha noleggi attivi o conclusi non può essere cancellato
             if (openRentals.length > 0 || closeRentals.length > 0) { $('#delete').addClass('disabled') }
         })
 
-        let state = true
         $('#modify').click(async () => {
-            if (state) {
+            if ( $('#firstname').attr('disabled') == 'disabled') {
                 $('#firstname').removeAttr('disabled')
                 $('#lastname').removeAttr('disabled')
                 $('#dateOfBirth').removeAttr('disabled')
@@ -186,7 +179,6 @@
                     const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
                     customer = response
 
-                    console.log(state)
                     $('#modify').click()
                 })
             }
@@ -203,13 +195,12 @@
 
                 fillCustomerForm(customer)
             }
-            state = !state
+           
         })
 
         $('#delete').on('click', async (event) => {
             event.preventDefault()
             const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
-            console.log(response)
 
             document.location.href="./customersPage.html"
         })

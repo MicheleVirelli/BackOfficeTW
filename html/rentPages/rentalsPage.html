@@ -86,7 +86,6 @@
         function refreshTable(paginate, value) {
             $('#rentlist').children().remove()
 
-            //Append dell'head della table
             $('#rentlist').append(`
             <table class="table" id="rentable">
                 <thead>
@@ -102,11 +101,7 @@
                 </thead>
             </table>
             `)
-
-            console.log('Refresh with ' + value)
-            console.log(paginate)
-
-            //Append delle pagine dell'head 
+            
             paginate[value].forEach(rental => {
                 boolColor = !boolColor
                 let employee
@@ -148,24 +143,18 @@
             });
         }
 
-       //Funzione per refreshare le pag e la table 
         $('document').ready(async () => {
             let rentForPage = 50
             let query = { limit: 0, populate: true }
 
             rentals = (await api.rentals.get(query)).data.docs
-            console.log('Tutti i noleggi:')
-            console.log(rentals)
 
-            //Gestisco la paginazione lato client dei rental
             paginate = paginator(rentForPage, rentals)
 
-            //Gestisco il numero di pagine della navPage
             refreshTable(paginate, 0)
             refreshNavPage(paginate, 'paginate', 'refreshTable')
         })
 
-        //Gestione della ricerca
         $('#submit').on('click', (event) => {
             event.preventDefault()
 

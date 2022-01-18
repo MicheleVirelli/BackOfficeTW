@@ -86,26 +86,18 @@
 
         $(document).ready(async () => {
             let query = { populate: true }
-
             rental = (await api.rentals.getSingle(RentalID, query)).data
-            console.log(rental)
 
-            //Informazioni sulla unit =
             $('#unitinfo').append(`
                 <p>Codice unità del noleggio ${rental.unit._id}, condizione ${conditionToCondizione(rental.unit.condition)}</p>
             `)
 
-            //Informazioni sul cliente
             $('#clientinfo').append(`
             <p>${rental.customer.lastname} ${rental.customer.firstname}</p>
             <p>Mail: ${rental.customer.loginInfo.email}</p>
             `)
 
-            //Devo richiedere le unit disponibili e insieme alla condizione
             let availableUnit = (await api.products.available(rental.unit.product._id)).data.availableUnits
-            console.log(availableUnit)
-
-            //In ogni caso non deve essere presente la unit del rent
             availableUnit = availableUnit.filter(unit => unit._id != rental.unit._id)
 
             availableUnit.forEach(unit =>{
@@ -122,10 +114,8 @@
 
             let alternativeunit = $('#unitalternative').val()
             rental.replacementUnit = alternativeunit
-            //Decido tra le due unit quella nelle condizioni peggiori => costo piu basso 
             let unitToEstimate = await worstConditionAcceptable(alternativeunit, rental.unit._id)
 
-            //Calcolo la priceEstimation per quella unit e la metto nel noleggio
             let query = {
                 form: rental.startDate,
                 to: rental.expectedEndDate
@@ -134,9 +124,7 @@
             priceEstimation = priceEstimation.filter(prE => prE.unitID == unitToEstimate._id)
             rental.priceEstimation = priceEstimation[0]
 
-            //Modifio il Noleggio
             const response = await api.rentals.patchSingle(rental._id, rental)
-            console.log(response)
 
             window.alert('Il noleggio e stato modificato con successo e non risulta più tra i noleggi a rischio')
             

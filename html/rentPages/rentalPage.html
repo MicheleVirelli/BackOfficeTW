@@ -123,14 +123,11 @@
         let isRental
         let surchargePrice = 0
 
-        //Suppongo rental DEFINITO
         function controlRentalLogic(rental) {
-            //Se il rental è aperto => Deve esserci un impiegato!!
             if (rental.state == 'open')
                 if (rental.employee == undefined)
                     return false
 
-            //Se il rental è chiuso => deve esserci un impiegato & deve esserci la data di chiusura
             if (rental.state == 'close') {
                 if (rental.employee == undefined)
                     return false
@@ -138,12 +135,10 @@
                     return false
             }
 
-            //Se c'è un impiegato => il rent non può essere pending
             if (rental.employee)
                 if (rental.state == 'pending')
                     return false
 
-            //Se c'è la data di chiusura deve esserci un impiegato e lo state deve essere close
             if (rental.actualEndDate) {
                 if (rental.state != 'close')
                     return false
@@ -181,8 +176,6 @@
             else
                 $('#actualenddate').val('')
 
-
-            //Informazioni sulla priceEstimation
             $('#priceinfo').children().remove()
 
             $('#priceinfo').append(`
@@ -202,7 +195,6 @@
                 <p>Prezzo finale: ${priceFormat(isRental.priceEstimation.finalPrice)} €</p>
                 `)
 
-            //Informazioni sulla bill
             if (isRental.state == 'close')
                 $('#priceinfo').append(`
                 <div class="d-flex justify-content-center">
@@ -212,7 +204,6 @@
 
         }
 
-        //Crea un nuovo rental con i dati di isRental e il form
         async function getFormRental() {
             let newRental = {
                 customer: isRental.customer._id,
@@ -248,9 +239,7 @@
             const RentalID = localStorage.getItem('rentalID')
 
             isRental = await getRental(RentalID, query)
-            console.log(isRental)
 
-            //Inserisco le opzioni dei dipendenti
             query = { limit: 0 }
             const employees = (await api.employees.get(query)).data.docs
             employees.forEach(employee => {
@@ -262,7 +251,6 @@
             fillRentalForm(isRental)
         })
 
-        //Bottoni di modifica ed attivazioni onchange 
         let modifyState = true
         $('#modify').on('click', (event) => {
             event.preventDefault()
@@ -274,21 +262,14 @@
                 $('#expectedenddate').removeAttr('disabled')
                 $('#actualenddate').removeAttr('disabled')
 
-
-                //Creo il bottone di submit
                 $('#submit').remove()
                 $('#buttonpanel').append(`
                 <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
                 `)
-                //Scrivo la funzione del bottone di submit
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
 
                     let newRental = await getFormRental()
-
-                    console.log('Rental dopo la funzione')
-                    console.log(newRental)
-
                     if (controlRentalLogic(newRental)) {
                         if (newRental.state == 'close')
                             await postBill(newRental, surchargePrice)
@@ -296,12 +277,8 @@
                             newRental.bill = undefined
                         
                         const response = await api.rentals.patchSingle(isRental._id, newRental)
-                        console.log(response)
-
                         let query = { populate: true}
                         newRental = await getRental(response.data._id, query)
-                        console.log(newRental)
-
                         isRental = newRental
                         
                         $('#lastdiv').children().remove()
@@ -326,8 +303,6 @@
             }
             
             modifyState = !modifyState
-            console.log('Il mio stato attuale')
-            console.log(modifyState)
         })
 
         $('#delete').on('click', async (event) => {
@@ -335,7 +310,6 @@
 
             if (isRental.state == 'pending') {
                 const response = (await api.rentals.deleteSingle(isRental._id)).data
-                console.log(response)
 
                 document.location.href = "./rentalsPage.html"
             }
