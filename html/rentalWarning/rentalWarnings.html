@@ -89,6 +89,7 @@
             return rentals.filter(rental => rental.unit.condition == 'broken')
         }
 
+        //TODO: un rental continua ad essere notificato anche se il rent precedente  chiuso 
         async function keepUnpresentUnits(rentals) {
             //Per ogni noleggio controllo la prE di oggi e se la unit non e` presente allora la mantengo
             let query = { from: getActualDate(), to: getActualDate() }
@@ -119,8 +120,11 @@
             console.log("I precedenti noleggi con le unit non disponibili")
             console.log(rentalsWUnpresentUnits)
 
-            //Unisco queste due categoire
+            //Unisco queste due categorie
             let warningRental = rentalsWBrokenUnits.concat(rentalsWUnpresentUnits)
+            //Un ulteriore controllo sul campo della replacementUnit mi permette di rimuovere quelle gia risolte
+            //warningRental = warningRental.filter(rental => rental.replacementUnit == undefined)
+
             console.log("Tutti i rental a rischio")
             console.log(warningRental)
 
@@ -133,6 +137,8 @@
             refreshNavPage(paginate, 'paginate', 'refreshTableW')
         })
 
+
+        //Se non ci sono elementi allora notificare ..
         function refreshTableW(paginateArray, value, pageFunction) {
             let boolColor = true;
 

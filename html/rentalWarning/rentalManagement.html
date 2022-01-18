@@ -51,18 +51,96 @@
 
 <body>
     <div id="content">
+        <div class="d-flex justify-content-center mb-4">
+            <h1>Pagina di gestione dei noleggi a rischio</h1>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <div class="card p-4">
+                <h2>Questo noleggio è a rischio !</h2>
+                <p>Se necessario è possibile sostituire l'unità con un altra dello stesso prodotto</p>
+                <div id="unitinfo"></div>
+                
 
+                <select id="unitalternative" class="mb-2"></select>
+                <button id="submit" class="btn btn-search col-sm-3">Coferma</button>
+
+                <p>Se l'unità non dovesse essere della stessa condizione richiesta notificare al cliente</p>
+                <div id="clientinfo"></div>
+
+                <p>Se la modifica della unit non dovesse essere sufficiente rimuovere il noleggio e crearne un altro ...</p>
+                <div class="d-flex justify-content-center">
+                <button id="rentalpage" class="btn btn-search col-sm-6">Pagina del noleggio </button>
+                </div>
+            </div>
+        </div>
+
+        
     </div>
 </body>
 
 <footer>
     <script>
         let RentalID = localStorage.getItem('RentalID')
+        let rental
+
         $(document).ready(async () => {
             let query = { populate: true }
 
-            const response = await api.rentals.getSingle(RentalID, query)
+            rental = (await api.rentals.getSingle(RentalID, query)).data
+            console.log(rental)
+
+            //Informazioni sulla unit =
+            $('#unitinfo').append(`
+                <p>Codice unità del noleggio ${rental.unit._id}, condizione ${conditionToCondizione(rental.unit.condition)}</p>
+            `)
+
+            //Informazioni sul cliente
+            $('#clientinfo').append(`
+            <p>${rental.customer.lastname} ${rental.customer.firstname}</p>
+            <p>Mail: ${rental.customer.loginInfo.email}</p>
+            `)
+
+            //Devo richiedere le unit disponibili e insieme alla condizione
+            let availableUnit = (await api.products.available(rental.unit.product._id)).data.availableUnits
+            console.log(availableUnit)
+
+            //In ogni caso non deve essere presente la unit del rent
+            availableUnit = availableUnit.filter(unit => unit._id != rental.unit._id)
+
+            availableUnit.forEach(unit =>{
+                $('#unitalternative').append(`
+                <option value="${unit._id}">${unit._id}: ${conditionToCondizione(unit.condition)}</option>
+                `)
+            })
+        })
+
+        $('#rentalpage').on('click', () => {rentalPage(RentalID)})
+
+        $('#submit').on('click', async (event) => {
+            event.preventDefault()
+
+            let alternativeunit = $('#unitalternative').val()
+            rental.replacementUnit = alternativeunit
+            //Decido tra le due unit quella nelle condizioni peggiori => costo piu basso 
+            let unitToEstimate = await worstConditionAcceptable(alternativeunit, rental.unit._id)
+
+            //Calcolo la priceEstimation per quella unit e la metto nel noleggio
+            let query = {
+                form: rental.startDate,
+                to: rental.expectedEndDate
+            }
+            let priceEstimation = (await api.products.priceEstimation(rental.unit.product._id, query)).data
+            priceEstimation = priceEstimation.filter(prE => prE.unitID == unitToEstimate._id)
+            rental.priceEstimation = priceEstimation[0]
+
+            //Modifio il Noleggio
+            const response = await api.rentals.patchSingle(rental._id, rental)
             console.log(response)
+
+            window.alert('Il noleggio e stato modificato con successo e non risulta più tra i noleggi a rischio')
+            
+            document.location.href='./rentalWarnings.html'
         })
     </script>
 </footer>

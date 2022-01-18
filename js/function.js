@@ -295,7 +295,7 @@ function conditionToCondizione(condition) {
       return 'abbastanza danneggiato'
       break;
     case 'minor flaw':
-      return 'lievemente danneggiatto'
+      return 'lievemente danneggiato'
       break;
     case 'perfect':
       return 'perfetto'
@@ -335,4 +335,34 @@ function dateToData(date) {
   date = new Date(date)
 
   return day + ' ' + montName[date.getMonth()] + ' ' + year
+}
+
+async function worstConditionAcceptable(unit1, unit2 ) {
+  unit1 = (await api.units.getSingle(unit1)).data
+  unit2 = (await api.units.getSingle(unit2)).data
+
+  if(unit1.condition == unit2.condition)
+    return unit1
+
+  if(unit2.condition == 'broken')
+    return unit1
+
+  switch (unit1.condition) {
+    //La unit2 puo solo essere piu costosa e io sono apposto cosi
+    case 'minor flaw':
+      return unit1
+    //La unit2 puo essere perfect o minor flaw
+    case 'major flaw':
+      if(unit2.condition == 'perfect')
+        return unit1
+      else
+        return unit2
+    //Invio la unit2 perche e sicuramente meglio 
+    case 'perfect':
+        return unit2
+    //Caso in cui la unit1 e rotta o altro strano
+    default:
+      return unit2
+  }
+
 }
