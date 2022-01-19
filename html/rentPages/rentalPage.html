@@ -61,7 +61,7 @@
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Condizione del prodotto: </span><br>
-                        <input type="text" disabled="disabled" id="unitcondition" class="form-control" aria-label="Condizione del noleggio">
+                        <input type="text" disabled="disabled" id="unitcondition" class="form-control" aria-label="Condizione del prodotto">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Data del noleggio: </span><br>
@@ -153,9 +153,14 @@
             return rental
         }
 
-        function fillRentalForm(rental) {
+        async function fillRentalForm(rental) {
             $('#unitname').val(rental.unit.name)
-            $('#unitcondition').val(conditionToCondizione(rental.unit.condition))
+            if(rental.replacementUnit){
+                const altUnit = (await api.units.getSingle(rental.replacementUnit)).data
+                $('#unitcondition').val(conditionToCondizione(altUnit.condition))
+            }
+            else
+                $('#unitcondition').val(conditionToCondizione(rental.unit.condition))
             $('#prenotationdate').val((rental.prenotationDate).toString().slice(0, 10))
             $('#customer').val(isRental.customer.lastname + ' ' + isRental.customer.firstname)
 
@@ -248,14 +253,13 @@
                 `)
             });
 
-            fillRentalForm(isRental)
+            await fillRentalForm(isRental)
         })
 
-        let modifyState = true
-        $('#modify').on('click', (event) => {
+        $('#modify').on('click', async (event) => {
             event.preventDefault()
 
-            if (modifyState) {
+            if ($('#state').attr('disabled') == 'disabled') {
                 $('#state').removeAttr('disabled')
                 $('#employee').removeAttr('disabled')
                 $('#startdate').removeAttr('disabled')
@@ -277,6 +281,7 @@
                             newRental.bill = undefined
                         
                         const response = await api.rentals.patchSingle(isRental._id, newRental)
+
                         let query = { populate: true}
                         newRental = await getRental(response.data._id, query)
                         isRental = newRental
@@ -297,12 +302,12 @@
                 $('#startdate').attr('disabled', 'disabled')
                 $('#expectedenddate').attr('disabled', 'disabled')
                 $('#actualenddate').attr('disabled', 'disabled')
-                
+                $('#submit').remove()
 
-                fillRentalForm(isRental)
+                await fillRentalForm(isRental)
             }
             
-            modifyState = !modifyState
+
         })
 
         $('#delete').on('click', async (event) => {
