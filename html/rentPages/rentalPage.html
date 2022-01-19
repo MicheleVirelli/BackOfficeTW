@@ -60,6 +60,10 @@
                         <input type="text" disabled="disabled" id="unitname" class="form-control" aria-label="Nome prodotto">
                     </div>
                     <div class="input-group mb-2">
+                        <span class="input-group-text">Unità noleggiata: </span><br>
+                        <input type="text" disabled="disabled" id="unitid" class="form-control" aria-label="Unità noleggiata">
+                    </div>
+                    <div class="input-group mb-2">
                         <span class="input-group-text">Condizione del prodotto: </span><br>
                         <input type="text" disabled="disabled" id="unitcondition" class="form-control" aria-label="Condizione del prodotto">
                     </div>
@@ -148,19 +152,18 @@
             return true
         }
 
-        async function getRental(id, query) {
-            let rental = (await api.rentals.getSingle(id, query)).data
-            return rental
-        }
-
         async function fillRentalForm(rental) {
             $('#unitname').val(rental.unit.name)
             if(rental.replacementUnit){
                 const altUnit = (await api.units.getSingle(rental.replacementUnit)).data
                 $('#unitcondition').val(conditionToCondizione(altUnit.condition))
+                $('#unitid').val(rental.replacementUnit)
             }
-            else
+            else{
                 $('#unitcondition').val(conditionToCondizione(rental.unit.condition))
+                $('#unitid').val(rental.unit._id)
+            }
+
             $('#prenotationdate').val((rental.prenotationDate).toString().slice(0, 10))
             $('#customer').val(isRental.customer.lastname + ' ' + isRental.customer.firstname)
 
@@ -243,7 +246,7 @@
             let query = { populate: true }
             const RentalID = localStorage.getItem('rentalID')
 
-            isRental = await getRental(RentalID, query)
+            isRental = (await api.rentals.getSingle(RentalID, query)).data
 
             query = { limit: 0 }
             const employees = (await api.employees.get(query)).data.docs
