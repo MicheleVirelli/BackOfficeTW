@@ -133,38 +133,6 @@ function refreshNavPage(array, arrayName, tableName, toPage, whatDisplay) {
   });
 }
 
-function refreshTable(paginateArray, value, pageFunction) {
-  let boolColor = true;
-
-  $("#productlist").children().remove();
-
-  $("#productlist").append(`
-  <table id="table" class="table">
-    <tr class="row-header">
-      <td>Nome Prodotto</td>
-      <td>Categoria</td>
-      <td>Sottocategoria</td>
-      <td>Prezzo</td>
-    </tr>
-  </table>
-  `);
-
-  console.log("Refresh with " + value);
-  console.log(paginateArray);
-
-  paginateArray[value].forEach((product) => {
-    boolColor = !boolColor;
-    $("#table").append(`
-      <tr class="clickable-row ${boolColor ? "row-one" : "row-two"}" onclick="${pageFunction}('${product._id}')">
-        <td>${product.name}</td>
-        <td>${product.category}</td>
-        <td>${product.subcategory}</td>
-        <td>${priceFormat(product.price)} €</td>
-      </tr>
-    `);
-  });
-}
-
 //Renderlo intercambiabile tra customer ed employee
 function refreshClientGrid(paginateArray, value, card) {
   $("#list").children().remove();

@@ -104,7 +104,7 @@ body {
   color: var(--text-color);
 }
 
-.row-one:hover, .row-two:hover {
+.row-one:hover, .row-two:hover, .row-one:focus, .row-two:focus{
   background-color: var(--main-lastcolor);
   color: #000;
 }

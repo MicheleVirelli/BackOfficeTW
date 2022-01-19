@@ -88,17 +88,15 @@
 
             $('#rentlist').append(`
             <table class="table" id="rentable">
-                <thead>
-                    <tr class="row-header">
-                    <td>Cliente</td>
-                    <td>Impiegato</td>
-                    <td>Prodotto</td>
-                    <td>Stato</td>
-                    <td>Data Inizio</td>
-                    <td>Data Fine</td>
-                    <td>Codice Unità</td>
-                    </tr>
-                </thead>
+                <tr class="row-header" tabindex="0">
+                    <th>Cliente</th>
+                    <th>Impiegato</th>
+                    <th>Prodotto</th>
+                    <th>Stato</th>
+                    <th>Data Inizio</th>
+                    <th>Data Fine</th>
+                    <th>Codice Unità</th>
+                </tr>
             </table>
             `)
             
@@ -130,7 +128,7 @@
                 startDate = (new Date(startDate)).toString().slice(0, 16)
                 
                 $('#rentable').append(`
-                <tr class="clickable-row  ${boolColor ? "row-one" : "row-two"}" onclick="rentalPage('${rental._id}')" >
+                <tr class="clickable-row  ${boolColor ? "row-one" : "row-two"}" onclick="rentalPage('${rental._id}')" onkeypress="rentalPage('${rental._id}')" tabindex="0">
                     <td>${rental.customer.lastname}, ${rental.customer.firstname}</td>
                     <td>${employee}</td>
                     <td>${rental.unit.name}</td>
