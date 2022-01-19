@@ -59,6 +59,7 @@
         <div id="list"></div>
 
         <div id="pagenav"></div>
+
     </div>
 </body>
 
@@ -125,12 +126,12 @@
             $("#list").children().remove();
 
             $("#list").append(`
-            <table id="table" class="table">
+            <table id="table" class="table" tabindex="0" role="grid" aria-multiselectable="true" >
             <tr class="row-header">
-                <td>Nome Prodotto</td>
-                <td>Nome Cliente</td>
-                <td>Data di inizio</td>
-                <td>Prezzo</td>
+                <th>Nome Prodotto</td>
+                <th>Nome Cliente</td>
+                <th>Data di inizio</td>
+                <th>Prezzo</td>
             </tr>
             </table>
             `);
@@ -138,11 +139,11 @@
             paginateArray[value].forEach(rental => {
                 boolColor = !boolColor;
                 $("#table").append(`
-                <tr class="clickable-row ${boolColor ? "row-one" : "row-two"}" onclick="${pageFunction}('${rental._id}')">
-                    <td>${rental.unit.name}</td>
-                    <td>${rental.customer.lastname} ${rental.customer.firstname}</td>
-                    <td>${dateToData(rental.startDate)}</td>
-                    <td>${priceFormat(rental.priceEstimation.finalPrice)} €</td>
+                <tr class="clickable-row ${boolColor ? "row-one" : "row-two"}" onclick="rentalManagementPage('${rental._id}')" onkeypress="rentalManagementPage('${rental._id}')" tabindex="0">
+                    <td tabindex="0">${rental.unit.name}</td>
+                    <td tabindex="0">${rental.customer.lastname} ${rental.customer.firstname}</td>
+                    <td tabindex="0">${dateToData(rental.startDate)}</td>
+                    <td tabindex="0">${priceFormat(rental.priceEstimation.finalPrice)} €</td>
                 </tr>
                 `);
             });
