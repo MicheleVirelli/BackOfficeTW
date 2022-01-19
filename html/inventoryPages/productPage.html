@@ -107,7 +107,7 @@
 
         <form id="altproductform" class="mb-4">
             <div class="input-group">
-                <span class="input-group-text">Scegli un prodotto da aggiungere a quelli alternativi</span>
+                <span class="input-group-text">Aggiungi un prodotto alternativo: </span>
                 <select id="alternative" class="form-select"
                     aria-label="Seleziona il prodotto alternativo da aggiungere">
                 </select>
@@ -307,16 +307,15 @@
             fillAltProductsCard()
         })
 
-        //TODO: Gestire possibili errori (?) Dovrebbero in entrambi i casi refreshare la pagina e non aggiungere niente al massimo notifico..
         $('#addaltproduct').on('click', async (event) => {
             event.preventDefault()
 
             product.altproducts.push($('#alternative').val())
-
             const formData = new FormData()
             formData.append('altproducts', product.altproducts)
 
             const response = (await api.products.patchSingle(product._id, formData)).data
+
 
             fillAltProductsCard()
         })
