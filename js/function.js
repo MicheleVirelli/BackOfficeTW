@@ -1,14 +1,3 @@
-//TODO: Funzione che fa la stessa cosa di nauthHome.html
-async function logIn(loginForm) {
-  const data = serializeFormJson(loginForm);
-
-  const response = await api.employees.login(data);
-
-  if (response.status == 200)
-    config.setToken(response.headers.authorization, data.remember);
-  document.location.href = "./html/rentalWarning/rentalWarnings.html";
-}
-
 function logOut() {
   sessionStorage.removeItem("authToken");
   localStorage.removeItem("authToken");
@@ -42,16 +31,6 @@ function serializeFormJson(form) {
         element.type === "checkbox" ? element.checked : element.value;
       return json;
     }, {});
-}
-
-function serializeFormsJson(form) {
-  let json
-
-  form.querySelectorAll("input, select, textarea").forEach(element => {
-    json[element.id] = element.value
-  });
-
-  return json
 }
 
 //FUNZIONI per muoversi tra le page 
@@ -133,7 +112,6 @@ function refreshNavPage(array, arrayName, tableName, toPage, whatDisplay) {
   });
 }
 
-//Renderlo intercambiabile tra customer ed employee
 function refreshClientGrid(paginateArray, value, card) {
   $("#list").children().remove();
 
@@ -182,6 +160,7 @@ function refreshClientGrid(paginateArray, value, card) {
 
 }
 
+//Funzioni per le ricerche
 function filterBy(array, fields, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
@@ -198,55 +177,58 @@ function filterBy(array, fields, value) {
   return filtered;
 }
 
-//TODO: Fa schifo mettere uno switch
 function filterByForRentals(array, field, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
 
-  if (field == 'product') {
-    array.forEach((element) => {
-      if (element != undefined) {
-        if (element.unit.name.trim().toLowerCase().includes(value))
-          filtered.push(element);
-      }
-    });
-  }
-  else if (field == 'customer') {
-    array.forEach((element) => {
-      if (element != undefined) {
-        if (element.customer.lastname.trim().toLowerCase().includes(value) || element.customer.firstname.trim().toLowerCase().includes(value))
-          filtered.push(element);
-      }
-    });
-  }
-  else if (field == 'employee') {
-    array.forEach((element) => {
-      if (element != undefined && element.employee != undefined) {
-        if (element.employee.lastname.trim().toLowerCase().includes(value) || element.employee.firstname.trim().toLowerCase().includes(value))
-          filtered.push(element);
-      }
-    });
-  }
-  else if (field == 'unit') {
-    array.forEach((element) => {
-      if (element != undefined) {
-        if (element.unit._id.trim().toLowerCase().includes(value))
-          filtered.push(element);
-      }
-    });
-  }
-  else {
-    array.forEach((element) => {
-      if (element != undefined) {
-        if (element[field].trim().toLowerCase().includes(value))
-          filtered.push(element);
-      }
-    });
+  switch (field) {
+    case 'product':
+      array.forEach((element) => {
+        if (element != undefined) {
+          if (element.unit.name.trim().toLowerCase().includes(value))
+            filtered.push(element);
+        }
+      });
+      break;
+    case 'customer':
+      array.forEach((element) => {
+        if (element != undefined) {
+          if (element.customer.lastname.trim().toLowerCase().includes(value) || element.customer.firstname.trim().toLowerCase().includes(value))
+            filtered.push(element);
+        }
+      });
+      break;
+    case 'employee':
+      array.forEach((element) => {
+        if (element != undefined && element.employee != undefined) {
+          if (element.employee.lastname.trim().toLowerCase().includes(value) || element.employee.firstname.trim().toLowerCase().includes(value))
+            filtered.push(element);
+        }
+      });
+      break;
+          
+    case 'unit':
+      array.forEach((element) => {
+        if (element != undefined) {
+          if (element.unit._id.trim().toLowerCase().includes(value))
+            filtered.push(element);
+        }
+      });
+      break;
+    default:
+      array.forEach((element) => {
+        if (element != undefined) {
+          if (element[field].trim().toLowerCase().includes(value))
+            filtered.push(element);
+        }
+      });
+      break;
   }
 
   return filtered;
 }
 
+//Funzioni che per unificare la visualizzazione dei dati
 function priceFormat(number) {
   //TODO: alternativa en-US oppure it
   const formatter = new Intl.NumberFormat('en-US')

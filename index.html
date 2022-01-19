@@ -53,6 +53,7 @@
                     config.setToken(response.headers.authorization, data.remember)
                 document.location.href = "./html/rentalWarning/rentalWarnings.html"
             })
+            
 
             const logged = await config.loggedIn()
             if (logged == true)
