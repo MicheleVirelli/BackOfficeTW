@@ -33,7 +33,6 @@ function serializeFormJson(form) {
     }, {});
 }
 
-//FUNZIONI per muoversi tra le page 
 function customerPage(id) {
   localStorage.setItem("CustomerID", id);
   document.location.href = "customerPage.html";
@@ -56,18 +55,15 @@ function rentalManagementPage(id) {
 }
 
 function productPage(id) {
-  localStorage.removeItem('ProductID')
   localStorage.setItem("ProductID", id);
   document.location.href = "productPage.html";
 }
 
 function billPage(id) {
-  localStorage.removeItem('BillID')
   localStorage.setItem("BillID", id);
   document.location.href = "../billPages/billPage.html";
 }
 
-//FUNZIONI per manipolare page
 function paginator(elemForPage, array) {
   let i = [];
   let c = 1;
@@ -160,7 +156,6 @@ function refreshClientGrid(paginateArray, value, card) {
 
 }
 
-//Funzioni per le ricerche
 function filterBy(array, fields, value) {
   let filtered = [];
   value = value.trim().toLowerCase();
@@ -228,9 +223,7 @@ function filterByForRentals(array, field, value) {
   return filtered;
 }
 
-//Funzioni che per unificare la visualizzazione dei dati
 function priceFormat(number) {
-  //TODO: alternativa en-US oppure it
   const formatter = new Intl.NumberFormat('en-US')
   return formatter.format(number)
 }
@@ -238,7 +231,7 @@ function priceFormat(number) {
 function conditionToCondizione(condition) {
   switch (condition) {
     case 'broken':
-      return 'Scassato'
+      return 'guasto'
       break;
     case 'major flaw':
       return 'abbastanza danneggiato'
@@ -283,7 +276,6 @@ function dateToData(date) {
   return day + ' ' + montName[date.getMonth()] + ' ' + year
 }
 
-//Le unit non devono essere undefined
 async function worstConditionAcceptable(unit1, unit2) {
   unit1 = (await api.units.getSingle(unit1)).data
   unit2 = (await api.units.getSingle(unit2)).data
@@ -295,19 +287,19 @@ async function worstConditionAcceptable(unit1, unit2) {
     return unit1
 
   switch (unit1.condition) {
-    //La unit2 puo solo essere piu costosa e io sono apposto cosi
+    
     case 'minor flaw':
       return unit1
-    //La unit2 puo essere perfect o minor flaw
+    
     case 'major flaw':
       if(unit2.condition == 'perfect')
         return unit1
       else
         return unit2
-    //Invio la unit2 perche e sicuramente meglio 
+   
     case 'perfect':
         return unit2
-    //Caso in cui la unit1 e rotta o altro strano
+   
     default:
       return unit2
   }
