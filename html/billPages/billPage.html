@@ -65,22 +65,17 @@
 
 <footer>
     <script>
-        async function getBill(id) {
-            const bill = (await api.bills.getSingle(id)).data
-            return bill
-        }
-
-        let BillID = localStorage.getItem('BillID')
+        const BillID = localStorage.getItem('BillID')
 
         $(document).ready(async () => {
-            bill = await getBill(BillID)
+            bill = bill = (await api.bills.getSingle(BillID)).data
             customer = (await api.customers.getSingle(bill.customer)).data
             employee = (await api.employees.getSingle(bill.employee)).data
-
+            
             $('#billinfo').append(`
             <div class="row d-flex justify-content-center">
                 <div class="col-sm-8">
-                <p>Noleggio effettuato dal ${((bill.startRent).toString()).slice(0, 10)} al ${((bill.endRent).toString()).slice(0, 10)}</p>
+                <p>Noleggio effettuato dal ${dateToData(bill.startRent)} al ${dateToData(bill.endRent)}</p>
                 </div>
                 <div class="col-sm-8">
                 <p>Servizio richiesto da ${customer.lastname} ${customer.firstname}</p>

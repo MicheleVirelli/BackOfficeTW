@@ -121,7 +121,7 @@
                             <p>Data fine offerta ${dateToData(offert.end)}</p>
                             <p>${offert.categoryFilter != '[]' ? 'Categorie interessate:' + (offert.categoryFilter).join(", ") : ''}</p>
                             <p>${offert.shortDescription}</p>
-                            <p>Prezzo modificato: ${(1 - (offert.modifier))/0.01} %</p>
+                            <p>Prezzo modificato: ${Math.round((1 - (offert.modifier))/0.01)} %</p>
                         </div>
                         <div>
                             <button onclick="deleteOffert('${offert._id}')" class="btn btn-search" aria-label="Bottone per cancellare l'offerta">Cancella l'offerta</button>
