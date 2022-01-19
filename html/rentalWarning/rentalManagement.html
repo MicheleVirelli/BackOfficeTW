@@ -63,6 +63,7 @@
                 
 
                 <select id="unitalternative" class="mb-2" aria-label="Unità che possono rimpiazzare quella del noleggio"></select>
+
                 <button id="submit" class="btn btn-search col-sm-3">Coferma</button>
 
                 <p>Se l'unità non dovesse essere della stessa condizione richiesta notificare al cliente</p>
@@ -100,6 +101,14 @@
             let availableUnit = (await api.products.available(rental.unit.product._id)).data.availableUnits
             availableUnit = availableUnit.filter(unit => unit._id != rental.unit._id)
 
+            if(availableUnit.length == 0)
+                $('#submit').addClass('disabled')
+
+            availableUnit.length == 0 ?
+            $('#unitalternative').append(`
+            <option value="undefined">Nessuna unità disponibile</option>
+            `)
+            :
             availableUnit.forEach(unit =>{
                 $('#unitalternative').append(`
                 <option value="${unit._id}">${unit._id}: ${conditionToCondizione(unit.condition)}</option>
@@ -113,6 +122,8 @@
             event.preventDefault()
 
             let alternativeunit = $('#unitalternative').val()
+            if(alternativeunit == undefined)
+
             rental.replacementUnit = alternativeunit
             let unitToEstimate = await worstConditionAcceptable(alternativeunit, rental.unit._id)
 
