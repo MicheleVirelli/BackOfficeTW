@@ -145,7 +145,7 @@ function refreshClientGrid(paginateArray, value, card) {
           <div class="card mb-5 p-3">
             <img src="https://site202120.tw.cs.unibo.it/${employee.profilePicture}" alt="Immagine di profilo dell impiegato">
             <div class="card-title">${employee.lastname}, ${employee.firstname}</div>
-            <div class="card-text">${employee.authorization}</div>
+            <div class="card-text">Autorizzazione: ${employee.authorization}</div>
             <div class="card-btn"><button class="btn btn-search" onclick="employeePage('${employee._id}')">Pagina dell'impiegato</button></div>
           </div>
         </div>
