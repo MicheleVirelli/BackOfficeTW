@@ -38,29 +38,31 @@
     <script src="js/function.js"></script>
 
     <script>
+        
         $(document).ready(async () => {
             $.get('html/templates/nauthNav.html', (data) => {
                 $('body').append(data)
             })
 
-            $('#loginsubmit').on('click', async (event) => {
-                event.preventDefault()
-
-                const data = serializeFormJson(loginForm);
-                const response = await api.employees.login(data);
-
-                if (response.status == 200)
-                    config.setToken(response.headers.authorization, data.remember)
-                document.location.href = "./html/rentalWarning/rentalWarnings.html"
-            })
-            
-
             const logged = await config.loggedIn()
             if (logged == true)
-                document.location.href = "./html/rentalWarning/rentalWarnings.html"
+                document.location.href = "./html/rentalWarning/rentalWarnings.html"        
 
+                
+            $('#loginsubmit').on('click', async (event) => {
+            event.preventDefault()
+
+            const data = serializeFormJson(loginForm);
+            const response = await api.employees.login(data);
+
+            if (response.status == 200)
+                config.setToken(response.headers.authorization, data.remember)
+            document.location.href = "./html/rentalWarning/rentalWarnings.html"
+            })
         })
 
+
+    
     </script>
 </head>
 
