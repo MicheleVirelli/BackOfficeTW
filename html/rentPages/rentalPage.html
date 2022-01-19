@@ -44,7 +44,6 @@
         })
     </script>
 </head>
-<!-- TODO: Modificare tutti gli alert con qualcosa di accessibile -->
 
 <body>
     <div id="content">
@@ -286,7 +285,7 @@
                         const response = await api.rentals.patchSingle(isRental._id, newRental)
 
                         let query = { populate: true}
-                        newRental = await getRental(response.data._id, query)
+                        newRental = (await api.rentals.getSingle(response.data._id, query)).data
                         isRental = newRental
                         
                         $('#lastdiv').children().remove()

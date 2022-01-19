@@ -78,7 +78,7 @@
         </div>
     </div>
 </body>
-<!-- TODO: Rimuovere alert con qualcosa di accessibile -->
+
 <footer>
     <script>
         let priceEstimation
@@ -87,25 +87,14 @@
             $('#expectedEndRent').attr('min', $('#startDate').val())
         })
         
-        //TODO: Sistemare accrocchi
         async function createCloseRent(index) {
             let employee = await config.user()
-
-            let date = new Date()
-            let month
-            let day
-            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
-
-            if (date.getDate() < 10)
-                day = ('0' + (date.getDate()).toString())
-            else
-                day = date.getDate()
 
             let newRental = {
                 customer: $('#customer').val(),
                 employee: employee._id,
                 state: 'close',
-                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                prenotationDate: getActualDate(false),
                 priceEstimation: priceEstimation[index],
                 startDate: $('#startDate').val() + 'T00:00:00.000Z',
                 expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
@@ -123,21 +112,11 @@
         async function createOpenRent(index) {
             let employee = await config.user()
 
-            let date = new Date()
-            let month
-            let day
-            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
-
-            if (date.getDate() < 10)
-                day = ('0' + (date.getDate()).toString())
-            else
-                day = date.getDate()
-
             let newRental = {
                 customer: $('#customer').val(),
                 employee: employee._id,
                 state: 'open',
-                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                prenotationDate: getActualDate(false),
                 priceEstimation: priceEstimation[index],
                 startDate: $('#startDate').val() + 'T00:00:00.000Z',
                 expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
@@ -150,20 +129,10 @@
         }
         
         async function createPendingRent(index) {
-            let date = new Date()
-            let month
-            let day
-            ((date.getMonth() + 1) < 10) ? (month = '0' + (date.getMonth() + 1).toString()) : (month = date.getMonth() + 1)
-
-            if (date.getDate() < 10)
-                day = ('0' + (date.getDate()).toString())
-            else
-                day = date.getDate()
-
             let newRental = {
                 customer: $('#customer').val(),
                 state: 'pending',
-                prenotationDate: date.getFullYear() + '-' + month + '-' + day + 'T00:00:00.000Z',
+                prenotationDate: getActualDate(false),
                 priceEstimation: priceEstimation[index],
                 startDate: $('#startDate').val() + 'T00:00:00.000Z',
                 expectedEndDate: $('#expectedEndRent').val() + 'T00:00:00.000Z',
@@ -173,6 +142,18 @@
             const response = (await api.rentals.post(newRental)).data
 
             rentalPage(response._id)
+        }
+
+        function validateDate(from, to) {
+            if(from == '' || to == '')
+                return true
+
+            let checkFrom = new Date(from) 
+            let checkTo = new Date(to)
+            if(checkFrom.valueOf() > checkTo.valueOf())
+                return true
+
+            return false
         }
 
         $(document).ready(async () => {
@@ -199,11 +180,12 @@
 
             $('#searchedProduct').remove()
 
-            //Controllo che entrambe le date siano state inserite
-            if ($('#startDate').val() == '' || $('#expectedEndRent').val() == ''){
+            if (validateDate($('#startDate').val(), $('#expectedEndRent').val())){
                 window.alert('Le date inserite sono scorrette o mancanti')
             }
             else {
+
+
                 let ProductID = $('#productname').val()
                 let query = {
                     from: $('#startDate').val() + 'T00:00:00.000Z',

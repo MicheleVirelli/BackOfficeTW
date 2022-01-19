@@ -68,29 +68,10 @@
         let elementForPage = 10
         let paginate
 
-        function getActualDate(tomorrow = false) {
-
-            let date = new Date()
-            if (tomorrow)
-                date.setDate(date.getDate() + 1)
-
-            let day = (date.getDate()).toString()
-            let month = (date.getMonth() + 1).toString()
-            let year = (date.getFullYear()).toString()
-
-            if (day < 10)
-                day = '0' + day
-            if (month < 10)
-                month = '0' + month
-
-            return (year + '-' + month + '-' + day + 'T00:00:00.000Z')
-        }
-
         function keepBrokenUnits(rentals) {
             return rentals.filter(rental => rental.unit.condition == 'broken')
         }
 
-        //TODO: un rental continua ad essere notificato anche se il rent precedente  chiuso 
         async function keepUnpresentUnits(rentals) {
             let query = { from: getActualDate(), to: getActualDate() }
             rentals = rentals.filter(async rental => {
@@ -98,7 +79,7 @@
             })
 
             rentals = rentals.filter(rental => rental.unit.condition != 'broken') 
-
+            rentals = rentals.filter(rental => rental.state != 'close')
             return rentals
         }
 

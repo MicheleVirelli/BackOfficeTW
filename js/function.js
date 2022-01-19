@@ -314,4 +314,21 @@ async function worstConditionAcceptable(unit1, unit2) {
 
 }
 
+function getActualDate(tomorrow = false) {
+
+  let date = new Date()
+  if (tomorrow)
+      date.setDate(date.getDate() + 1)
+
+  let day = (date.getDate()).toString()
+  let month = (date.getMonth() + 1).toString()
+  let year = (date.getFullYear()).toString()
+
+  if (day < 10)
+      day = '0' + day
+  if (month < 10)
+      month = '0' + month
+
+  return (year + '-' + month + '-' + day + 'T00:00:00.000Z')
+}
 const urlsite = "https://site202120.tw.cs.unibo.it/"
