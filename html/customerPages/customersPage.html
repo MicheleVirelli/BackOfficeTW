@@ -93,6 +93,8 @@
             else
                 searchCustomers = filterBy(customers, ['firstname', 'lastname'], $('#value').val())
             
+            searchCustomers = [...new Set(searchCustomers)]
+
             searchCustomers = paginator(elementForPage, searchCustomers)
             
             refreshClientGrid(searchCustomers, 0)

@@ -203,7 +203,7 @@
                 }
 
                 priceEstimation = (await api.products.priceEstimation(ProductID, query)).data
-
+                
                 if (priceEstimation.length > 0) {
                     $('#content').append(`
                     <div class="d-flex justify-content-center">
