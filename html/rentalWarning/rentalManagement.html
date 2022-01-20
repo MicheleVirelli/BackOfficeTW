@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="errorinfo" class="mb-4"></div>
+        <div id="errorinfo" class="mb-4"></div>
     </div>
 </body>
 
@@ -121,7 +121,7 @@
         $('#submit').on('click', async (event) => {
             event.preventDefault()
 
-            $('#errorinfo').children().remove()
+            //$('#errorinfo').children().remove()
             let alternativeunit = $('#unitalternative').val()
             if(alternativeunit == undefined)
 
@@ -137,7 +137,6 @@
             rental.priceEstimation = priceEstimation[0]
 
             const response = await api.rentals.patchSingle(rental._id, rental)
-
             $('#errorinfo').append(`
             <div class="card p-4">
                 <div class="d-flex justify-content-center">
