@@ -112,6 +112,8 @@
             </div>
         </div>
 
+        <div id="errorinfo" class="mb-4"></div>
+
         <div class="d-flex justify-content-center mb-4">
             <h1>Informazioni sul prezzo</h1>
         </div>
@@ -131,26 +133,25 @@
         function controlRentalLogic(rental) {
             if (rental.state == 'open')
                 if (rental.employee == undefined)
-                    return false
+                    return {bool: false, why: 'Un noleggio non può essere aperto senza un impiegato associato'}
 
             if (rental.state == 'close') {
                 if (rental.employee == undefined)
-                    return false
+                    return {bool: false, why: 'Un noleggio non può essere chiuso senza un impiegato associato'}
                 if (rental.actualEndDate == undefined)
-                    return false
+                    return {bool: false, why: 'Un noleggio non può essere chiuso senza una data di fine del noleggio'}
             }
-
             if (rental.employee)
                 if (rental.state == 'pending')
-                    return false
+                    return {bool: false, why: 'Un noleggio in attesa non può avere un impiegato associato'}
 
             if (rental.actualEndDate) {
                 if (rental.state != 'close')
-                    return false
+                    return {bool: false, why: 'Un noleggio con una data di fine effettiva non può non essere chiuso'}
                 if (rental.employee == undefined)
-                    return false
+                    return {bool: false, why: 'Un noleggio con una data di fine effettiva non può non avere un impiegato associato'}
             }
-            return true
+            return {bool: true, why: 'Noleggio corretto'}
         }
 
         async function fillRentalForm(rental) {
@@ -249,6 +250,8 @@
 
             isRental = (await api.rentals.getSingle(RentalID, query)).data
 
+            $('#errorinfo').children().remove()
+
             if(isRental.state != 'pending')
                 $('#delete').addClass('disabled')
 
@@ -265,6 +268,7 @@
 
         $('#modify').on('click', async (event) => {
             event.preventDefault()
+            $('#errorinfo').children().remove()
 
             if ($('#state').attr('disabled') == 'disabled') {
                 $('#state').removeAttr('disabled')
@@ -281,7 +285,7 @@
                     event.preventDefault()
 
                     let newRental = await getFormRental()
-                    if (controlRentalLogic(newRental)) {
+                    if (controlRentalLogic(newRental).bool) {
                         if (newRental.state == 'close')
                             await postBill(newRental, surchargePrice)
                         else
@@ -297,9 +301,14 @@
                         $('#modify').click()
                     }
                     else {
-                        window.alert('Il Noleggio nel form non è corretto')
+                        $('#errorinfo').append(`
+                        <div class="card p-4">
+                            <div class="d-flex justify-content-center">
+                                <h2>${controlRentalLogic(newRental).why}</h2>
+                            </div>
+                        </div>
+                        `)
                     }
-                    
                 })
 
             }
