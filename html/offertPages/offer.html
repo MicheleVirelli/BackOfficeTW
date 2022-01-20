@@ -162,9 +162,9 @@
             event.preventDefault()
             $('#errorinfo').children().remove()
 
-            let value = '[]'
+            let value = []
             if($('#category').val() != "")
-                value = $('#category').val().split(" ")
+                value = $('#category').val().split(",")
 
             let newOffert={
                 start: $('#start').val(),
@@ -175,7 +175,7 @@
                 description: $('#description').val(),
                 shortDescription: $('#shortDescription').val(),
             }
-
+            
             if(!offertLogic(newOffert)){
                 $('#errorinfo').append(`
                 <div class="card p-4">
