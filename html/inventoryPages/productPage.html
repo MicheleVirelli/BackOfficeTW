@@ -231,13 +231,20 @@
         })
 
         async function deleteAltProducts(index) {
+            const altProductId = product.altproducts[index]
+            const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
 
-            const response = (await api.products.deleteAltProducts(ProductID, product.altproducts[index]))
-            console.log(response)
+            await $.ajax({
+                url: `https://site202120.tw.cs.unibo.it/api/products/${ProductID}/altproducts/`,
+                method: 'DELETE',
+                headers: {"Authorization": authToken},
+                contentType: 'application/json',
+                data: JSON.stringify({ "_id": altProductId }),
+            })
 
             let query = { populate: true }
             product = (await api.products.getSingle(ProductID, query)).data
-
+            
             fillAltProductsCard()
         }
 
@@ -277,7 +284,6 @@
                         altproducts.push(prod)
                 })
             })
-
             $('#altproductsinfo').children('div').remove()
             let i = 0
             altproducts.forEach(altprod => {
@@ -297,6 +303,7 @@
                 `)
                 i++
             })
+        
         }
 
         function fillProductForm(product) {
@@ -327,7 +334,9 @@
             })
 
             $('#errorinfo').children().remove()
-            $('#modify').click()
+            if ($('#name').attr('disabled') != 'disabled')
+                $('#modify').click()
+
             fillProductForm(product)
             fillUnitsCard(units)
             fillAltProductsCard()
@@ -335,16 +344,15 @@
 
         $('#addaltproduct').on('click', async (event) => {
             event.preventDefault()
+            if(product.altproducts.filter(altP => altP == $('#alternative').val()).length == 0){
+                const newAltProduct = { _id: $('#alternative').val() }
+                const response = await api.products.postAltProduct(ProductID, newAltProduct)
 
-            const newAltProduct = {
-                _id: $('#alternative').val()
+                let query = { populate: true }
+                product = (await api.products.getSingle(ProductID, query)).data
+
+                fillAltProductsCard()
             }
-            const response = await api.products.postAltProduct(ProductID, newAltProduct)
-
-            let query = { populate: true }
-            product = (await api.products.getSingle(ProductID, query)).data
-
-            fillAltProductsCard()
         })
 
         $('#addunits').on('click', async (event) => {
