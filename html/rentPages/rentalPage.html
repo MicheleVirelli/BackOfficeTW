@@ -56,23 +56,28 @@
                 <form class="form">
                     <div class="input-group mb-2">
                         <span class="input-group-text">Nome prodotto: </span><br>
-                        <input type="text" disabled="disabled" id="unitname" class="form-control" aria-label="Nome prodotto">
+                        <input type="text" disabled="disabled" id="unitname" class="form-control"
+                            aria-label="Nome prodotto">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Unità noleggiata: </span><br>
-                        <input type="text" disabled="disabled" id="unitid" class="form-control" aria-label="Unità noleggiata">
+                        <input type="text" disabled="disabled" id="unitid" class="form-control"
+                            aria-label="Unità noleggiata">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Condizione del prodotto: </span><br>
-                        <input type="text" disabled="disabled" id="unitcondition" class="form-control" aria-label="Condizione del prodotto">
+                        <input type="text" disabled="disabled" id="unitcondition" class="form-control"
+                            aria-label="Condizione del prodotto">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Data del noleggio: </span><br>
-                        <input type="date" disabled="disabled" id="prenotationdate" class="form-control" aria-label="Data di prenotazione del noleggio">
+                        <input type="date" disabled="disabled" id="prenotationdate" class="form-control"
+                            aria-label="Data di prenotazione del noleggio">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Stato del noleggio: </span><br>
-                        <select id="state" class="form-select" disabled="disabled" aria-label="Seleziona lo stato del noleggio">
+                        <select id="state" class="form-select" disabled="disabled"
+                            aria-label="Seleziona lo stato del noleggio">
                             <option id="pending" value="pending">In attesa</option>
                             <option id="open" value="open">Aperto</option>
                             <option id="close" value="close">Chiuso</option>
@@ -80,7 +85,8 @@
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Cliente: </span><br>
-                        <input type="text" disabled="disabled" id="customer" class="form-control" aria-label="Seleziona cliente">
+                        <input type="text" disabled="disabled" id="customer" class="form-control"
+                            aria-label="Seleziona cliente">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Impiegato: </span><br>
@@ -90,21 +96,25 @@
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Data di inizio</span><br>
-                        <input type="date" disabled="disabled" id="startdate" class="form-control" aria-label="Data di inizio">
+                        <input type="date" disabled="disabled" id="startdate" class="form-control"
+                            aria-label="Data di inizio">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Data fine programmata:</span><br>
-                        <input type="date" disabled="disabled" id="expectedenddate" class="form-control" aria-label="Data di fine programmata">
+                        <input type="date" disabled="disabled" id="expectedenddate" class="form-control"
+                            aria-label="Data di fine programmata">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text">Data fine effettiva</span><br>
-                        <input type="date" disabled="disabled" id="actualenddate" class="form-control" aria-label="Data di fine effettiva">
+                        <input type="date" disabled="disabled" id="actualenddate" class="form-control"
+                            aria-label="Data di fine effettiva">
                     </div>
                     <div id="lastdiv" class="input-group mb-2"></div>
 
                     <div id="buttonpanel" class="row d-flex justify-content-center">
                         <button id="modify" class="btn btn-search col-sm-3 me-4 ">Modifica</button>
-                        <div class="col-sm-3" id="wrapperdelete" data-toggle="tooltip" title="Non è possibile cancellare noleggi aperti o chiusi">
+                        <div class="col-sm-3" id="wrapperdelete" data-toggle="tooltip"
+                            title="Non è possibile cancellare noleggi aperti o chiusi">
                             <button id="delete" class="btn btn-search container-fluid me-4">Elimina</button>
                         </div>
                     </div>
@@ -133,35 +143,35 @@
         function controlRentalLogic(rental) {
             if (rental.state == 'open')
                 if (rental.employee == undefined)
-                    return {bool: false, why: 'Un noleggio non può essere aperto senza un impiegato associato'}
+                    return { bool: false, why: 'Un noleggio non può essere aperto senza un impiegato associato' }
 
             if (rental.state == 'close') {
                 if (rental.employee == undefined)
-                    return {bool: false, why: 'Un noleggio non può essere chiuso senza un impiegato associato'}
+                    return { bool: false, why: 'Un noleggio non può essere chiuso senza un impiegato associato' }
                 if (rental.actualEndDate == undefined)
-                    return {bool: false, why: 'Un noleggio non può essere chiuso senza una data di fine del noleggio'}
+                    return { bool: false, why: 'Un noleggio non può essere chiuso senza una data di fine del noleggio' }
             }
             if (rental.employee)
                 if (rental.state == 'pending')
-                    return {bool: false, why: 'Un noleggio in attesa non può avere un impiegato associato'}
+                    return { bool: false, why: 'Un noleggio in attesa non può avere un impiegato associato' }
 
             if (rental.actualEndDate) {
                 if (rental.state != 'close')
-                    return {bool: false, why: 'Un noleggio con una data di fine effettiva non può non essere chiuso'}
+                    return { bool: false, why: 'Un noleggio con una data di fine effettiva non può non essere chiuso' }
                 if (rental.employee == undefined)
-                    return {bool: false, why: 'Un noleggio con una data di fine effettiva non può non avere un impiegato associato'}
+                    return { bool: false, why: 'Un noleggio con una data di fine effettiva non può non avere un impiegato associato' }
             }
-            return {bool: true, why: 'Noleggio corretto'}
+            return { bool: true, why: 'Noleggio corretto' }
         }
 
         async function fillRentalForm(rental) {
             $('#unitname').val(rental.unit.name)
-            if(rental.replacementUnit){
+            if (rental.replacementUnit) {
                 const altUnit = (await api.units.getSingle(rental.replacementUnit)).data
                 $('#unitcondition').val(conditionToCondizione(altUnit.condition))
                 $('#unitid').val(rental.replacementUnit)
             }
-            else{
+            else {
                 $('#unitcondition').val(conditionToCondizione(rental.unit.condition))
                 $('#unitid').val(rental.unit._id)
             }
@@ -223,7 +233,7 @@
                 expectedEndDate: $('#expectedenddate').val() + 'T00:00:00.000Z',
                 actualEndDate: null,
                 priceEstimation: null,
-                unit: null  ,
+                unit: null,
             }
 
             if ($('#employee').val() != 'undefined')
@@ -252,7 +262,7 @@
 
             $('#errorinfo').children().remove()
 
-            if(isRental.state != 'pending')
+            if (isRental.state != 'pending')
                 $('#delete').addClass('disabled')
 
             query = { limit: 0 }
@@ -281,6 +291,7 @@
                 $('#buttonpanel').append(`
                 <button id="submit" class="btn btn-search col-sm-3">Conferma</button>
                 `)
+
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
 
@@ -290,14 +301,20 @@
                             await postBill(newRental, surchargePrice)
                         else
                             newRental.bill = undefined
-                        
+
                         const response = await api.rentals.patchSingle(isRental._id, newRental)
 
-                        let query = { populate: true}
+                        let query = { populate: true }
                         newRental = (await api.rentals.getSingle(response.data._id, query)).data
                         isRental = newRental
-                        
+
                         $('#lastdiv').children().remove()
+
+                        if(isRental.state != 'pending')
+                            $('#delete').addClass('disabled')
+                        if(isRental.state == 'pending')
+                            $('#delete').removeClass('disabled')
+
                         $('#modify').click()
                     }
                     else {
@@ -322,7 +339,7 @@
 
                 await fillRentalForm(isRental)
             }
-            
+
 
         })
 
