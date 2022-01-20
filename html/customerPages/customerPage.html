@@ -53,7 +53,7 @@
             <h1>Informazioni Cliente</h1>
         </div>
 
-        <div class="card col-sm-8 p-4">
+        <div class="card col-sm-8 p-4 mb-4">
             <div class="row d-flex justify-content-center">
                 <div class="row col-sm-6">
                     <img id="profilepicture" class="img-fluid rounded" alt="Immagine profilo del cliente"
@@ -90,6 +90,8 @@
                 </div>
             </div>
         </div>
+
+        <div id="errorinfo" class="mb-4"></div>
     </div>
 </body>
 
@@ -135,6 +137,15 @@
             return newCustomer
         }
 
+        function verifyForm() {
+            if($('#firstname').val() == '' || $('#lastname').val() == '' || $('#dateOfBirth').val() == '' ||  $('#country').val() == '' )
+                return false
+            if($('#city').val() == '' || $('#streetAddress').val() == '' || $   ('#zipcode').val() == '')
+                return false
+
+            return true
+        }
+
         $(document).ready(async () => {
 
             customer = await getCustomer(CustomerID)
@@ -176,10 +187,25 @@
 
                 $('#submit').on('click', async (event) => {
                     event.preventDefault()
-                    const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
-                    customer = response
+                    
+                    if(verifyForm($('#customerInfo'))){
+                        const response = (await api.customers.patchSingle(customer._id, getFormCustomer())).data
+                        customer = response
+                        $('#modify').click()
+                    }
+                    else {
+                        $('#errorinfo').children().remove()
 
-                    $('#modify').click()
+                        $('#errorinfo').append(`
+                            <div class="card p-4">
+                                <div class="d-flex justify-content-center"> 
+                                    <h2>Ci sono dei campi non acora completati</h2>
+                                </div>
+                            </div>
+                        `)
+
+                        $('#modify').click()
+                    }
                 })
             }
             else {

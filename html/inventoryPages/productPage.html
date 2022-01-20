@@ -99,6 +99,8 @@
             </div>
         </div>
 
+        <div id="errorinfo" calss="mb-4"></div>
+
         <div class="d-flex justify-content-end col-sm-12 mb-4 ">
             <button id="addunits" class="btn btn-search">Aggiungi unit al prodotto</button>
         </div>
@@ -154,6 +156,13 @@
             }  
         }
 
+        function verifyData(){
+            if($('#name').val() == '' || $('#category').val() == '' || $('#subcategory').val() == '' || $('#price').val() == '' || $('#description').val() == '')
+                return false
+
+            return true
+        }
+
         $('#modify').on('click', (event) => {
             event.preventDefault()
 
@@ -172,16 +181,30 @@
 
                 $('#confirm').on('click', async (event) => {
                     event.preventDefault()
-                    const form = document.getElementById('formModify');
-                    const formData = new FormData(form);
+                    $('#errorinfo').children().remove()
 
-                    let image = $('#image').prop('files')[0];
-                    if (image)
-                        formData.append('image', image)
+                    if(verifyData()){
+                        const form = document.getElementById('formModify');
+                        const formData = new FormData(form);
 
-                    const response = await api.products.patchSingle(ProductID, formData)
-                    product = response.data
+                        let image = $('#image').prop('files')[0];
+                        if (image)
+                            formData.append('image', image)
+
+                        const response = await api.products.patchSingle(ProductID, formData)
+                        product = response.data
+                    }
+                    else {
+                        $('#errorinfo').append(`
+                            <div class="card p-4">
+                                <div class="d-felx justify-content-center">
+                                    <h2>Prodotto non modificato: è necessario inserire informazioni in tutti i campi</h2>
+                                </div>
+                            </div>
+                        `)
+                    }
                     $('#modify').click()
+
                 })
             }
             else {
@@ -208,11 +231,12 @@
         })
 
         async function deleteAltProducts(index) {
-            product.altproducts.splice(index, 1)
 
-            product.altproducts = altproducts
+            const response = (await api.products.deleteAltProducts(ProductID, product.altproducts[index]))
+            console.log(response)
 
-            const response = (await api.products.patchSingle(ProductID, product))
+            let query = { populate: true }
+            product = (await api.products.getSingle(ProductID, query)).data
 
             fillAltProductsCard()
         }
@@ -302,6 +326,8 @@
                     `)
             })
 
+            $('#errorinfo').children().remove()
+            $('#modify').click()
             fillProductForm(product)
             fillUnitsCard(units)
             fillAltProductsCard()
@@ -310,12 +336,13 @@
         $('#addaltproduct').on('click', async (event) => {
             event.preventDefault()
 
-            product.altproducts.push($('#alternative').val())
-            const formData = new FormData()
-            formData.append('altproducts', product.altproducts)
+            const newAltProduct = {
+                _id: $('#alternative').val()
+            }
+            const response = await api.products.postAltProduct(ProductID, newAltProduct)
 
-            const response = (await api.products.patchSingle(product._id, formData)).data
-
+            let query = { populate: true }
+            product = (await api.products.getSingle(ProductID, query)).data
 
             fillAltProductsCard()
         })
