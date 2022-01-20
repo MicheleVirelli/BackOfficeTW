@@ -104,7 +104,9 @@
 
                     <div id="buttonpanel" class="row d-flex justify-content-center">
                         <button id="modify" class="btn btn-search col-sm-3 me-4 ">Modifica</button>
-                        <button id="delete" class="btn btn-search col-sm-3 me-4">Elimina</button>
+                        <div class="col-sm-3" id="wrapperdelete" data-toggle="tooltip" title="Non è possibile cancellare noleggi aperti o chiusi">
+                            <button id="delete" class="btn btn-search container-fluid me-4">Elimina</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -247,6 +249,9 @@
 
             isRental = (await api.rentals.getSingle(RentalID, query)).data
 
+            if(isRental.state != 'pending')
+                $('#delete').addClass('disabled')
+
             query = { limit: 0 }
             const employees = (await api.employees.get(query)).data.docs
             employees.forEach(employee => {
@@ -317,11 +322,7 @@
 
             if (isRental.state == 'pending') {
                 const response = (await api.rentals.deleteSingle(isRental._id)).data
-
                 document.location.href = "./rentalsPage.html"
-            }
-            else {
-                window.alert('Non è possibile cancellare un noleggio se lo stato è aperto o chiuso')
             }
         })
 

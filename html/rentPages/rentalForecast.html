@@ -76,6 +76,8 @@
                 </div>
             </form>
         </div>
+
+        <div id="errorinfo" class="mb-4"></div>
     </div>
 </body>
 
@@ -161,6 +163,7 @@
             const products = (await api.products.get(query)).data.docs
             const customers = (await api.customers.get(query)).data.docs
 
+            $('#errorinfo').children().remove()
             products.forEach(product => {
                 $('#productname').append(`
                 <option value="${product._id}">${product.name}</option>
@@ -179,9 +182,16 @@
             event.preventDefault()
 
             $('#searchedProduct').remove()
-
+            $('#unitscard').children().remove()
+            $('#errorinfo').children().remove()
             if (validateDate($('#startDate').val(), $('#expectedEndRent').val())){
-                window.alert('Le date inserite sono scorrette o mancanti')
+                $('#errorinfo').append(`
+                <div class="card p-4">
+                    <div class="d-flex justify-content-center">
+                        <h2>Le date inserite sono scorrette o mancanti</h2>
+                    </div>    
+                </div>
+                `)
             }
             else {
 

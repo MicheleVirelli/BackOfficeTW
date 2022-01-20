@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        
+        <div class="errorinfo" class="mb-4"></div>
     </div>
 </body>
 
@@ -121,6 +121,7 @@
         $('#submit').on('click', async (event) => {
             event.preventDefault()
 
+            $('#errorinfo').children().remove()
             let alternativeunit = $('#unitalternative').val()
             if(alternativeunit == undefined)
 
@@ -137,9 +138,13 @@
 
             const response = await api.rentals.patchSingle(rental._id, rental)
 
-            window.alert('Il noleggio e stato modificato con successo e non risulta più tra i noleggi a rischio')
-            
-            document.location.href='./rentalWarnings.html'
+            $('#errorinfo').append(`
+            <div class="card p-4">
+                <div class="d-flex justify-content-center">
+                    <h2>Il noleggio e stato modificato con successo</h2>    
+                </div>
+            </div>
+            `)
         })
     </script>
 </footer>
