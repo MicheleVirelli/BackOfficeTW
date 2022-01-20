@@ -68,7 +68,7 @@
         const BillID = localStorage.getItem('BillID')
 
         $(document).ready(async () => {
-            bill = bill = (await api.bills.getSingle(BillID)).data
+            bill = (await api.bills.getSingle(BillID)).data
             customer = (await api.customers.getSingle(bill.customer)).data
             employee = (await api.employees.getSingle(bill.employee)).data
             

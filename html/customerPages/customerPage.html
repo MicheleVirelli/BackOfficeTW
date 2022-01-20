@@ -149,7 +149,6 @@
         $(document).ready(async () => {
 
             customer = await getCustomer(CustomerID)
-
             fillCustomerForm(customer)
             let query = { limit: 0, populate: true }
             rentals = (await api.customers.getRentals(CustomerID, query)).data.docs
@@ -226,7 +225,7 @@
 
         $('#delete').on('click', async (event) => {
             event.preventDefault()
-            const response = await api.customers.deleteSingle(customer._id, getFormCustomer())
+            const response = await api.customers.deleteSingle(customer._id)
 
             document.location.href="./customersPage.html"
         })
