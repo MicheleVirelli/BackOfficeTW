@@ -85,7 +85,6 @@ function paginator(elemForPage, array) {
 }
 
 function refreshNavPage(array, arrayName, tableName, toPage, whatDisplay) {
-  console.log("Refreshing: " + tableName + "with " + whatDisplay);
   $("#pagenav").children().remove();
 
   $("#pagenav").append(`
