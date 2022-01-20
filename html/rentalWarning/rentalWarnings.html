@@ -73,10 +73,20 @@
         }
 
         async function keepUnpresentUnits(rentals) {
-            let query = { from: getActualDate(), to: getActualDate() }
-            rentals = rentals.filter(async rental => {
-                (((await api.products.priceEstimation(rental.unit.product._id, query)).data).filter(prE => prE.unitID == rental.unit._id)).length == 0
+            let query = { from: getActualDate(false), to: getActualDate(false) }
+            
+            let array = []
+            rentals.forEach(async (rental) => {
+                let priceEstimations = (await api.products.priceEstimation(rental.unit.product._id, query)).data
+                priceEstimations = priceEstimations.filter(prE => prE.unitID == rental.unit._id)
+                if (priceEstimations.length != 0) {
+                    const index = rentals.indexOf(rental)
+                    if (index > -1)
+                        array.push(index)
+                }
             })
+
+            array.forEach(index => rentals.splice(arr, 1))
 
             rentals = rentals.filter(rental => rental.unit.condition != 'broken') 
             rentals = rentals.filter(rental => rental.state != 'close')
