@@ -123,9 +123,6 @@
                         endDate = rental.expectedEndDate
                         break;
                 }
-
-                endDate = (new Date(endDate)).toString().slice(0, 16)
-                startDate = (new Date(startDate)).toString().slice(0, 16)
                 
                 $('#rentable').append(`
                 <tr class="clickable-row  ${boolColor ? "row-one" : "row-two"}" onclick="rentalPage('${rental._id}')" onkeypress="rentalPage('${rental._id}')" tabindex="0">
@@ -133,8 +130,8 @@
                     <td>${employee}</td>
                     <td>${rental.unit.name}</td>
                     <td>${rental.state}</td>
-                    <td>${startDate}</td>
-                    <td>${endDate}</td>
+                    <td>${dateToData(startDate)}</td>
+                    <td>${dateToData(endDate)}</td>
                     <td>${rental.unit._id}</td>
                 </tr>
                 `)
@@ -142,7 +139,7 @@
         }
 
         $(document).ready(async () => {
-            let rentForPage = 50
+            let rentForPage = 20
             let query = { limit: 0, populate: true }
 
             rentals = (await api.rentals.get(query)).data.docs
